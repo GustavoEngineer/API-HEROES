@@ -3,6 +3,7 @@ const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 const connectDB = require('./src/config/database');
 const Test = require('./src/domain/models/Test');
+const path = require('path');
 
 connectDB();
 
@@ -18,15 +19,14 @@ const swaggerDefinition = {
     description: 'Documentación de la API Saga Fighters',
   },
   servers: [
-    {
-      url: 'http://localhost:' + port,
-    },
+    { url: 'https://api-heroes-3l62.onrender.com' },
+    { url: 'http://localhost:3000' }
   ],
 };
 
 const options = {
   swaggerDefinition,
-  apis: ['./src/presentation/routes/*.js'], // Rutas para documentación
+  apis: [path.join(__dirname, 'src/presentation/routes/*.js')], // Rutas para documentación
 };
 
 const swaggerSpec = swaggerJSDoc(options);
