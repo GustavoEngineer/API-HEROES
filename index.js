@@ -44,7 +44,7 @@ app.use(batallaRoutes);
 app.use(batalla3v3Routes);
 
 app.get('/', (req, res) => {
-  res.send('API Saga Fighters - Onion Architecture');
+  res.redirect('/api-docs/');
 });
 
 app.listen(port, () => {
