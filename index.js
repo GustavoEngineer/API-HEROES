@@ -31,8 +31,12 @@ const options = {
 
 const swaggerSpec = swaggerJSDoc(options);
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Redirección de la raíz (debe ir antes de los app.use de rutas)
+app.get('/', (req, res) => {
+  res.redirect('/api-docs/');
+});
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use(express.json());
 const personajeRoutes = require('./src/presentation/routes/personajeRoutes');
 const batallaRoutes = require('./src/presentation/routes/batallaRoutes');
@@ -42,10 +46,6 @@ app.use('/auth', authRoutes);
 app.use(personajeRoutes);
 app.use(batallaRoutes);
 app.use(batalla3v3Routes);
-
-app.get('/', (req, res) => {
-  res.redirect('/api-docs/');
-});
 
 app.listen(port, () => {
   console.log(`Servidor escuchando en http://localhost:${port}`);
