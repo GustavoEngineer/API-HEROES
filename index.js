@@ -4,11 +4,15 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const connectDB = require('./src/config/database');
 const Test = require('./src/domain/models/Test');
 const path = require('path');
+const cors = require('cors');
 
 connectDB();
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+app.use(cors());
+app.use(express.json());
 
 // Swagger config básica
 const swaggerDefinition = {
@@ -19,7 +23,6 @@ const swaggerDefinition = {
     description: 'Documentación de la API Saga Fighters',
   },
   servers: [
-    { url: 'https://api-heroes-3l62.onrender.com' },
     { url: 'http://localhost:3000' }
   ],
 };
@@ -37,7 +40,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use(express.json());
 const personajeRoutes = require('./src/presentation/routes/personajeRoutes');
 const batallaRoutes = require('./src/presentation/routes/batallaRoutes');
 const batalla3v3Routes = require('./src/presentation/routes/batalla3v3Routes');
