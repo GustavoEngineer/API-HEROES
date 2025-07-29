@@ -23,6 +23,7 @@ const swaggerDefinition = {
     description: 'Documentación de la API Saga Fighters',
   },
   servers: [
+    { url: 'https://api-heroes-3l62.onrender.com' },
     { url: 'http://localhost:3000' }
   ],
 };
