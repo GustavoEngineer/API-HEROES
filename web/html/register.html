@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Anywhere - Create Account</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Righteous:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/css/icons.css">
+</head>
+<body>
+
+
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="form-container">
+            <div class="form-content">
+                <h2 class="subtitle">START FOR FREE</h2>
+                <h1 class="title">CREATE NEW ACCOUNT</h1>
+                <p class="form-switch">Already A Member? <a href="login.html" class="switch-link">Log In</a></p>
+                
+                <form class="auth-form" id="registerForm">
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <i class="ph-user-circle input-icon"></i>
+                            <input type="text" id="firstName" name="firstName" placeholder="First name" value="KIM" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <i class="ph-user-circle input-icon"></i>
+                            <input type="text" id="lastName" name="lastName" placeholder="Last name" value="VENOM" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <i class="ph-user-circle input-icon"></i>
+                            <input type="text" id="username" name="username" placeholder="Username" value="VENOMDESIGNS" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <i class="ph-envelope input-icon"></i>
+                            <input type="email" id="email" name="email" placeholder="Email" value="kimvenomdesign@thankyou.com" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="input-wrapper">
+                            <i class="ph-lock input-icon"></i>
+                            <input type="password" id="password" name="password" placeholder="Password" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">CREATE ACCOUNT</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/apiConfig.js"></script>
+    <script src="../js/auth.js"></script>
+</body>
+</html> 

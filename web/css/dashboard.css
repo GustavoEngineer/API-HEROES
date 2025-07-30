@@ -1,0 +1,2434 @@
+/* Hide main header in dashboard */
+.header {
+    display: none;
+}
+
+/* Scrollbar styling for dashboard */
+.dashboard-main::-webkit-scrollbar {
+    width: 8px;
+}
+
+.dashboard-main::-webkit-scrollbar-track {
+    background: rgba(15, 26, 46, 0.3);
+    border-radius: 4px;
+}
+
+.dashboard-main::-webkit-scrollbar-thumb {
+    background: linear-gradient(135deg, #0096ff, #FFD700);
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.dashboard-main::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(135deg, #FFD700, #0096ff);
+}
+
+/* Firefox scrollbar */
+.dashboard-main {
+    scrollbar-width: thin;
+    scrollbar-color: #0096ff rgba(15, 26, 46, 0.3);
+}
+
+/* Dashboard Navigation Bar */
+.dashboard-nav {
+    background: rgba(64, 64, 64, 0.95);
+    backdrop-filter: blur(20px);
+    border-top: 2px solid rgba(128, 128, 128, 0.3);
+    padding: 0.5rem 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.nav-container {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    padding: 0;
+}
+
+.nav-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: #E2E8F0;
+    text-decoration: none;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    position: relative;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #000000;
+    border-right: 1px solid rgba(128, 128, 128, 0.3);
+}
+
+.nav-item:last-child {
+    border-right: none;
+}
+
+.nav-item i {
+    font-size: 1.5rem;
+    color: #FFD700;
+    transition: all 0.3s ease;
+}
+
+.nav-item .nav-icon {
+    width: 3rem;
+    height: 3rem;
+    object-fit: contain;
+    transition: all 0.3s ease;
+}
+
+.nav-item:hover {
+    color: #FFFFFF;
+    background: rgba(128, 128, 128, 0.3);
+    transform: translateY(-2px);
+}
+
+.nav-item:hover i {
+    color: #0096ff;
+    text-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
+}
+
+.nav-item:hover .nav-icon {
+    transform: translateY(-3px) scale(1.05);
+    filter: brightness(1.1);
+}
+
+.nav-item.active {
+    color: #FFFFFF;
+    background: rgba(0, 150, 255, 0.4);
+    border: 1px solid rgba(0, 150, 255, 0.5);
+    box-shadow: 0 0 15px rgba(0, 150, 255, 0.3);
+}
+
+.nav-item.active i {
+    color: #0096ff;
+    text-shadow: 0 0 10px rgba(0, 150, 255, 0.8);
+}
+
+.nav-item.active .nav-icon {
+    transform: translateY(-6px) scale(1.3);
+    filter: brightness(1.2);
+}
+
+
+
+/* Dashboard Main Content */
+.dashboard-main {
+    padding-bottom: 80px;
+    min-height: calc(100vh - 80px);
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+/* Contenedor principal para el scroll horizontal */
+.dashboard-sections-container {
+    display: flex;
+    width: 300%; /* 3 secciones * 100% */
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    height: 100%;
+    position: relative;
+}
+
+.dashboard-section {
+    width: 33.33%; /* Cada sección ocupa 1/3 del contenedor */
+    flex-shrink: 0;
+    display: block;
+    opacity: 1;
+    transform: translateX(0);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    position: relative;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Mejorar la transición de las secciones */
+.dashboard-section.active {
+    z-index: 2;
+}
+
+.dashboard-section:not(.active) {
+    z-index: 1;
+}
+
+/* Efecto de profundidad para las secciones inactivas */
+.dashboard-section.slide-left {
+    transform: translateX(-100%);
+    opacity: 0.3;
+    filter: blur(1px);
+}
+
+.dashboard-section.slide-right {
+    transform: translateX(100%);
+    opacity: 0.3;
+    filter: blur(1px);
+}
+
+.dashboard-section.slide-center {
+    transform: translateX(0);
+    opacity: 1;
+    filter: blur(0);
+}
+
+/* Indicadores visuales de navegación */
+.dashboard-nav::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    width: var(--nav-progress, 0%);
+    height: 2px;
+    background: linear-gradient(90deg, #0096ff, #FFD700);
+    transition: width 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 0 10px rgba(0, 150, 255, 0.5);
+}
+
+.dashboard-nav.nav-progress::before {
+    animation: progressPulse 0.6s ease;
+}
+
+@keyframes progressPulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.8; }
+}
+
+/* Mejorar la animación de entrada */
+@keyframes slideInFromRight {
+    0% { 
+        transform: translateX(100%); 
+        opacity: 0; 
+        filter: blur(2px);
+    }
+    100% { 
+        transform: translateX(0); 
+        opacity: 1; 
+        filter: blur(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    0% { 
+        transform: translateX(-100%); 
+        opacity: 0; 
+        filter: blur(2px);
+    }
+    100% { 
+        transform: translateX(0); 
+        opacity: 1; 
+        filter: blur(0);
+    }
+}
+
+@keyframes slideOutToRight {
+    0% { 
+        transform: translateX(0); 
+        opacity: 1; 
+        filter: blur(0);
+    }
+    100% { 
+        transform: translateX(100%); 
+        opacity: 0; 
+        filter: blur(2px);
+    }
+}
+
+@keyframes slideOutToLeft {
+    0% { 
+        transform: translateX(0); 
+        opacity: 1; 
+        filter: blur(0);
+    }
+    100% { 
+        transform: translateX(-100%); 
+        opacity: 0; 
+        filter: blur(2px);
+    }
+}
+
+/* Clases para las animaciones */
+.slide-in-right {
+    animation: slideInFromRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.slide-in-left {
+    animation: slideInFromLeft 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.slide-out-right {
+    animation: slideOutToRight 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.slide-out-left {
+    animation: slideOutToLeft 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+.section-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.section-title {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 2.5rem;
+    color: #FFFFFF;
+    text-align: center;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 0px #000000;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #0096ff, #FFD700);
+    border-radius: 2px;
+}
+
+/* Profile Section */
+.profile-card {
+    background: rgba(15, 26, 46, 0.8);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 150, 255, 0.3);
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 30px rgba(0, 150, 255, 0.1);
+}
+
+.profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(0, 150, 255, 0.2);
+}
+
+.profile-avatar {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.profile-avatar i {
+    font-size: 2.5rem;
+    color: #FFFFFF;
+}
+
+.profile-info h2 {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 1.8rem;
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #000000;
+}
+
+.profile-info p {
+    color: #A0AEC0;
+    margin-bottom: 0.5rem;
+    font-family: 'Fredoka One', cursive;
+}
+
+.user-level {
+    background: linear-gradient(135deg, #0096ff, #0066cc);
+    color: #FFFFFF;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 400;
+    font-family: 'Fredoka One', cursive;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.profile-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.stat-item {
+    text-align: center;
+    padding: 1rem;
+    background: rgba(26, 26, 26, 0.5);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 150, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 150, 255, 0.2);
+}
+
+.stat-item i {
+    font-size: 1.5rem;
+    color: #FFD700;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.stat-value {
+    display: block;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: #FFFFFF;
+    margin-bottom: 0.3rem;
+    text-shadow: 2px 2px 0px #000000;
+}
+
+.stat-label {
+    color: #A0AEC0;
+    font-size: 0.8rem;
+    font-family: 'Fredoka One', cursive;
+    text-transform: uppercase;
+}
+
+/* Characters Section - Clash Royale Style */
+.deck-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+}
+
+.deck-title {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 2rem;
+    color: #FFFFFF;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #000000;
+}
+
+.deck-selector {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.deck-btn {
+    background: rgba(26, 26, 26, 0.8);
+    color: #FFFFFF;
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.deck-btn.active {
+    background: rgba(0, 150, 255, 0.2);
+    border-color: #0096ff;
+    box-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
+}
+
+.deck-btn:hover {
+    background: rgba(0, 150, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+.deck-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    max-width: 1000px;
+    margin: 0 auto 2rem;
+    padding: 0 1rem;
+}
+
+.character-card {
+    background: rgba(15, 26, 46, 0.8);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 150, 255, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.character-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 150, 255, 0.2);
+    border-color: #0096ff;
+}
+
+.card-cost {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #FFFFFF;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.character-avatar {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 1.5rem auto 0.5rem;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.character-avatar i {
+    font-size: 1.5rem;
+    color: #FFFFFF;
+}
+
+.character-card h3 {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.card-level {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.card-level span {
+    color: #A0AEC0;
+    font-size: 0.8rem;
+    font-family: 'Fredoka One', cursive;
+    text-transform: uppercase;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(26, 26, 26, 0.8);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 0.2rem 0;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #0096ff, #FFD700);
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    color: #A0AEC0;
+    font-size: 0.7rem;
+    font-weight: 400;
+    font-family: 'Fredoka One', cursive;
+}
+
+/* Deck Footer */
+.deck-footer {
+    background: rgba(15, 26, 46, 0.8);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 150, 255, 0.3);
+    border-radius: 15px;
+    padding: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.average-cost {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    color: #FFFFFF;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.average-cost i {
+    color: #0096ff;
+    font-size: 1.2rem;
+}
+
+.card-collection h3 {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.collection-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.collection-info span {
+    color: #A0AEC0;
+    font-size: 0.9rem;
+    font-family: 'Fredoka One', cursive;
+    text-transform: uppercase;
+}
+
+.sort-btn {
+    background: rgba(26, 26, 26, 0.8);
+    color: #FFFFFF;
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    padding: 0.3rem 0.8rem;
+    border-radius: 6px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.sort-btn:hover {
+    background: rgba(0, 150, 255, 0.1);
+    border-color: #0096ff;
+}
+
+.collection-preview {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+}
+
+.preview-card {
+    background: rgba(26, 26, 26, 0.6);
+    border: 1px solid rgba(0, 150, 255, 0.2);
+    border-radius: 8px;
+    padding: 0.5rem;
+    min-width: 60px;
+    text-align: center;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.preview-card i {
+    font-size: 1.2rem;
+    color: #A0AEC0;
+    margin-bottom: 0.2rem;
+}
+
+.preview-cost {
+    position: absolute;
+    top: -0.2rem;
+    right: -0.2rem;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #FFFFFF;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 400;
+    font-family: 'Fredoka One', cursive;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.preview-level {
+    color: #A0AEC0;
+    font-size: 0.6rem;
+    display: block;
+    margin-top: 0.2rem;
+    font-family: 'Fredoka One', cursive;
+    text-transform: uppercase;
+}
+
+.character-card {
+    background: rgba(15, 26, 46, 0.8);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 150, 255, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.character-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 150, 255, 0.2);
+}
+
+.character-card.empty {
+    border: 2px dashed rgba(0, 150, 255, 0.5);
+    background: rgba(15, 26, 46, 0.6);
+}
+
+.character-avatar {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+}
+
+.character-card.empty .character-avatar {
+    background: linear-gradient(135deg, #0096ff, #0066cc);
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
+}
+
+.character-avatar i {
+    font-size: 2rem;
+    color: #FFFFFF;
+}
+
+.character-card h3 {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.character-card p {
+    color: #A0AEC0;
+    margin-bottom: 1.5rem;
+    font-family: 'Fredoka One', cursive;
+}
+
+.select-btn, .create-btn {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #FFFFFF;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #000000;
+}
+
+.create-btn {
+    background: linear-gradient(135deg, #0096ff, #0066cc);
+}
+
+.select-btn:hover, .create-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Battles Section */
+.battles-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.battle-options {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+}
+
+.battle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+    justify-content: center;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #000000;
+}
+
+.battle-btn.primary {
+    background: linear-gradient(135deg, #0096ff, #0066cc);
+    color: #FFFFFF;
+}
+
+.battle-btn.secondary {
+    background: rgba(26, 26, 26, 0.8);
+    color: #FFFFFF;
+    border: 2px solid rgba(0, 150, 255, 0.3);
+}
+
+.battle-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.recent-battles {
+    background: rgba(15, 26, 46, 0.8);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 150, 255, 0.3);
+    border-radius: 15px;
+    padding: 2rem;
+}
+
+.recent-battles h3 {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    color: #FFFFFF;
+    margin-bottom: 1rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.no-battles, .team-status p {
+    color: #A0AEC0;
+    text-align: center;
+    font-style: italic;
+    font-family: 'Fredoka One', cursive;
+}
+
+
+
+/* Battle Items */
+.battle-item {
+    background: rgba(15, 26, 46, 0.8);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 150, 255, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.battle-item:hover {
+    border-color: rgba(0, 150, 255, 0.5);
+    transform: translateX(5px);
+}
+
+.battle-result {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 400;
+    font-size: 0.9rem;
+    font-family: 'Fredoka One', cursive;
+    text-transform: uppercase;
+}
+
+.battle-result.win {
+    background: rgba(0, 150, 255, 0.2);
+    color: #0096ff;
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.battle-result.loss {
+    background: rgba(255, 68, 68, 0.2);
+    color: #ff4444;
+    border: 1px solid rgba(255, 68, 68, 0.3);
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.battle-info {
+    flex: 1;
+}
+
+.battle-info h4 {
+    color: #FFFFFF;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.battle-info p {
+    color: #A0AEC0;
+    font-size: 0.8rem;
+    font-family: 'Fredoka One', cursive;
+}
+
+.battle-score {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 1.2rem;
+    color: #FFFFFF;
+    text-shadow: 2px 2px 0px #000000;
+}
+
+/* Battle Stats */
+.battle-stats {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: rgba(15, 26, 46, 0.8);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 150, 255, 0.3);
+    border-radius: 15px;
+}
+
+.battle-stats h3 {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    color: #FFFFFF;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.stat-card {
+    background: rgba(26, 26, 26, 0.6);
+    border: 1px solid rgba(0, 150, 255, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+    border-color: rgba(0, 150, 255, 0.5);
+    transform: translateY(-5px);
+}
+
+.stat-card i {
+    font-size: 2rem;
+    color: #0096ff;
+    margin-bottom: 0.5rem;
+}
+
+.stat-card h4 {
+    color: #FFFFFF;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.stat-number {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 1.5rem;
+    color: #FFD700;
+    text-shadow: 2px 2px 0px #000000;
+}
+
+/* Achievements */
+.achievements {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: rgba(15, 26, 46, 0.8);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 150, 255, 0.3);
+    border-radius: 15px;
+}
+
+.achievements h3 {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    color: #FFFFFF;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.achievement-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.achievement-item {
+    background: rgba(26, 26, 26, 0.6);
+    border: 1px solid rgba(0, 150, 255, 0.2);
+    border-radius: 12px;
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+}
+
+.achievement-item:hover {
+    border-color: rgba(0, 150, 255, 0.5);
+    transform: translateX(5px);
+}
+
+.achievement-item i {
+    font-size: 1.5rem;
+    color: #FFD700;
+}
+
+.achievement-info {
+    flex: 1;
+}
+
+.achievement-info h4 {
+    color: #FFFFFF;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    margin-bottom: 0.2rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.achievement-info p {
+    color: #A0AEC0;
+    font-size: 0.8rem;
+    font-family: 'Fredoka One', cursive;
+}
+
+.achievement-date {
+    color: #A0AEC0;
+    font-size: 0.8rem;
+    font-style: italic;
+    font-family: 'Fredoka One', cursive;
+}
+
+/* Battle Arena Image */
+.battle-arena-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 200px);
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.battle-arena-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.battle-arena-content.shifted {
+    transform: translateX(-150px);
+}
+
+.battle-arena-image {
+    max-width: 72%;
+    max-height: 63vh;
+    object-fit: contain;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+    filter: 
+        drop-shadow(0 15px 30px rgba(0, 0, 0, 0.6))
+        drop-shadow(0 0 40px rgba(0, 150, 255, 0.15))
+        drop-shadow(0 0 60px rgba(255, 215, 0, 0.1));
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.battle-arena-image:hover {
+    transform: translateY(-5px) scale(1.02);
+    filter: 
+        drop-shadow(0 20px 40px rgba(0, 0, 0, 0.7))
+        drop-shadow(0 0 50px rgba(0, 150, 255, 0.2))
+        drop-shadow(0 0 70px rgba(255, 215, 0, 0.15));
+    animation-play-state: paused;
+}
+
+/* Game Mode Button */
+.game-mode-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-mode-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.8rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #0096ff, #0066cc);
+    color: #FFFFFF;
+    border: none;
+    border-radius: 15px;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #000000;
+    box-shadow: 
+        0 8px 20px rgba(0, 150, 255, 0.3),
+        0 0 30px rgba(0, 150, 255, 0.2);
+    text-align: center;
+    width: 200px;
+    white-space: nowrap;
+}
+
+.game-mode-btn:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, #0066cc, #0096ff);
+    box-shadow: 
+        0 12px 30px rgba(0, 150, 255, 0.4),
+        0 0 40px rgba(0, 150, 255, 0.3);
+}
+
+.game-mode-btn:active {
+    transform: translateY(-1px);
+}
+
+.game-mode-btn i {
+    font-size: 1.3rem;
+    color: #FFD700;
+}
+
+/* Dropdown Menu */
+.game-mode-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(15, 26, 46, 0.95);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 150, 255, 0.3);
+    border-radius: 12px;
+    padding: 0.5rem;
+    margin-top: 0.5rem;
+    display: none;
+    flex-direction: column;
+    gap: 0.3rem;
+    min-width: 150px;
+    box-shadow: 
+        0 10px 30px rgba(0, 0, 0, 0.4),
+        0 0 40px rgba(0, 150, 255, 0.2);
+    z-index: 1000;
+}
+
+.game-mode-dropdown.show {
+    display: flex;
+    animation: dropdownSlide 0.3s ease;
+}
+
+@keyframes dropdownSlide {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+.dropdown-option {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.8rem 1rem;
+    background: transparent;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.dropdown-option:hover {
+    background: rgba(0, 150, 255, 0.2);
+    transform: translateX(5px);
+}
+
+.dropdown-option:active {
+    background: rgba(0, 150, 255, 0.3);
+}
+
+.dropdown-option i {
+    font-size: 1.1rem;
+    color: #FFD700;
+}
+
+/* Responsive adjustments for battle arena */
+@media (max-width: 768px) {
+    .battle-arena-container {
+        min-height: calc(100vh - 150px);
+        padding: 1rem;
+        margin-top: 1rem;
+    }
+    
+    .battle-arena-content {
+        gap: 1.5rem;
+    }
+    
+    .battle-arena-image {
+        max-width: 95%;
+        max-height: 60vh;
+    }
+    
+    .game-mode-btn {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .game-mode-dropdown {
+        min-width: 140px;
+    }
+    
+    .dropdown-option {
+        padding: 0.7rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .battle-arena-container {
+        min-height: calc(100vh - 120px);
+        padding: 0.5rem;
+    }
+    
+    .battle-arena-content {
+        gap: 1rem;
+    }
+    
+    .battle-arena-image {
+        max-width: 100%;
+        max-height: 50vh;
+        border-radius: 15px;
+    }
+    
+    .game-mode-btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+    }
+    
+    .game-mode-dropdown {
+        min-width: 130px;
+    }
+    
+    .dropdown-option {
+        padding: 0.6rem 0.7rem;
+        font-size: 0.75rem;
+    }
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .dashboard-sections-container {
+        width: 300%; /* Mantener el ancho para 3 secciones */
+    }
+    
+    .dashboard-section {
+        width: 33.33%; /* Mantener el ancho de cada sección */
+    }
+    
+    .nav-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+        padding: 0;
+    }
+    
+    .nav-item {
+        font-size: 0.8rem;
+    }
+    
+    .nav-item i {
+        font-size: 1.2rem;
+    }
+    
+    .nav-item .nav-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+    }
+    
+    .section-content {
+        padding: 1rem;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+    }
+    
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .profile-stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .deck-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+    
+    .deck-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .deck-title {
+        font-size: 1.5rem;
+    }
+    
+    .battle-options {
+        flex-direction: column;
+    }
+    
+    .battle-btn {
+        width: 100%;
+    }
+    
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .battle-item, .achievement-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+    }
+    
+    .battle-result {
+        align-self: center;
+    }
+    
+
+}
+
+@media (max-width: 480px) {
+    .dashboard-nav {
+        padding: 0.3rem 0;
+    }
+    
+    .nav-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0;
+    }
+    
+    .nav-item i {
+        font-size: 1rem;
+    }
+    
+    .nav-item .nav-icon {
+        width: 2rem;
+        height: 2rem;
+    }
+    
+    .section-title {
+        font-size: 1.5rem;
+    }
+    
+    .profile-card {
+        padding: 1.5rem;
+    }
+    
+    .deck-grid {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+    }
+    
+    .character-card {
+        padding: 1rem;
+        min-height: 150px;
+    }
+    
+    .deck-title {
+        font-size: 1.2rem;
+    }
+    
+    .collection-preview {
+        gap: 0.3rem;
+    }
+    
+    .preview-card {
+        min-width: 50px;
+        padding: 0.3rem;
+    }
+} 
+
+/* Game Setup Panel */
+.game-setup-panel {
+    position: fixed;
+    top: 50%;
+    right: -600px;
+    transform: translateY(-50%);
+    width: 580px;
+    background: rgba(15, 26, 46, 0.95);
+    backdrop-filter: blur(20px);
+    border: 2px solid rgba(0, 150, 255, 0.3);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.4),
+        0 0 60px rgba(0, 150, 255, 0.2);
+    transition: right 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    z-index: 1000;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.game-setup-panel.show {
+    right: 20px;
+}
+
+.setup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(0, 150, 255, 0.2);
+}
+
+.setup-header h3 {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    color: #FFFFFF;
+    font-size: 1.3rem;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px #000000;
+    margin: 0;
+}
+
+.close-setup-btn {
+    background: none;
+    border: none;
+    color: #A0AEC0;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-setup-btn:hover {
+    color: #FFD700;
+    background: rgba(255, 215, 0, 0.1);
+}
+
+.setup-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.setup-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.setup-section label {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    color: #FFFFFF;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.setup-section input,
+.setup-section select {
+    padding: 0.8rem;
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.setup-section input:focus,
+.setup-section select:focus {
+    outline: none;
+    border-color: #0096ff;
+    box-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
+}
+
+.setup-section input::placeholder {
+    color: #A0AEC0;
+}
+
+.mode-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+}
+
+.mode-display i,
+.mode-rune-icon {
+    color: #FFD700;
+    font-size: 1rem;
+}
+
+.mode-rune-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    filter: drop-shadow(0 0 5px rgba(0, 150, 255, 0.5));
+}
+
+.advanced-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    color: #A0AEC0;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.8rem;
+    transition: color 0.3s ease;
+}
+
+.checkbox-label:hover {
+    color: #FFFFFF;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: #0096ff;
+}
+
+.setup-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 150, 255, 0.2);
+}
+
+.start-game-btn,
+.cancel-setup-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+    flex: 1;
+}
+
+.start-game-btn {
+    background: linear-gradient(135deg, #00ff88, #00cc6a);
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+}
+
+.start-game-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
+}
+
+.cancel-setup-btn {
+    background: rgba(26, 26, 26, 0.8);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 68, 68, 0.3);
+}
+
+.cancel-setup-btn:hover {
+    background: rgba(255, 68, 68, 0.2);
+    border-color: #ff4444;
+    transform: translateY(-2px);
+}
+
+/* Mode Information Display */
+.mode-info-section {
+    background: rgba(0, 150, 255, 0.1);
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.mode-info-display {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+}
+
+.mode-info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(26, 26, 26, 0.6);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 150, 255, 0.2);
+    transition: all 0.3s ease;
+}
+
+.mode-info-item:hover {
+    background: rgba(0, 150, 255, 0.1);
+    border-color: rgba(0, 150, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.mode-info-item i {
+    color: #FFD700;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.mode-info-item span {
+    color: #FFFFFF;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+/* Character Preview */
+.character-preview {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem;
+    background: rgba(26, 26, 26, 0.6);
+    border: 1px solid rgba(0, 150, 255, 0.2);
+    border-radius: 8px;
+    margin-top: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.character-preview.character-found {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: rgba(0, 255, 136, 0.3);
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+}
+
+.character-preview i {
+    color: #A0AEC0;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.character-preview.character-found i {
+    color: #00ff88;
+}
+
+.character-preview span {
+    color: #A0AEC0;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.character-preview.character-found span {
+    color: #FFFFFF;
+}
+
+/* Team Characters */
+.team-characters {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.character-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.character-input-group label {
+    font-family: 'Fredoka One', cursive;
+    font-weight: 400;
+    color: #FFFFFF;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    text-shadow: 1px 1px 0px #000000;
+}
+
+.character-input-group input {
+    padding: 0.8rem;
+    background: rgba(26, 26, 26, 0.8);
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.character-input-group input:focus {
+    outline: none;
+    border-color: #0096ff;
+    box-shadow: 0 0 10px rgba(0, 150, 255, 0.3);
+}
+
+.character-input-group input::placeholder {
+    color: #A0AEC0;
+}
+
+/* Responsive adjustments for setup panel */
+@media (max-width: 768px) {
+    .game-setup-panel {
+        width: 95%;
+        right: -95%;
+        max-height: 85vh;
+    }
+    
+    .game-setup-panel.show {
+        right: 2.5%;
+    }
+    
+    .battle-arena-content.shifted {
+        transform: translateX(-50px);
+    }
+    
+    .setup-actions {
+        flex-direction: column;
+    }
+    
+    .mode-info-display {
+        grid-template-columns: 1fr;
+        gap: 0.6rem;
+    }
+    
+    .mode-info-item {
+        padding: 0.4rem;
+    }
+    
+    .mode-info-item span {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-setup-panel {
+        width: 95%;
+        right: -95%;
+        padding: 1rem;
+    }
+    
+    .game-setup-panel.show {
+        right: 2.5%;
+    }
+    
+    .setup-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    .setup-section input,
+    .setup-section select {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    .mode-info-display {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    
+    .mode-info-item {
+        padding: 0.3rem;
+    }
+    
+    .mode-info-item span {
+        font-size: 0.65rem;
+    }
+    
+    .character-preview {
+        padding: 0.6rem;
+    }
+    
+    .character-preview span {
+        font-size: 0.7rem;
+    }
+    
+    .team-characters {
+        gap: 0.8rem;
+    }
+    
+    .character-input-group {
+        gap: 0.4rem;
+    }
+    
+    .character-input-group input {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+    }
+} 
+
+/* Countdown Animation Styles */
+.countdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.countdown-overlay.show {
+    opacity: 1;
+}
+
+.countdown-container {
+    text-align: center;
+    animation: countdownEntrance 0.5s ease-out;
+}
+
+.countdown-number {
+    font-family: 'Fredoka One', cursive;
+    font-size: 8rem;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 
+        0 0 20px rgba(255, 215, 0, 0.8),
+        0 0 40px rgba(255, 215, 0, 0.6),
+        0 0 60px rgba(255, 215, 0, 0.4),
+        4px 4px 0px rgba(0, 0, 0, 0.8);
+    animation: countdownFloat 2s ease-in-out infinite;
+    transition: all 0.3s ease;
+}
+
+.countdown-number.pulse {
+    animation: countdownPulse 0.5s ease-out;
+}
+
+.countdown-number.final-message {
+    font-size: 3rem;
+    color: #0096ff;
+    text-shadow: 
+        0 0 20px rgba(0, 150, 255, 0.8),
+        0 0 40px rgba(0, 150, 255, 0.6),
+        0 0 60px rgba(0, 150, 255, 0.4),
+        4px 4px 0px rgba(0, 0, 0, 0.8);
+    animation: finalMessageGlow 1.5s ease-in-out infinite;
+}
+
+@keyframes countdownEntrance {
+    0% {
+        transform: scale(0.5) rotate(-10deg);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.1) rotate(5deg);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+@keyframes countdownFloat {
+    0%, 100% {
+        transform: translateY(0px) scale(1);
+    }
+    50% {
+        transform: translateY(-10px) scale(1.05);
+    }
+}
+
+@keyframes countdownPulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.3);
+        color: #0096ff;
+        text-shadow: 
+            0 0 30px rgba(0, 150, 255, 0.9),
+            0 0 60px rgba(0, 150, 255, 0.7),
+            0 0 90px rgba(0, 150, 255, 0.5),
+            4px 4px 0px rgba(0, 0, 0, 0.8);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes finalMessageGlow {
+    0%, 100% {
+        text-shadow: 
+            0 0 20px rgba(0, 150, 255, 0.8),
+            0 0 40px rgba(0, 150, 255, 0.6),
+            0 0 60px rgba(0, 150, 255, 0.4),
+            4px 4px 0px rgba(0, 0, 0, 0.8);
+    }
+    50% {
+        text-shadow: 
+            0 0 30px rgba(0, 150, 255, 1),
+            0 0 60px rgba(0, 150, 255, 0.8),
+            0 0 90px rgba(0, 150, 255, 0.6),
+            4px 4px 0px rgba(0, 0, 0, 0.8);
+    }
+}
+
+/* Battle Mode Styles */
+body.battle-mode {
+    background: url('../Images/sitio1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    transition: background 1s ease;
+}
+
+body.battle-mode::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    pointer-events: none;
+    z-index: -1;
+}
+
+.battle-mode-indicator {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.battle-mode-indicator.show {
+    opacity: 1;
+}
+
+.battle-status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-shadow: 
+        0 0 20px rgba(255, 255, 255, 0.8),
+        0 0 40px rgba(255, 255, 255, 0.6),
+        0 0 60px rgba(255, 255, 255, 0.4),
+        4px 4px 0px rgba(0, 0, 0, 0.8);
+    animation: battleStatusGlow 2s ease-in-out infinite;
+    letter-spacing: 3px;
+}
+
+.battle-status i {
+    font-size: 2.5rem;
+    color: #FFD700;
+    animation: swordSwing 3s ease-in-out infinite;
+}
+
+@keyframes battleStatusGlow {
+    0%, 100% {
+        text-shadow: 
+            0 0 20px rgba(255, 255, 255, 0.8),
+            0 0 40px rgba(255, 255, 255, 0.6),
+            0 0 60px rgba(255, 255, 255, 0.4),
+            4px 4px 0px rgba(0, 0, 0, 0.8);
+    }
+    50% {
+        text-shadow: 
+            0 0 30px rgba(255, 255, 255, 1),
+            0 0 60px rgba(255, 255, 255, 0.8),
+            0 0 90px rgba(255, 255, 255, 0.6),
+            4px 4px 0px rgba(0, 0, 0, 0.8);
+    }
+}
+
+@keyframes swordSwing {
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(-15deg);
+    }
+    75% {
+        transform: rotate(15deg);
+    }
+}
+
+/* Responsive countdown for mobile */
+@media (max-width: 768px) {
+    .countdown-number {
+        font-size: 5rem;
+    }
+    
+    .countdown-number.final-message {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-number {
+        font-size: 4rem;
+    }
+    
+    .countdown-number.final-message {
+        font-size: 1.5rem;
+    }
+    
+    .battle-status {
+        font-size: 1.5rem;
+        letter-spacing: 2px;
+    }
+    
+    .battle-status i {
+        font-size: 2rem;
+    }
+}
+
+/* Battle mode responsive */
+@media (max-width: 768px) {
+    .battle-status {
+        font-size: 1.8rem;
+        letter-spacing: 2px;
+    }
+    
+    .battle-status i {
+        font-size: 2.2rem;
+    }
+}
+
+/* ===== ESTILOS PARA ELEMENTOS DINÁMICOS ===== */
+
+/* Contenedor de batallas */
+.battles-container {
+    background: rgba(15, 26, 46, 0.8);
+    border-radius: 15px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    border: 2px solid rgba(128, 128, 128, 0.3);
+    backdrop-filter: blur(10px);
+}
+
+.battles-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(128, 128, 128, 0.3);
+}
+
+.battles-header h2 {
+    color: #FFD700;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.refresh-battles-btn {
+    background: linear-gradient(135deg, #0096ff, #00CED1);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.refresh-battles-btn:hover {
+    background: linear-gradient(135deg, #00CED1, #0096ff);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 206, 209, 0.4);
+}
+
+.battles-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.battle-item {
+    background: rgba(64, 64, 64, 0.6);
+    border-radius: 10px;
+    padding: 1rem;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.battle-item:hover {
+    background: rgba(64, 64, 64, 0.8);
+    border-color: rgba(255, 215, 0, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+}
+
+.battle-info h4 {
+    color: #FFD700;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.battle-status {
+    color: #00CED1;
+    font-size: 0.9rem;
+    margin: 0.2rem 0;
+}
+
+.battle-turn {
+    color: #E2E8F0;
+    font-size: 0.8rem;
+    margin: 0.2rem 0;
+}
+
+.battle-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    background: linear-gradient(135deg, #0096ff, #00CED1);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-btn:hover {
+    background: linear-gradient(135deg, #00CED1, #0096ff);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 206, 209, 0.4);
+}
+
+.delete-btn {
+    background: linear-gradient(135deg, #FF69B4, #FF1493);
+}
+
+.delete-btn:hover {
+    background: linear-gradient(135deg, #FF1493, #FF69B4);
+    box-shadow: 0 2px 8px rgba(255, 105, 180, 0.4);
+}
+
+.no-battles {
+    text-align: center;
+    color: #E2E8F0;
+    font-size: 1.1rem;
+    padding: 2rem;
+    font-style: italic;
+}
+
+/* Estilos para personajes dinámicos */
+.characters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.character-card {
+    background: rgba(64, 64, 64, 0.6);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 2px solid rgba(128, 128, 128, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.character-card:hover {
+    background: rgba(64, 64, 64, 0.8);
+    border-color: rgba(255, 215, 0, 0.5);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 215, 0, 0.3);
+}
+
+.character-image {
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.character-image img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    border-radius: 50%;
+    background: rgba(255, 215, 0, 0.1);
+    padding: 0.5rem;
+}
+
+.character-info h3 {
+    color: #FFD700;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+    text-align: center;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.character-category {
+    color: #00CED1;
+    font-size: 0.9rem;
+    text-align: center;
+    margin: 0.2rem 0;
+    font-weight: 600;
+}
+
+.character-saga {
+    color: #E2E8F0;
+    font-size: 0.8rem;
+    text-align: center;
+    margin: 0.2rem 0;
+    font-style: italic;
+}
+
+.character-stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 1rem 0;
+    gap: 0.5rem;
+}
+
+.stat {
+    background: rgba(0, 150, 255, 0.2);
+    color: #0096ff;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: center;
+    flex: 1;
+}
+
+.character-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.select-btn, .edit-btn {
+    background: linear-gradient(135deg, #0096ff, #00CED1);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+}
+
+.select-btn:hover, .edit-btn:hover {
+    background: linear-gradient(135deg, #00CED1, #0096ff);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 206, 209, 0.4);
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+}
+
+.edit-btn:hover {
+    background: linear-gradient(135deg, #FFA500, #FFD700);
+    box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
+}
+
+/* Responsive para elementos dinámicos */
+@media (max-width: 768px) {
+    .battles-container {
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .battles-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .battle-item {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+    
+    .battle-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .characters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 0.8rem;
+    }
+    
+    .character-stats {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+    
+    .character-actions {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .battles-header h2 {
+        font-size: 1.2rem;
+    }
+    
+    .refresh-battles-btn {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+    
+    .battle-info h4 {
+        font-size: 1rem;
+    }
+    
+    .characters-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 0.6rem;
+    }
+    
+    .character-card {
+        padding: 0.8rem;
+    }
+    
+    .character-info h3 {
+        font-size: 1rem;
+    }
+    
+    .character-stats {
+        margin: 0.8rem 0;
+    }
+    
+    .stat {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+}

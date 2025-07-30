@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Anywhere - Dashboard</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Righteous:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.0.3/src/css/icons.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <i class="ph-game-controller"></i>
+            <span class="logo-text">Game Anywhere</span>
+        </div>
+        <nav class="header-nav">
+            <a href="#" class="nav-link">HOME</a>
+            <a href="#" class="nav-link">JOIN</a>
+        </nav>
+        <div class="header-right">
+            <div class="language-selector">
+                <span class="lang-option">RU</span>
+                <span class="lang-option">FR</span>
+                <span class="lang-option active">→ EN</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Dashboard Navigation Bar -->
+    <nav class="dashboard-nav">
+        <div class="nav-container">
+            <a href="#profile" class="nav-item active" data-section="profile">
+                <img src="../Images/profile.png" alt="Profile" class="nav-icon">
+            </a>
+            <a href="#characters" class="nav-item" data-section="characters">
+                <img src="../Images/knight.png" alt="Knight" class="nav-icon">
+            </a>
+            <a href="#battles1v1" class="nav-item" data-section="battles1v1">
+                <img src="../Images/sabers.png" alt="Sabers" class="nav-icon">
+            </a>
+            <a href="#logout" class="nav-item" data-section="logout">
+                <img src="../Images/close.png" alt="Close" class="nav-icon">
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="dashboard-main">
+        <div class="dashboard-sections-container">
+            <!-- Profile Section -->
+            <section id="profile" class="dashboard-section active">
+            <div class="section-content">
+                <h1 class="section-title">Perfil de Usuario</h1>
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar">
+                            <i class="ph-user-circle"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h2 class="user-name">Usuario</h2>
+                            <p class="user-email">usuario@email.com</p>
+                            <span class="user-level">Nivel 1</span>
+                        </div>
+                    </div>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <i class="ph-trophy"></i>
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Victorias</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="ph-sword"></i>
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Batallas</span>
+                        </div>
+                        <div class="stat-item">
+                            <i class="ph-star"></i>
+                            <span class="stat-value">0</span>
+                            <span class="stat-label">Puntos</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Characters Section -->
+        <section id="characters" class="dashboard-section">
+            <div class="section-content">
+                <div class="deck-header">
+                    <h1 class="deck-title">Battle Deck</h1>
+                    <div class="deck-selector">
+                        <button class="deck-btn" data-deck="1">1</button>
+                        <button class="deck-btn" data-deck="2">2</button>
+                        <button class="deck-btn active" data-deck="3">3</button>
+                    </div>
+                </div>
+                
+                <div class="deck-grid characters-grid">
+                    <!-- Los personajes se cargarán dinámicamente desde la API -->
+                </div>
+                
+                <div class="deck-footer">
+                    <div class="average-cost">
+                        <i class="ph-drop"></i>
+                        <span>Average Elixir cost: 4.0</span>
+                    </div>
+                    <div class="card-collection">
+                        <h3>Card Collection</h3>
+                        <div class="collection-info">
+                            <span>Found: 65/66</span>
+                            <button class="sort-btn">By Elixir</button>
+                        </div>
+                        <div class="collection-preview">
+                            <div class="preview-card">
+                                <i class="ph-question"></i>
+                            </div>
+                            <div class="preview-card">
+                                <span class="preview-cost">1</span>
+                                <i class="ph-snowflake"></i>
+                                <span class="preview-level">Level 9</span>
+                            </div>
+                            <div class="preview-card">
+                                <span class="preview-cost">1</span>
+                                <i class="ph-skull"></i>
+                                <span class="preview-level">Level 9</span>
+                            </div>
+                            <div class="preview-card">
+                                <span class="preview-cost">2</span>
+                                <i class="ph-fire"></i>
+                                <span class="preview-level">Level 9</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+                <!-- Battles Section -->
+        <section id="battles1v1" class="dashboard-section">
+            <div class="section-content">
+                <h1 class="section-title">Batallas</h1>
+                
+                <!-- Battle List View -->
+                <div class="battles-container">
+                    <div class="battles-header">
+                        <h2>Mis Batallas</h2>
+                        <button class="refresh-battles-btn">
+                            <i class="ph-arrows-clockwise"></i>
+                            <span>Actualizar</span>
+                        </button>
+                    </div>
+                    <div class="battles-list">
+                        <!-- Las batallas se cargarán dinámicamente desde la API -->
+                    </div>
+                </div>
+
+                <!-- Battle Setup View -->
+                <div class="battle-arena-container" id="battleSetupView">
+                    <div class="battle-arena-content">
+                        <img src="../Images/campus.png" alt="Arena de Batalla" class="battle-arena-image" id="arenaImage">
+                        <div class="game-mode-container">
+                            <button class="game-mode-btn" id="newGameBtn">
+                                <i class="ph-game-controller"></i>
+                                <span>Nueva Partida</span>
+                            </button>
+                            <div class="game-mode-dropdown" id="gameModeDropdown">
+                                <button class="dropdown-option" data-mode="1v1">
+                                    <i class="ph-sword"></i>
+                                    <span>1v1</span>
+                                </button>
+                                <button class="dropdown-option" data-mode="team">
+                                    <i class="ph-users"></i>
+                                    <span>En Equipo</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Game Setup Panel -->
+                    <div class="game-setup-panel" id="gameSetupPanel">
+                        <div class="setup-header">
+                            <h3 id="setupTitle">Configuración de Partida</h3>
+                            <button class="close-setup-btn" id="closeSetupBtn">
+                                <i class="ph-x"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="setup-content">
+                            <div class="setup-section">
+                                <label for="playerName">Nombre del Jugador:</label>
+                                <input type="text" id="playerName" placeholder="Ingresa tu nombre" maxlength="20">
+                            </div>
+                            
+                            <div class="setup-section">
+                                <label for="deckSelection">Seleccionar Deck:</label>
+                                <select id="deckSelection">
+                                    <option value="">Elige tu deck</option>
+                                    <option value="deck1">Deck 1 - Ataque</option>
+                                    <option value="deck2">Deck 2 - Defensa</option>
+                                    <option value="deck3">Deck 3 - Balanceado</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setup-section">
+                                <label for="gameMode">Modo de Juego:</label>
+                                <div class="mode-display" id="modeDisplay">
+                                    <img src="../Images/runa.png" alt="Runa" class="mode-rune-icon">
+                                    <span>Selecciona un modo</span>
+                                </div>
+                            </div>
+                            
+                            <div class="setup-section">
+                                <label for="gameTime">Tiempo de Partida:</label>
+                                <select id="gameTime">
+                                    <option value="3">3 minutos</option>
+                                    <option value="5" selected>5 minutos</option>
+                                    <option value="10">10 minutos</option>
+                                </select>
+                            </div>
+                            
+                            <div class="setup-section">
+                                <label>Configuración Avanzada:</label>
+                                <div class="advanced-options">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="allowSpectators">
+                                        <span>Permitir espectadores</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" id="friendlyMatch">
+                                        <span>Partida amistosa</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="setup-actions">
+                            <button class="start-game-btn" id="startGameBtn">
+                                <i class="ph-play"></i>
+                                <span>Iniciar Partida</span>
+                            </button>
+                            <button class="cancel-setup-btn" id="cancelSetupBtn">
+                                <i class="ph-x-circle"></i>
+                                <span>Cancelar</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+
+
+        </div>
+
+
+    </main>
+
+    <!-- JavaScript -->
+    <script src="../js/apiConfig.js"></script>
+    <script src="../js/dashboard.js"></script>
+</body>
+</html> 
