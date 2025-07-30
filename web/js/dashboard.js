@@ -444,13 +444,13 @@ document.addEventListener('DOMContentLoaded', function() {
         // Update panel content based on mode
         if (mode === '1v1') {
             setupTitle.textContent = 'Configuración 1v1';
-            modeDisplay.innerHTML = '<img src="../Images/runa.png" alt="Runa" class="mode-rune-icon"><span>1v1</span>';
+            modeDisplay.innerHTML = '<img src="../Images/Icons/runa.png" alt="Runa" class="mode-rune-icon"><span>1v1</span>';
             
             // Update setup content for 1v1 mode
             updateSetupContentFor1v1();
         } else if (mode === 'team') {
             setupTitle.textContent = 'Configuración En Equipo';
-            modeDisplay.innerHTML = '<img src="../Images/runa.png" alt="Runa" class="mode-rune-icon"><span>En Equipo</span>';
+            modeDisplay.innerHTML = '<img src="../Images/Icons/runa.png" alt="Runa" class="mode-rune-icon"><span>En Equipo</span>';
             
             // Update setup content for team mode
             updateSetupContentForTeam();
@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Change arena image to runa when configuring
         const arenaImage = document.getElementById('arenaImage');
         if (arenaImage) {
-            arenaImage.src = '../Images/runa.png';
+            arenaImage.src = '../Images/Icons/runa.png';
             arenaImage.alt = 'Runa Mágica';
         }
         
@@ -479,12 +479,14 @@ document.addEventListener('DOMContentLoaded', function() {
         // Clear existing content
         setupContent.innerHTML = '';
         
-        // Add character ID inputs section
+        // Add character selection dropdowns section
         const characterSection = document.createElement('div');
         characterSection.className = 'setup-section';
         characterSection.innerHTML = `
-            <label for="character1Id">ID del Personaje 1:</label>
-            <input type="text" id="character1Id" placeholder="Ingresa el ID del primer personaje" maxlength="10">
+            <label for="character1Select">Personaje 1:</label>
+            <select id="character1Select" class="character-select">
+                <option value="">Selecciona el primer personaje</option>
+            </select>
             <div class="character-preview" id="character1Preview">
                 <i class="ph-question"></i>
                 <span>Personaje no seleccionado</span>
@@ -495,8 +497,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const character2Section = document.createElement('div');
         character2Section.className = 'setup-section';
         character2Section.innerHTML = `
-            <label for="character2Id">ID del Personaje 2:</label>
-            <input type="text" id="character2Id" placeholder="Ingresa el ID del segundo personaje" maxlength="10">
+            <label for="character2Select">Personaje 2:</label>
+            <select id="character2Select" class="character-select">
+                <option value="">Selecciona el segundo personaje</option>
+            </select>
             <div class="character-preview" id="character2Preview">
                 <i class="ph-question"></i>
                 <span>Personaje no seleccionado</span>
@@ -504,8 +508,11 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         setupContent.appendChild(character2Section);
         
-        // Add event listeners for character ID inputs
-        addCharacterIdEventListeners();
+        // Populate dropdowns with characters from API
+        populateCharacterDropdowns();
+        
+        // Add event listeners for character selection dropdowns
+        addCharacterDropdownEventListeners();
     }
     
     function updateSetupContentForTeam() {
@@ -522,7 +529,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="team-characters">
                 <div class="character-input-group">
                     <label for="team1Char1">Personaje 1:</label>
-                    <input type="text" id="team1Char1" placeholder="ID del personaje" maxlength="10">
+                    <select id="team1Char1" class="character-select">
+                        <option value="">Selecciona el personaje</option>
+                    </select>
                     <div class="character-preview" id="team1Char1Preview">
                         <i class="ph-question"></i>
                         <span>No seleccionado</span>
@@ -530,7 +539,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="character-input-group">
                     <label for="team1Char2">Personaje 2:</label>
-                    <input type="text" id="team1Char2" placeholder="ID del personaje" maxlength="10">
+                    <select id="team1Char2" class="character-select">
+                        <option value="">Selecciona el personaje</option>
+                    </select>
                     <div class="character-preview" id="team1Char2Preview">
                         <i class="ph-question"></i>
                         <span>No seleccionado</span>
@@ -538,7 +549,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="character-input-group">
                     <label for="team1Char3">Personaje 3:</label>
-                    <input type="text" id="team1Char3" placeholder="ID del personaje" maxlength="10">
+                    <select id="team1Char3" class="character-select">
+                        <option value="">Selecciona el personaje</option>
+                    </select>
                     <div class="character-preview" id="team1Char3Preview">
                         <i class="ph-question"></i>
                         <span>No seleccionado</span>
@@ -556,7 +569,9 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="team-characters">
                 <div class="character-input-group">
                     <label for="team2Char1">Personaje 1:</label>
-                    <input type="text" id="team2Char1" placeholder="ID del personaje" maxlength="10">
+                    <select id="team2Char1" class="character-select">
+                        <option value="">Selecciona el personaje</option>
+                    </select>
                     <div class="character-preview" id="team2Char1Preview">
                         <i class="ph-question"></i>
                         <span>No seleccionado</span>
@@ -564,7 +579,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="character-input-group">
                     <label for="team2Char2">Personaje 2:</label>
-                    <input type="text" id="team2Char2" placeholder="ID del personaje" maxlength="10">
+                    <select id="team2Char2" class="character-select">
+                        <option value="">Selecciona el personaje</option>
+                    </select>
                     <div class="character-preview" id="team2Char2Preview">
                         <i class="ph-question"></i>
                         <span>No seleccionado</span>
@@ -572,7 +589,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 <div class="character-input-group">
                     <label for="team2Char3">Personaje 3:</label>
-                    <input type="text" id="team2Char3" placeholder="ID del personaje" maxlength="10">
+                    <select id="team2Char3" class="character-select">
+                        <option value="">Selecciona el personaje</option>
+                    </select>
                     <div class="character-preview" id="team2Char3Preview">
                         <i class="ph-question"></i>
                         <span>No seleccionado</span>
@@ -582,26 +601,67 @@ document.addEventListener('DOMContentLoaded', function() {
         `;
         setupContent.appendChild(team2Section);
         
-        // Add event listeners for team character ID inputs
-        addTeamCharacterIdEventListeners();
+        // Populate dropdowns with characters from API
+        populateTeamCharacterDropdowns();
+        
+        // Add event listeners for team character selection dropdowns
+        addTeamCharacterDropdownEventListeners();
     }
     
-    function addCharacterIdEventListeners() {
-        const character1Input = document.getElementById('character1Id');
-        const character2Input = document.getElementById('character2Id');
+    function populateCharacterDropdowns() {
+        const character1Select = document.getElementById('character1Select');
+        const character2Select = document.getElementById('character2Select');
+        
+        if (!character1Select || !character2Select) return;
+        
+        // Clear existing options except the first one
+        character1Select.innerHTML = '<option value="">Selecciona el primer personaje</option>';
+        character2Select.innerHTML = '<option value="">Selecciona el segundo personaje</option>';
+        
+        // Add character options if we have characters loaded
+        if (allCharacters && allCharacters.length > 0) {
+            allCharacters.forEach(personaje => {
+                const option1 = document.createElement('option');
+                option1.value = personaje.id;
+                option1.textContent = `${personaje.Nombre} (${personaje.Categoria})`;
+                character1Select.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = personaje.id;
+                option2.textContent = `${personaje.Nombre} (${personaje.Categoria})`;
+                character2Select.appendChild(option2);
+            });
+        } else {
+            // If no characters loaded, try to load them
+            loadCharactersFromAPI().then(() => {
+                populateCharacterDropdowns();
+            });
+        }
+    }
+    
+    function addCharacterDropdownEventListeners() {
+        const character1Select = document.getElementById('character1Select');
+        const character2Select = document.getElementById('character2Select');
         const character1Preview = document.getElementById('character1Preview');
         const character2Preview = document.getElementById('character2Preview');
         
-        if (character1Input) {
-            character1Input.addEventListener('input', function() {
-                const characterId = this.value.trim();
+        if (character1Select) {
+            character1Select.addEventListener('change', function() {
+                const characterId = this.value;
                 if (characterId) {
-                    // Simulate character lookup
-                    character1Preview.innerHTML = `
-                        <i class="ph-sword"></i>
-                        <span>Personaje ID: ${characterId}</span>
-                    `;
-                    character1Preview.classList.add('character-found');
+                    const selectedCharacter = allCharacters.find(char => char.id === characterId);
+                    if (selectedCharacter) {
+                        const iconClass = getIconForCategory(selectedCharacter.Categoria);
+                        character1Preview.innerHTML = `
+                            <i class="${iconClass}"></i>
+                            <div class="character-info">
+                                <span class="character-name">${selectedCharacter.Nombre}</span>
+                                <span class="character-category">${selectedCharacter.Categoria}</span>
+                                <span class="character-saga">${selectedCharacter.Saga}</span>
+                            </div>
+                        `;
+                        character1Preview.classList.add('character-found');
+                    }
                 } else {
                     character1Preview.innerHTML = `
                         <i class="ph-question"></i>
@@ -612,16 +672,23 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
         
-        if (character2Input) {
-            character2Input.addEventListener('input', function() {
-                const characterId = this.value.trim();
+        if (character2Select) {
+            character2Select.addEventListener('change', function() {
+                const characterId = this.value;
                 if (characterId) {
-                    // Simulate character lookup
-                    character2Preview.innerHTML = `
-                        <i class="ph-sword"></i>
-                        <span>Personaje ID: ${characterId}</span>
-                    `;
-                    character2Preview.classList.add('character-found');
+                    const selectedCharacter = allCharacters.find(char => char.id === characterId);
+                    if (selectedCharacter) {
+                        const iconClass = getIconForCategory(selectedCharacter.Categoria);
+                        character2Preview.innerHTML = `
+                            <i class="${iconClass}"></i>
+                            <div class="character-info">
+                                <span class="character-name">${selectedCharacter.Nombre}</span>
+                                <span class="character-category">${selectedCharacter.Categoria}</span>
+                                <span class="character-saga">${selectedCharacter.Saga}</span>
+                            </div>
+                        `;
+                        character2Preview.classList.add('character-found');
+                    }
                 } else {
                     character2Preview.innerHTML = `
                         <i class="ph-question"></i>
@@ -633,24 +700,78 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    function addTeamCharacterIdEventListeners() {
+    function populateTeamCharacterDropdowns() {
+        const team1Inputs = ['team1Char1', 'team1Char2', 'team1Char3'];
+        const team2Inputs = ['team2Char1', 'team2Char2', 'team2Char3'];
+        
+        // Populate team 1 dropdowns
+        team1Inputs.forEach(inputId => {
+            const select = document.getElementById(inputId);
+            if (select) {
+                select.innerHTML = '<option value="">Selecciona el personaje</option>';
+                
+                if (allCharacters && allCharacters.length > 0) {
+                    allCharacters.forEach(personaje => {
+                        const option = document.createElement('option');
+                        option.value = personaje.id;
+                        option.textContent = `${personaje.Nombre} (${personaje.Categoria})`;
+                        select.appendChild(option);
+                    });
+                }
+            }
+        });
+        
+        // Populate team 2 dropdowns
+        team2Inputs.forEach(inputId => {
+            const select = document.getElementById(inputId);
+            if (select) {
+                select.innerHTML = '<option value="">Selecciona el personaje</option>';
+                
+                if (allCharacters && allCharacters.length > 0) {
+                    allCharacters.forEach(personaje => {
+                        const option = document.createElement('option');
+                        option.value = personaje.id;
+                        option.textContent = `${personaje.Nombre} (${personaje.Categoria})`;
+                        select.appendChild(option);
+                    });
+                }
+            }
+        });
+        
+        // If no characters loaded, try to load them
+        if (!allCharacters || allCharacters.length === 0) {
+            loadCharactersFromAPI().then(() => {
+                populateTeamCharacterDropdowns();
+            });
+        }
+    }
+    
+    function addTeamCharacterDropdownEventListeners() {
         const team1Inputs = ['team1Char1', 'team1Char2', 'team1Char3'];
         const team2Inputs = ['team2Char1', 'team2Char2', 'team2Char3'];
         
         // Add listeners for team 1
         team1Inputs.forEach((inputId, index) => {
-            const input = document.getElementById(inputId);
+            const select = document.getElementById(inputId);
             const preview = document.getElementById(inputId + 'Preview');
             
-            if (input && preview) {
-                input.addEventListener('input', function() {
-                    const characterId = this.value.trim();
+            if (select && preview) {
+                select.addEventListener('change', function() {
+                    const characterId = this.value;
                     if (characterId) {
-                        preview.innerHTML = `
-                            <i class="ph-sword"></i>
-                            <span>Personaje ID: ${characterId}</span>
-                        `;
-                        preview.classList.add('character-found');
+                        const selectedCharacter = allCharacters.find(char => char.id === characterId);
+                        if (selectedCharacter) {
+                            const iconClass = getIconForCategory(selectedCharacter.Categoria);
+                            preview.innerHTML = `
+                                <i class="${iconClass}"></i>
+                                <div class="character-info">
+                                    <span class="character-name">${selectedCharacter.Nombre}</span>
+                                    <span class="character-category">${selectedCharacter.Categoria}</span>
+                                    <span class="character-saga">${selectedCharacter.Saga}</span>
+                                </div>
+                            `;
+                            preview.classList.add('character-found');
+                        }
                     } else {
                         preview.innerHTML = `
                             <i class="ph-question"></i>
@@ -664,18 +785,26 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Add listeners for team 2
         team2Inputs.forEach((inputId, index) => {
-            const input = document.getElementById(inputId);
+            const select = document.getElementById(inputId);
             const preview = document.getElementById(inputId + 'Preview');
             
-            if (input && preview) {
-                input.addEventListener('input', function() {
-                    const characterId = this.value.trim();
+            if (select && preview) {
+                select.addEventListener('change', function() {
+                    const characterId = this.value;
                     if (characterId) {
-                        preview.innerHTML = `
-                            <i class="ph-sword"></i>
-                            <span>Personaje ID: ${characterId}</span>
-                        `;
-                        preview.classList.add('character-found');
+                        const selectedCharacter = allCharacters.find(char => char.id === characterId);
+                        if (selectedCharacter) {
+                            const iconClass = getIconForCategory(selectedCharacter.Categoria);
+                            preview.innerHTML = `
+                                <i class="${iconClass}"></i>
+                                <div class="character-info">
+                                    <span class="character-name">${selectedCharacter.Nombre}</span>
+                                    <span class="character-category">${selectedCharacter.Categoria}</span>
+                                    <span class="character-saga">${selectedCharacter.Saga}</span>
+                                </div>
+                            `;
+                            preview.classList.add('character-found');
+                        }
                     } else {
                         preview.innerHTML = `
                             <i class="ph-question"></i>
@@ -697,7 +826,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Change arena image back to coliseum
         const arenaImage = document.getElementById('arenaImage');
         if (arenaImage) {
-            arenaImage.src = '../Images/campus.png';
+            arenaImage.src = '../Images/Icons/campus.png';
             arenaImage.alt = 'Arena de Batalla';
         }
         
@@ -719,12 +848,118 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Start game functionality
     if (startGameBtn) {
-        startGameBtn.addEventListener('click', function() {
-            // Hide setup panel immediately
-            hideGameSetupPanel();
+        startGameBtn.addEventListener('click', async function() {
+            // Get current game mode
+            const setupTitle = document.getElementById('setupTitle');
+            const isTeamMode = setupTitle && setupTitle.textContent.includes('En Equipo');
             
-            // Show success message
-            showMessage('¡Partida iniciada!', 'success');
+            let characterIds = [];
+            
+            if (isTeamMode) {
+                // Team mode - get all 6 character selections
+                const team1Inputs = ['team1Char1', 'team1Char2', 'team1Char3'];
+                const team2Inputs = ['team2Char1', 'team2Char2', 'team2Char3'];
+                
+                // Get all character selections
+                const allInputs = [...team1Inputs, ...team2Inputs];
+                for (const inputId of allInputs) {
+                    const select = document.getElementById(inputId);
+                    if (!select || !select.value) {
+                        showMessage('Debes seleccionar todos los personajes para ambos equipos', 'error');
+                        return;
+                    }
+                    characterIds.push(select.value);
+                }
+                
+                // Check for duplicates
+                const uniqueIds = new Set(characterIds);
+                if (uniqueIds.size !== characterIds.length) {
+                    showMessage('No puedes seleccionar el mismo personaje más de una vez', 'error');
+                    return;
+                }
+                
+                // For now, we'll use the first character from each team for 1v1 battle
+                // In the future, you could implement team battle logic
+                characterIds = [characterIds[0], characterIds[3]]; // First from team 1 vs first from team 2
+                showMessage('Modo equipo: usando el primer personaje de cada equipo para batalla 1v1', 'info');
+            } else {
+                // 1v1 mode - get two character selections
+                const character1Select = document.getElementById('character1Select');
+                const character2Select = document.getElementById('character2Select');
+                
+                // Check if both characters are selected
+                if (!character1Select || !character2Select || !character1Select.value || !character2Select.value) {
+                    showMessage('Debes seleccionar ambos personajes para iniciar la partida', 'error');
+                    return;
+                }
+                
+                // Check if same character is selected
+                if (character1Select.value === character2Select.value) {
+                    showMessage('No puedes seleccionar el mismo personaje para ambos lados', 'error');
+                    return;
+                }
+                
+                characterIds = [character1Select.value, character2Select.value];
+            }
+            
+            // Show loading state
+            setLoadingState(this, true);
+            this.innerHTML = '<i class="ph-spinner"></i> <span>Iniciando partida...</span>';
+            
+            try {
+                // Get token from localStorage
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No hay token de autenticación. Por favor, inicia sesión nuevamente.');
+                }
+                
+                // Prepare battle data
+                const battleData = {
+                    personaje1Id: characterIds[0],
+                    personaje2Id: characterIds[1]
+                };
+                
+                // Send request to API
+                const response = await fetch(`${API_BASE_URL}/api/batallas`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(battleData)
+                });
+                
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || 'Error al crear la batalla');
+                }
+                
+                const battleResult = await response.json();
+                
+                // Hide setup panel
+                hideGameSetupPanel();
+                
+                // Show success message with battle details
+                const personaje1 = allCharacters.find(char => char.id === characterIds[0]);
+                const personaje2 = allCharacters.find(char => char.id === characterIds[1]);
+                const personaje1Name = personaje1 ? personaje1.Nombre : 'Personaje 1';
+                const personaje2Name = personaje2 ? personaje2.Nombre : 'Personaje 2';
+                
+                showMessage(`¡Batalla creada exitosamente! ${personaje1Name} vs ${personaje2Name}`, 'success');
+                
+                // Redirigir a la interfaz de batalla
+                setTimeout(() => {
+                    window.location.href = 'campobatallas.html';
+                }, 1500);
+                
+            } catch (error) {
+                console.error('Error creating battle:', error);
+                showMessage(`Error: ${error.message}`, 'error');
+            } finally {
+                // Reset button state
+                setLoadingState(this, false);
+                this.innerHTML = '<i class="ph-play"></i> <span>Iniciar Partida</span>';
+            }
         });
     }
     
