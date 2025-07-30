@@ -63,8 +63,8 @@
                             <i class="ph-user-circle"></i>
                         </div>
                         <div class="profile-info">
-                            <h2 class="user-name">Usuario</h2>
-                            <p class="user-email">usuario@email.com</p>
+                            <h2>Gus</h2>
+                            <p>gus@gmail.com</p>
                             <span class="user-level">Nivel 1</span>
                         </div>
                     </div>
@@ -93,51 +93,261 @@
         <section id="characters" class="dashboard-section">
             <div class="section-content">
                 <div class="deck-header">
-                    <h1 class="deck-title">Battle Deck</h1>
-                    <div class="deck-selector">
-                        <button class="deck-btn" data-deck="1">1</button>
-                        <button class="deck-btn" data-deck="2">2</button>
-                        <button class="deck-btn active" data-deck="3">3</button>
+                    <div class="deck-title-section">
+                        <h1 class="deck-title">Battle Deck</h1>
+                        <div class="character-counter">
+                            <span id="totalCharacters">0</span> personajes
+                        </div>
+                    </div>
+                    <div class="deck-controls">
+                        <div class="filter-section">
+                            <select id="categoryFilter" class="filter-select">
+                                <option value="">Todas las categorías</option>
+                                <option value="Héroe">Héroes</option>
+                                <option value="Villano">Villanos</option>
+                                <option value="Antihéroe">Antihéroes</option>
+                                <option value="Antivillano">Antivillanos</option>
+                            </select>
+                            <select id="sagaFilter" class="filter-select">
+                                <option value="">Todas las sagas</option>
+                            </select>
+                            <button id="clearFilters" class="clear-filters-btn">
+                                <i class="ph-x-circle"></i>
+                                Limpiar filtros
+                            </button>
+                        </div>
+
                     </div>
                 </div>
                 
-                <div class="deck-grid characters-grid">
-                    <!-- Los personajes se cargarán dinámicamente desde la API -->
+                <div class="deck-grid">
+                    <div class="character-card">
+                        <div class="card-cost">4</div>
+                        <div class="character-avatar">
+                            <i class="ph-sword"></i>
+                        </div>
+                        <h3>Lumberjack</h3>
+                        <div class="card-level">
+                            <span>Level 1</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="progress-text">1/2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">3</div>
+                        <div class="character-avatar">
+                            <i class="ph-pickaxe"></i>
+                        </div>
+                        <h3>Miner</h3>
+                        <div class="card-level">
+                            <span>Level 1</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="progress-text">1/2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">7</div>
+                        <div class="character-avatar">
+                            <i class="ph-rock"></i>
+                        </div>
+                        <h3>Golem</h3>
+                        <div class="card-level">
+                            <span>Level 2</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 25%"></div>
+                            </div>
+                            <span class="progress-text">1/4</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">3</div>
+                        <div class="character-avatar">
+                            <i class="ph-bow"></i>
+                        </div>
+                        <h3>Princess</h3>
+                        <div class="card-level">
+                            <span>Level 1</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="progress-text">1/2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">3</div>
+                        <div class="character-avatar">
+                            <i class="ph-snowflake"></i>
+                        </div>
+                        <h3>Ice Wizard</h3>
+                        <div class="card-level">
+                            <span>Level 2</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0/4</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">4</div>
+                        <div class="character-avatar">
+                            <i class="ph-fire"></i>
+                        </div>
+                        <h3>Inferno Dragon</h3>
+                        <div class="card-level">
+                            <span>Level 1</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="progress-text">1/2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">6</div>
+                        <div class="character-avatar">
+                            <i class="ph-cannon"></i>
+                        </div>
+                        <h3>Sparky</h3>
+                        <div class="card-level">
+                            <span>Level 1</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="progress-text">1/2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">2</div>
+                        <div class="character-avatar">
+                            <i class="ph-tree"></i>
+                        </div>
+                        <h3>The Log</h3>
+                        <div class="card-level">
+                            <span>Level 1</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="progress-text">1/2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">5</div>
+                        <div class="character-avatar">
+                            <i class="ph-lightning"></i>
+                        </div>
+                        <h3>Lightning</h3>
+                        <div class="card-level">
+                            <span>Level 3</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%"></div>
+                            </div>
+                            <span class="progress-text">3/4</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">4</div>
+                        <div class="character-avatar">
+                            <i class="ph-ghost"></i>
+                        </div>
+                        <h3>Ghost</h3>
+                        <div class="card-level">
+                            <span>Level 2</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 25%"></div>
+                            </div>
+                            <span class="progress-text">1/4</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">3</div>
+                        <div class="character-avatar">
+                            <i class="ph-dagger"></i>
+                        </div>
+                        <h3>Dart Goblin</h3>
+                        <div class="card-level">
+                            <span>Level 1</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="progress-text">1/2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">6</div>
+                        <div class="character-avatar">
+                            <i class="ph-crown"></i>
+                        </div>
+                        <h3>Royal Giant</h3>
+                        <div class="card-level">
+                            <span>Level 4</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">0/5</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">2</div>
+                        <div class="character-avatar">
+                            <i class="ph-snowflake"></i>
+                        </div>
+                        <h3>Ice Spirit</h3>
+                        <div class="card-level">
+                            <span>Level 1</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="progress-text">1/2</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">5</div>
+                        <div class="character-avatar">
+                            <i class="ph-sword"></i>
+                        </div>
+                        <h3>Dark Prince</h3>
+                        <div class="card-level">
+                            <span>Level 2</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 25%"></div>
+                            </div>
+                            <span class="progress-text">1/4</span>
+                        </div>
+                    </div>
+                    
+                    <div class="character-card">
+                        <div class="card-cost">4</div>
+                        <div class="character-avatar">
+                            <i class="ph-bow"></i>
+                        </div>
+                        <h3>Archers</h3>
+                        <div class="card-level">
+                            <span>Level 1</span>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 50%"></div>
+                            </div>
+                            <span class="progress-text">1/2</span>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="deck-footer">
-                    <div class="average-cost">
-                        <i class="ph-drop"></i>
-                        <span>Average Elixir cost: 4.0</span>
-                    </div>
-                    <div class="card-collection">
-                        <h3>Card Collection</h3>
-                        <div class="collection-info">
-                            <span>Found: 65/66</span>
-                            <button class="sort-btn">By Elixir</button>
-                        </div>
-                        <div class="collection-preview">
-                            <div class="preview-card">
-                                <i class="ph-question"></i>
-                            </div>
-                            <div class="preview-card">
-                                <span class="preview-cost">1</span>
-                                <i class="ph-snowflake"></i>
-                                <span class="preview-level">Level 9</span>
-                            </div>
-                            <div class="preview-card">
-                                <span class="preview-cost">1</span>
-                                <i class="ph-skull"></i>
-                                <span class="preview-level">Level 9</span>
-                            </div>
-                            <div class="preview-card">
-                                <span class="preview-cost">2</span>
-                                <i class="ph-fire"></i>
-                                <span class="preview-level">Level 9</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
         </section>
 
@@ -146,20 +356,6 @@
             <div class="section-content">
                 <h1 class="section-title">Batallas</h1>
                 
-                <!-- Battle List View -->
-                <div class="battles-container">
-                    <div class="battles-header">
-                        <h2>Mis Batallas</h2>
-                        <button class="refresh-battles-btn">
-                            <i class="ph-arrows-clockwise"></i>
-                            <span>Actualizar</span>
-                        </button>
-                    </div>
-                    <div class="battles-list">
-                        <!-- Las batallas se cargarán dinámicamente desde la API -->
-                    </div>
-                </div>
-
                 <!-- Battle Setup View -->
                 <div class="battle-arena-container" id="battleSetupView">
                     <div class="battle-arena-content">
@@ -263,7 +459,6 @@
     </main>
 
     <!-- JavaScript -->
-    <script src="../js/apiConfig.js"></script>
     <script src="../js/dashboard.js"></script>
 </body>
 </html> 

@@ -1,14 +1,8 @@
+// API Configuration
+const API_BASE_URL = 'http://localhost:3000';
+
 // Dashboard Navigation and Interactions
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Verificar autenticación
-    if (!apiService || !apiService.isAuthenticated()) {
-        window.location.href = 'login.html';
-        return;
-    }
-    
-    // Cargar datos del usuario
-    loadUserData();
     
     // Navigation functionality with horizontal scroll animation
     const navItems = document.querySelectorAll('.nav-item');
@@ -136,20 +130,13 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize sections on load
     initializeSections();
     
-    // Deck selection functionality
-    const deckBtns = document.querySelectorAll('.deck-btn');
-    deckBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            // Remove active class from all deck buttons
-            deckBtns.forEach(b => b.classList.remove('active'));
-            
-            // Add active class to clicked button
-            this.classList.add('active');
-            
-            const deckNumber = this.getAttribute('data-deck');
-            showMessage(`Deck ${deckNumber} seleccionado`, 'success');
-        });
-    });
+    // Load characters from API
+    loadCharactersFromAPI();
+    
+    // Initialize filters
+    initializeFilters();
+    
+
     
     // Character card hover effects
     const characterCards = document.querySelectorAll('.character-card');
@@ -805,262 +792,278 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // ===== FUNCIONES DE API =====
-    
-    // Cargar datos del usuario
-    async function loadUserData() {
+    // Function to load characters from API
+    async function loadCharactersFromAPI() {
         try {
-            const userSession = localStorage.getItem('userSession');
-            if (userSession) {
-                const user = JSON.parse(userSession);
-                updateUserProfile(user);
+            const response = await fetch(`${API_BASE_URL}/api/personajes`);
+            
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
             
-            // Cargar personajes
-            await loadPersonajes();
+            const personajes = await response.json();
             
-            // Cargar batallas
-            await loadBatallas();
+            if (personajes && personajes.length > 0) {
+                displayCharactersFromAPI(personajes);
+                showMessage(`Cargados ${personajes.length} personajes de la API`, 'success');
+            } else {
+                showMessage('No se encontraron personajes en la API', 'info');
+            }
             
         } catch (error) {
-            console.error('Error cargando datos del usuario:', error);
-            showMessage('Error al cargar datos del usuario', 'error');
+            console.error('Error loading characters:', error);
+            showMessage('Error al cargar personajes. Verifica que la API esté corriendo.', 'error');
         }
     }
-    
-    // Actualizar perfil del usuario
-    function updateUserProfile(user) {
-        const userNameElement = document.querySelector('.user-name');
-        const userEmailElement = document.querySelector('.user-email');
+
+    // Global variable to store all characters
+    let allCharacters = [];
+    let filteredCharacters = [];
+
+    // Function to display characters from API
+    function displayCharactersFromAPI(personajes) {
+        allCharacters = personajes;
+        filteredCharacters = [...personajes];
         
-        if (userNameElement) {
-            userNameElement.textContent = user.nombre || 'Usuario';
-        }
+        // Update character counter
+        updateCharacterCounter();
         
-        if (userEmailElement) {
-            userEmailElement.textContent = user.correo || 'usuario@email.com';
+        // Populate saga filter
+        populateSagaFilter();
+        
+        // Display characters
+        renderCharacterCards();
+    }
+
+    // Function to update character counter
+    function updateCharacterCounter() {
+        const counter = document.getElementById('totalCharacters');
+        if (counter) {
+            counter.textContent = filteredCharacters.length;
         }
     }
-    
-    // Cargar personajes desde la API
-    async function loadPersonajes() {
-        try {
-            const personajes = await apiService.getPersonajes();
-            displayPersonajes(personajes);
-        } catch (error) {
-            console.error('Error cargando personajes:', error);
-            showMessage('Error al cargar personajes', 'error');
-        }
-    }
-    
-    // Mostrar personajes en la interfaz
-    function displayPersonajes(personajes) {
-        const charactersContainer = document.querySelector('.characters-grid');
-        if (!charactersContainer) return;
+
+    // Function to populate saga filter
+    function populateSagaFilter() {
+        const sagaFilter = document.getElementById('sagaFilter');
+        if (!sagaFilter) return;
+
+        // Get unique sagas
+        const sagas = [...new Set(allCharacters.map(char => char.Saga))].sort();
         
-        charactersContainer.innerHTML = '';
+        // Clear existing options except the first one
+        sagaFilter.innerHTML = '<option value="">Todas las sagas</option>';
         
-        personajes.forEach(personaje => {
-            const characterCard = createCharacterCard(personaje);
-            charactersContainer.appendChild(characterCard);
+        // Add saga options
+        sagas.forEach(saga => {
+            const option = document.createElement('option');
+            option.value = saga;
+            option.textContent = saga;
+            sagaFilter.appendChild(option);
         });
     }
-    
-    // Crear tarjeta de personaje
-    function createCharacterCard(personaje) {
-        const card = document.createElement('div');
-        card.className = 'character-card';
-        card.innerHTML = `
-            <div class="character-image">
-                <img src="../Images/knight.png" alt="${personaje.Nombre}">
-            </div>
-            <div class="character-info">
-                <h3>${personaje.Nombre}</h3>
-                <p class="character-category">${personaje.Categoria}</p>
-                <p class="character-saga">${personaje.Saga}</p>
-                <div class="character-stats">
-                    <span class="stat">HP: ${personaje.Vida}</span>
-                    <span class="stat">Energía: ${personaje.Energia}</span>
-                </div>
-                <div class="character-actions">
-                    <button class="action-btn select-btn" data-id="${personaje.id}">Seleccionar</button>
-                    <button class="action-btn edit-btn" data-id="${personaje.id}">Editar</button>
-                </div>
-            </div>
-        `;
+
+    // Function to render character cards
+    function renderCharacterCards() {
+        const deckGrid = document.querySelector('.deck-grid');
         
-        // Agregar event listeners
-        const selectBtn = card.querySelector('.select-btn');
-        const editBtn = card.querySelector('.edit-btn');
-        
-        selectBtn.addEventListener('click', () => selectCharacter(personaje.id));
-        editBtn.addEventListener('click', () => editCharacter(personaje.id));
-        
-        return card;
-    }
-    
-    // Seleccionar personaje
-    function selectCharacter(characterId) {
-        showMessage(`Personaje ${characterId} seleccionado`, 'success');
-        // Aquí puedes implementar la lógica para seleccionar personajes para batallas
-    }
-    
-    // Editar personaje
-    function editCharacter(characterId) {
-        showMessage(`Editando personaje ${characterId}`, 'info');
-        // Aquí puedes implementar la lógica para editar personajes
-    }
-    
-    // Cargar batallas desde la API
-    async function loadBatallas() {
-        try {
-            const batallas = await apiService.getBatallas();
-            displayBatallas(batallas);
-        } catch (error) {
-            console.error('Error cargando batallas:', error);
-            showMessage('Error al cargar batallas', 'error');
-        }
-    }
-    
-    // Mostrar batallas en la interfaz
-    function displayBatallas(batallas) {
-        const battlesContainer = document.querySelector('.battles-list');
-        if (!battlesContainer) return;
-        
-        battlesContainer.innerHTML = '';
-        
-        if (batallas.length === 0) {
-            battlesContainer.innerHTML = '<p class="no-battles">No hay batallas registradas</p>';
+        if (!deckGrid) {
+            console.error('Deck grid not found');
             return;
         }
         
-        batallas.forEach(batalla => {
-            const battleItem = createBattleItem(batalla);
-            battlesContainer.appendChild(battleItem);
+        // Clear existing character cards
+        deckGrid.innerHTML = '';
+        
+        // Create character cards for filtered characters
+        filteredCharacters.forEach(personaje => {
+            const characterCard = createCharacterCard(personaje);
+            deckGrid.appendChild(characterCard);
         });
+        
+        // Update counter
+        updateCharacterCounter();
     }
-    
-    // Crear elemento de batalla
-    function createBattleItem(batalla) {
-        const item = document.createElement('div');
-        item.className = 'battle-item';
-        item.innerHTML = `
-            <div class="battle-info">
-                <h4>${batalla.Personaje1?.nombre || 'Personaje 1'} vs ${batalla.Personaje2?.nombre || 'Personaje 2'}</h4>
-                <p class="battle-status">Estado: ${batalla.Estado}</p>
-                <p class="battle-turn">Turno: ${batalla.TurnoActual}</p>
+
+    // Function to apply filters
+    function applyFilters() {
+        const categoryFilter = document.getElementById('categoryFilter');
+        const sagaFilter = document.getElementById('sagaFilter');
+        
+        if (!categoryFilter || !sagaFilter) return;
+        
+        const selectedCategory = categoryFilter.value;
+        const selectedSaga = sagaFilter.value;
+        
+        // Filter characters
+        filteredCharacters = allCharacters.filter(personaje => {
+            const categoryMatch = !selectedCategory || personaje.Categoria === selectedCategory;
+            const sagaMatch = !selectedSaga || personaje.Saga === selectedSaga;
+            return categoryMatch && sagaMatch;
+        });
+        
+        // Re-render cards
+        renderCharacterCards();
+        
+        // Show filter message
+        if (selectedCategory || selectedSaga) {
+            const filters = [];
+            if (selectedCategory) filters.push(selectedCategory);
+            if (selectedSaga) filters.push(selectedSaga);
+            showMessage(`Filtrado por: ${filters.join(', ')}`, 'info');
+        }
+    }
+
+    // Function to clear filters
+    function clearFilters() {
+        const categoryFilter = document.getElementById('categoryFilter');
+        const sagaFilter = document.getElementById('sagaFilter');
+        
+        if (categoryFilter) categoryFilter.value = '';
+        if (sagaFilter) sagaFilter.value = '';
+        
+        filteredCharacters = [...allCharacters];
+        renderCharacterCards();
+        showMessage('Filtros limpiados', 'success');
+    }
+
+    // Function to create a character card from API data
+    function createCharacterCard(personaje) {
+        const card = document.createElement('div');
+        card.className = 'character-card';
+        card.setAttribute('data-character-id', personaje.id);
+        
+        // Get icon based on category
+        const iconClass = getIconForCategory(personaje.Categoria);
+        
+        // Calculate level based on stats (simple calculation)
+        const level = Math.floor((personaje.Vida + personaje.Energia) / 20) + 1;
+        const maxLevel = 10;
+        const progress = Math.min(100, (level / maxLevel) * 100);
+        
+        card.innerHTML = `
+            <div class="character-avatar">
+                <i class="${iconClass}"></i>
             </div>
-            <div class="battle-actions">
-                <button class="action-btn continue-btn" data-id="${batalla.id}">Continuar</button>
-                <button class="action-btn delete-btn" data-id="${batalla.id}">Eliminar</button>
+            <h3>${personaje.Nombre}</h3>
+            <div class="character-stats">
+                <div class="stat-item-mini">
+                    <span class="stat-label">HP</span>
+                    <span class="stat-value">${personaje.Vida}</span>
+                </div>
+                <div class="stat-item-mini">
+                    <span class="stat-label">EN</span>
+                    <span class="stat-value">${personaje.Energia}</span>
+                </div>
             </div>
         `;
         
-        // Agregar event listeners
-        const continueBtn = item.querySelector('.continue-btn');
-        const deleteBtn = item.querySelector('.delete-btn');
+        // Add click event to show character details
+        card.addEventListener('click', function() {
+            showCharacterDetails(personaje);
+        });
         
-        continueBtn.addEventListener('click', () => continueBattle(batalla.id));
-        deleteBtn.addEventListener('click', () => deleteBattle(batalla.id));
+        return card;
+    }
+
+    // Function to get icon class based on character category
+    function getIconForCategory(categoria) {
+        const iconMap = {
+            'Héroe': 'ph-sword',
+            'Villano': 'ph-skull',
+            'Antihéroe': 'ph-lightning',
+            'Antivillano': 'ph-ghost'
+        };
         
-        return item;
+        return iconMap[categoria] || 'ph-user';
     }
-    
-    // Continuar batalla
-    async function continueBattle(battleId) {
-        try {
-            const batalla = await apiService.getBatallaById(battleId);
-            showBattleInterface(batalla);
-        } catch (error) {
-            console.error('Error cargando batalla:', error);
-            showMessage('Error al cargar la batalla', 'error');
+
+    // Function to show character details
+    function showCharacterDetails(personaje) {
+        const detailsHTML = `
+            <div class="character-details">
+                <h2>${personaje.Nombre}</h2>
+                <p><strong>Categoría:</strong> ${personaje.Categoria}</p>
+                <p><strong>Saga:</strong> ${personaje.Saga}</p>
+                <p><strong>Ciudad:</strong> ${personaje.Ciudad}</p>
+                <p><strong>Vida:</strong> ${personaje.Vida}</p>
+                <p><strong>Energía:</strong> ${personaje.Energia}</p>
+                <p><strong>Combo:</strong> ${personaje.Combo}</p>
+                <p><strong>Ultra:</strong> ${personaje.Ultra}</p>
+                <p><strong>Estado:</strong> ${personaje.Estado}</p>
+                <div class="combos">
+                    <h3>Combos:</h3>
+                    <p>• ${personaje.combo1Name}</p>
+                    <p>• ${personaje.combo2Name}</p>
+                    <p>• ${personaje.combo3Name}</p>
+                    <p><strong>Ultra:</strong> ${personaje.ultraName}</p>
+                </div>
+            </div>
+        `;
+        
+        // Create modal or show in a tooltip
+        showModal(detailsHTML, `${personaje.Nombre} - Detalles`);
+    }
+
+    // Function to show modal
+    function showModal(content, title) {
+        // Remove existing modal
+        const existingModal = document.querySelector('.character-modal');
+        if (existingModal) {
+            existingModal.remove();
         }
-    }
-    
-    // Eliminar batalla
-    async function deleteBattle(battleId) {
-        if (confirm('¿Estás seguro de que quieres eliminar esta batalla?')) {
-            try {
-                await apiService.eliminarBatalla(battleId);
-                showMessage('Batalla eliminada', 'success');
-                loadBatallas(); // Recargar lista
-            } catch (error) {
-                console.error('Error eliminando batalla:', error);
-                showMessage('Error al eliminar la batalla', 'error');
-            }
-        }
-    }
-    
-    // Mostrar interfaz de batalla
-    function showBattleInterface(batalla) {
-        // Aquí puedes implementar la interfaz de batalla
-        showMessage(`Iniciando batalla: ${batalla.Personaje1?.nombre} vs ${batalla.Personaje2?.nombre}`, 'info');
-    }
-    
-    // Crear nueva batalla
-    async function createNewBattle(personaje1Id, personaje2Id) {
-        try {
-            const nuevaBatalla = await apiService.crearBatalla(personaje1Id, personaje2Id);
-            showMessage('¡Nueva batalla creada!', 'success');
-            loadBatallas(); // Recargar lista
-            return nuevaBatalla;
-        } catch (error) {
-            console.error('Error creando batalla:', error);
-            showMessage(error.message || 'Error al crear la batalla', 'error');
-            throw error;
-        }
-    }
-    
-    // Ejecutar acción en batalla
-    async function executeBattleAction(batallaId, personajeId, accion) {
-        try {
-            const resultado = await apiService.ejecutarAccion(batallaId, personajeId, accion);
-            showMessage(resultado.mensaje, 'success');
-            return resultado;
-        } catch (error) {
-            console.error('Error ejecutando acción:', error);
-            showMessage(error.message || 'Error al ejecutar la acción', 'error');
-            throw error;
-        }
-    }
-    
-    // Actualizar logout para usar la API
-    const logoutBtn = document.querySelector('[data-section="logout"]');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                showMessage('Cerrando sesión...', 'info');
-                
-                setTimeout(() => {
-                    if (apiService) {
-                        apiService.logout();
-                    }
-                    window.location.href = '../index.html';
-                }, 1500);
+        
+        const modal = document.createElement('div');
+        modal.className = 'character-modal';
+        modal.innerHTML = `
+            <div class="modal-overlay"></div>
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${title}</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    ${content}
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Add close functionality
+        const closeBtn = modal.querySelector('.modal-close');
+        const overlay = modal.querySelector('.modal-overlay');
+        
+        closeBtn.addEventListener('click', () => modal.remove());
+        overlay.addEventListener('click', () => modal.remove());
+        
+        // Close on escape key
+        document.addEventListener('keydown', function closeOnEscape(e) {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', closeOnEscape);
             }
         });
     }
-    
-    // Botón de actualizar batallas
-    const refreshBattlesBtn = document.querySelector('.refresh-battles-btn');
-    if (refreshBattlesBtn) {
-        refreshBattlesBtn.addEventListener('click', async function() {
-            try {
-                setLoadingState(this, true);
-                this.innerHTML = '<i class="ph-spinner"></i> <span>Actualizando...</span>';
-                
-                await loadBatallas();
-                showMessage('Batallas actualizadas', 'success');
-                
-            } catch (error) {
-                console.error('Error actualizando batallas:', error);
-                showMessage('Error al actualizar batallas', 'error');
-            } finally {
-                setLoadingState(this, false);
-                this.innerHTML = '<i class="ph-arrows-clockwise"></i> <span>Actualizar</span>';
-            }
-        });
+
+    // Function to initialize filters
+    function initializeFilters() {
+        const categoryFilter = document.getElementById('categoryFilter');
+        const sagaFilter = document.getElementById('sagaFilter');
+        const clearFiltersBtn = document.getElementById('clearFilters');
+        
+        // Add event listeners for filters
+        if (categoryFilter) {
+            categoryFilter.addEventListener('change', applyFilters);
+        }
+        
+        if (sagaFilter) {
+            sagaFilter.addEventListener('change', applyFilters);
+        }
+        
+        if (clearFiltersBtn) {
+            clearFiltersBtn.addEventListener('click', clearFilters);
+        }
     }
 
 }); 

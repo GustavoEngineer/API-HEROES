@@ -1,13 +1,8 @@
-// Sistema de Autenticación con API Real
+// API Configuration
+const API_BASE_URL = 'http://localhost:3000';
+
+// Authentication System with API Integration
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // Verificar si ya está autenticado
-    if (apiService && apiService.isAuthenticated()) {
-        // Si ya está autenticado, redirigir al dashboard
-        if (window.location.pathname.includes('login.html') || window.location.pathname.includes('register.html')) {
-            window.location.href = 'dashboard.html';
-        }
-    }
     
     // Login Form Handler
     const loginForm = document.getElementById('loginForm');
@@ -19,34 +14,40 @@ document.addEventListener('DOMContentLoaded', function() {
             const password = document.getElementById('password').value;
             const submitBtn = this.querySelector('.submit-btn');
             
-            // Validación básica
-            if (!email || !password) {
-                showMessage('Por favor completa todos los campos', 'error');
-                return;
-            }
+            // Set loading state
+            setLoadingState(submitBtn, true);
             
             try {
-                // Mostrar estado de carga
-                setLoadingState(submitBtn, true);
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        correo: email,
+                        contrasena: password
+                    })
+                });
                 
-                // Intentar login con la API
-                const response = await apiService.login(email, password);
+                const data = await response.json();
                 
-                showMessage('¡Login exitoso!', 'success');
-                
-                // Guardar información del usuario
-                if (response.usuario) {
-                    localStorage.setItem('userSession', JSON.stringify(response.usuario));
+                if (response.ok) {
+                    // Store token and user data
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.usuario));
+                    
+                    showMessage('¡Login exitoso!', 'success');
+                    
+                    // Redirect to dashboard after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 2000);
+                } else {
+                    showMessage(data.error || 'Error en el login', 'error');
                 }
-                
-                // Redirigir al dashboard después de 2 segundos
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 2000);
-                
             } catch (error) {
-                console.error('Error en login:', error);
-                showMessage(error.message || 'Error al iniciar sesión', 'error');
+                console.error('Error:', error);
+                showMessage('Error de conexión. Verifica que la API esté corriendo.', 'error');
             } finally {
                 setLoadingState(submitBtn, false);
             }
@@ -59,15 +60,13 @@ document.addEventListener('DOMContentLoaded', function() {
         registerForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const firstName = document.getElementById('firstName').value;
-            const lastName = document.getElementById('lastName').value;
-            const username = document.getElementById('username').value;
+            const nombre = document.getElementById('nombre').value;
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const submitBtn = this.querySelector('.submit-btn');
             
-            // Validación
-            if (!firstName || !lastName || !username || !email || !password) {
+            // Simple validation
+            if (!nombre || !email || !password) {
                 showMessage('Por favor completa todos los campos', 'error');
                 return;
             }
@@ -77,29 +76,40 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
+            // Set loading state
+            setLoadingState(submitBtn, true);
+            
             try {
-                // Mostrar estado de carga
-                setLoadingState(submitBtn, true);
+                const response = await fetch(`${API_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nombre: nombre,
+                        correo: email,
+                        contrasena: password
+                    })
+                });
                 
-                // Crear nombre completo
-                const nombre = `${firstName} ${lastName}`;
+                const data = await response.json();
                 
-                // Intentar registro con la API
-                await apiService.register(nombre, email, password);
-                
-                showMessage('¡Cuenta creada exitosamente!', 'success');
-                
-                // Limpiar formulario
-                registerForm.reset();
-                
-                // Redirigir al login después de 2 segundos
-                setTimeout(() => {
-                    window.location.href = 'login.html';
-                }, 2000);
-                
+                if (response.ok) {
+                    showMessage('¡Cuenta creada exitosamente!', 'success');
+                    
+                    // Clear form
+                    registerForm.reset();
+                    
+                    // Redirect to login after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2000);
+                } else {
+                    showMessage(data.error || 'Error en el registro', 'error');
+                }
             } catch (error) {
-                console.error('Error en registro:', error);
-                showMessage(error.message || 'Error al crear la cuenta', 'error');
+                console.error('Error:', error);
+                showMessage('Error de conexión. Verifica que la API esté corriendo.', 'error');
             } finally {
                 setLoadingState(submitBtn, false);
             }
@@ -166,7 +176,9 @@ document.addEventListener('DOMContentLoaded', function() {
             button.style.opacity = '0.7';
         } else {
             button.disabled = false;
-            button.textContent = button.getAttribute('data-original-text') || 'LOGIN';
+            const originalText = button.getAttribute('data-original-text') || 
+                               (button.closest('#loginForm') ? 'LOGIN' : 'CREATE ACCOUNT');
+            button.textContent = originalText;
             button.style.opacity = '1';
         }
     }
@@ -176,14 +188,6 @@ document.addEventListener('DOMContentLoaded', function() {
     submitButtons.forEach(button => {
         button.setAttribute('data-original-text', button.textContent);
     });
-    
-    // Función para cerrar sesión (puede ser llamada desde otros archivos)
-    window.logout = function() {
-        if (apiService) {
-            apiService.logout();
-        }
-        window.location.href = '../index.html';
-    };
 }); 
 
  

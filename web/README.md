@@ -1,196 +1,176 @@
-# Game Anywhere - Frontend
+# Game Anywhere - Frontend Web
 
-## Descripción
-Frontend de la aplicación Game Anywhere, un sistema de batallas de personajes con autenticación y gestión de partidas.
+Este es el frontend web de la aplicación Game Anywhere, diseñado con un estilo moderno y gaming-friendly.
 
-## Características
-- ✅ **Autenticación completa** con API real
-- ✅ **Gestión de personajes** desde la base de datos
-- ✅ **Sistema de batallas** 1v1 y 3v3
-- ✅ **Interfaz responsiva** y moderna
-- ✅ **Diseño inspirado en Clash Royale** con gradientes azules y dorados
+## 🎮 Características
 
-## Estructura del Proyecto
+- **Diseño Responsivo**: Adaptable a diferentes tamaños de pantalla
+- **Tema Gaming**: Colores vibrantes y tipografía especializada para videojuegos
+- **Animaciones**: Efectos visuales suaves y atractivos
+- **Validación en Tiempo Real**: Validación de formularios con feedback visual
+- **Autenticación Completa**: Sistema de login y registro con manejo de tokens
+- **Personaje 3D**: Elemento visual animado que flota suavemente
+
+## 📁 Estructura del Proyecto
 
 ```
 web/
-├── css/
-│   ├── styles.css          # Estilos principales
-│   └── dashboard.css       # Estilos del dashboard
 ├── html/
 │   ├── login.html          # Página de inicio de sesión
-│   ├── register.html       # Página de registro
-│   └── dashboard.html      # Dashboard principal
+│   └── register.html       # Página de registro
+├── css/
+│   └── styles.css          # Estilos principales
 ├── js/
-│   ├── apiConfig.js        # Configuración y servicios de API
-│   ├── auth.js             # Lógica de autenticación
-│   └── dashboard.js        # Funcionalidad del dashboard
-├── Images/                 # Recursos gráficos
-└── index.html             # Página de bienvenida
+│   └── auth.js            # Lógica de autenticación
+├── assets/                # Recursos estáticos (imágenes, iconos, etc.)
+└── README.md              # Este archivo
 ```
 
-## Conexión con la API
+## 🎨 Diseño y Colores
 
-### Configuración
-El frontend se conecta automáticamente a la API según el entorno:
-- **Desarrollo**: `http://localhost:3000`
-- **Producción**: `https://api-heroes-3l62.onrender.com`
+### Paleta de Colores
+- **Verde Principal**: `#00ff88` - Color base del tema
+- **Verde Secundario**: `#00cc6a` - Gradientes y acentos
+- **Naranja**: `#ff6b35` - Botones y elementos interactivos
+- **Naranja Claro**: `#ff8c42` - Hover states
+- **Gris Oscuro**: `#1a1a1a` - Textos principales
+- **Gris Medio**: `#444` - Elementos secundarios
 
-### Endpoints Utilizados
+### Tipografías
+- **Orbitron**: Para títulos y elementos destacados (fuente gaming)
+- **Rajdhani**: Para texto general y formularios
 
-#### Autenticación
-- `POST /auth/login` - Iniciar sesión
-- `POST /auth/register` - Registrar usuario
+## 🚀 Cómo Usar
 
-#### Personajes
-- `GET /api/personajes` - Obtener todos los personajes
-- `GET /api/personajes/:id` - Obtener personaje por ID
-- `POST /api/personajes` - Crear nuevo personaje
-- `PUT /api/personajes/:id` - Actualizar personaje
-- `DELETE /api/personajes/:id` - Eliminar personaje
-- `GET /api/personajes/sagas` - Obtener sagas disponibles
+### 1. Abrir las Páginas
+- **Login**: Abre `html/login.html` en tu navegador
+- **Registro**: Abre `html/register.html` en tu navegador
 
-#### Batallas
-- `GET /api/batallas` - Obtener batallas del usuario
-- `GET /api/batallas/:id` - Obtener batalla por ID
-- `POST /api/batallas` - Crear nueva batalla
-- `POST /api/batallas/accion` - Ejecutar acción en batalla
-- `DELETE /api/batallas/:id` - Eliminar batalla
-- `GET /api/batallas/:id/historial` - Obtener historial de batalla
-- `GET /api/batallas/reglas` - Obtener reglas del juego
+### 2. Configuración de la API
+El frontend está configurado para conectarse con la API en `http://localhost:3000/api`. Si tu API está en una URL diferente, modifica la constante `API_BASE_URL` en `js/auth.js`.
 
-#### Batallas 3v3
-- `GET /api/batallas3v3` - Obtener batallas 3v3
-- `POST /api/batallas3v3` - Crear batalla 3v3
-- `POST /api/batallas3v3/accion` - Ejecutar acción en batalla 3v3
+### 3. Funcionalidades
 
-## Funcionalidades Implementadas
+#### Login
+- Validación de email/username y contraseña
+- Toggle de visibilidad de contraseña
+- Mensajes de error/éxito
+- Redirección automática tras login exitoso
 
-### 🔐 Autenticación
-- Login con email y contraseña
-- Registro de nuevos usuarios
-- Gestión de tokens JWT
-- Redirección automática según estado de autenticación
+#### Registro
+- Validación de todos los campos requeridos
+- Verificación de formato de email
+- Validación de longitud de contraseña
+- Redirección al login tras registro exitoso
 
-### 👤 Perfil de Usuario
-- Visualización de datos del usuario
-- Estadísticas de juego
-- Gestión de sesión
+## 🔧 Características Técnicas
 
-### ⚔️ Personajes
-- Lista dinámica de personajes desde la API
-- Filtros por categoría y saga
-- Acciones de selección y edición
-- Visualización de estadísticas
+### Validación de Formularios
+- Validación en tiempo real
+- Mensajes de error específicos
+- Estilos visuales para campos con error
+- Limpieza automática de errores
 
-### 🏆 Batallas
-- Lista de batallas del usuario
-- Creación de nuevas batallas
-- Continuación de batallas existentes
-- Eliminación de batallas
-- Actualización en tiempo real
+### Gestión de Autenticación
+- Almacenamiento seguro de tokens
+- Verificación de expiración (24 horas)
+- Redirección automática para páginas protegidas
+- Logout con limpieza de datos
 
-### 🎮 Sistema de Juego
-- Configuración de partidas 1v1 y 3v3
-- Selección de personajes
-- Interfaz de batalla
-- Ejecución de acciones por turnos
+### Notificaciones
+- Sistema de notificaciones toast
+- Diferentes tipos: éxito, error, info
+- Animaciones suaves
+- Auto-eliminación después de 5 segundos
 
-## Tecnologías Utilizadas
-
-- **HTML5** - Estructura semántica
-- **CSS3** - Estilos modernos con gradientes y animaciones
-- **JavaScript ES6+** - Funcionalidad interactiva
-- **Fetch API** - Comunicación con el backend
-- **LocalStorage** - Persistencia de datos de sesión
-
-## Instalación y Uso
-
-1. **Clonar el repositorio**
-   ```bash
-   git clone <repository-url>
-   cd web
-   ```
-
-2. **Abrir en el navegador**
-   - Simplemente abre `index.html` en tu navegador
-   - O usa un servidor local:
-   ```bash
-   python -m http.server 8000
-   # o
-   npx serve .
-   ```
-
-3. **Configurar la API**
-   - Asegúrate de que la API esté ejecutándose
-   - Para desarrollo: `http://localhost:3000`
-   - Para producción: `https://api-heroes-3l62.onrender.com`
-
-## Características de Diseño
-
-### 🎨 Paleta de Colores
-- **Azul principal**: `#0096ff` - Elementos principales
-- **Azul claro**: `#00CED1` - Acentos y hover
-- **Dorado**: `#FFD700` - Títulos y elementos destacados
-- **Gris oscuro**: `#404040` - Fondos y contenedores
-- **Blanco**: `#FFFFFF` - Texto principal
-
-### 🌟 Efectos Visuales
-- Gradientes suaves y modernos
-- Animaciones de hover y transiciones
-- Efectos de sombra y blur
-- Diseño glassmorphism
-- Responsive design
-
-### 📱 Responsive Design
+### Responsive Design
 - Mobile-first approach
-- Breakpoints: 768px, 480px
-- Navegación adaptativa
-- Elementos redimensionables
+- Breakpoints en 768px y 480px
+- Personaje oculto en pantallas muy pequeñas
+- Formularios adaptables
 
-## Estado del Proyecto
+## 🎯 Elementos Visuales
 
-### ✅ Completado
-- [x] Conexión completa con la API
-- [x] Sistema de autenticación
-- [x] Gestión de personajes
-- [x] Sistema de batallas básico
-- [x] Interfaz responsiva
-- [x] Manejo de errores
-- [x] Persistencia de sesión
+### Personaje 3D
+- Creado completamente con CSS
+- Animación de flotación suave
+- Detalles: pelo verde, chaqueta, zapatos, arma
+- Plataforma con sombra
 
-### 🚧 En Desarrollo
-- [ ] Interfaz de batalla en tiempo real
-- [ ] Chat en partidas
-- [ ] Sistema de rankings
-- [ ] Logros y recompensas
-- [ ] Modo espectador
+### Efectos Visuales
+- Gradientes en botones y fondos
+- Sombras y blur effects
+- Transiciones suaves
+- Hover effects interactivos
 
-### 📋 Pendiente
-- [ ] Notificaciones push
-- [ ] Modo offline
-- [ ] PWA (Progressive Web App)
-- [ ] Tests automatizados
-- [ ] Optimización de rendimiento
+### Patrón de Fondo
+- Patrón geométrico sutil
+- Efecto de profundidad
+- No interfiere con la legibilidad
 
-## Contribución
+## 🔒 Seguridad
 
-1. Fork el proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/AmazingFeature`)
-3. Commit tus cambios (`git commit -m 'Add some AmazingFeature'`)
-4. Push a la rama (`git push origin feature/AmazingFeature`)
-5. Abre un Pull Request
+- Validación tanto en frontend como backend
+- Tokens de autenticación con expiración
+- Sanitización de inputs
+- Protección contra XSS básica
 
-## Licencia
+## 📱 Compatibilidad
 
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
+- **Navegadores Modernos**: Chrome, Firefox, Safari, Edge
+- **Dispositivos**: Desktop, Tablet, Mobile
+- **Resoluciones**: Desde 320px hasta 4K
 
-## Contacto
+## 🛠️ Desarrollo
 
-- **Desarrollador**: [Tu Nombre]
-- **Email**: [tu-email@ejemplo.com]
-- **Proyecto**: [https://github.com/tu-usuario/api-heroes]
+### Para Modificar Estilos
+1. Edita `css/styles.css`
+2. Los cambios se aplican automáticamente al recargar
+
+### Para Modificar Lógica
+1. Edita `js/auth.js`
+2. La clase `AuthManager` maneja toda la lógica de autenticación
+
+### Para Agregar Páginas
+1. Crea nuevo archivo HTML en `html/`
+2. Incluye los mismos enlaces a CSS y JS
+3. Usa la misma estructura de header y footer
+
+## 🎨 Personalización
+
+### Cambiar Colores
+Modifica las variables CSS en `styles.css`:
+```css
+:root {
+    --primary-green: #00ff88;
+    --secondary-green: #00cc6a;
+    --accent-orange: #ff6b35;
+    --dark-gray: #1a1a1a;
+}
+```
+
+### Cambiar Tipografías
+Actualiza los enlaces de Google Fonts en los archivos HTML:
+```html
+<link href="https://fonts.googleapis.com/css2?family=TuFuente:wght@400;700&display=swap" rel="stylesheet">
+```
+
+## 🚀 Próximas Mejoras
+
+- [ ] Modo oscuro/claro
+- [ ] Más animaciones del personaje
+- [ ] Sonidos de interfaz
+- [ ] Página de dashboard
+- [ ] Perfil de usuario
+- [ ] Recuperación de contraseña
+
+## 📞 Soporte
+
+Para problemas o sugerencias, revisa:
+1. La consola del navegador para errores JavaScript
+2. La conexión con la API backend
+3. Los logs del servidor
 
 ---
 
-**¡Gracias por usar Game Anywhere! 🎮✨** 
+**Game Anywhere** - Donde los héroes se conectan 🎮⚡ 
