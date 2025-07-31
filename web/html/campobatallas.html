@@ -24,70 +24,20 @@
         /* Fallback font stack with similar characteristics */
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Righteous:wght@400&display=swap');
 
-        /* Base body with image background */
+        /* Base body with white background */
         body {
             font-family: 'Fredoka One', 'Righteous', cursive;
-            background: 
-                /* Imagen de fondo */
-                url('../Images/wallpapers/fondobatalla1.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
-            color: #FFFFFF;
+            color: #333333;
             min-height: 100vh;
             height: 100vh;
             position: relative;
             overflow-x: hidden;
             margin: 0;
             padding: 0;
+            background-color: #FFFFFF;
         }
 
-        /* Battle Header */
-        .battle-header {
-            background: rgba(15, 26, 46, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 2px solid #0096ff;
-            padding: 1.5rem 2rem;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0, 150, 255, 0.2);
-        }
 
-        .battle-title {
-            font-family: 'Fredoka One', cursive;
-            font-weight: 400;
-            font-size: 2.5rem;
-            color: #FFFFFF;
-            text-transform: uppercase;
-            text-shadow: 3px 3px 0px #000000;
-            margin-bottom: 0.5rem;
-        }
-
-        .battle-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #0096ff, #FFD700);
-            border-radius: 2px;
-        }
-
-        .turn-indicator {
-            font-family: 'Fredoka One', cursive;
-            font-size: 1.2rem;
-            color: #FFD700;
-            text-transform: uppercase;
-            text-shadow: 2px 2px 0px #000000;
-            animation: turnPulse 2s ease-in-out infinite;
-        }
-
-        @keyframes turnPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
 
         /* Control Button */
         .control-btn {
@@ -170,22 +120,29 @@
         }
 
         .history-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
         }
 
         .stat-item {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 1rem;
-            background: rgba(0, 150, 255, 0.1);
-            border: 1px solid rgba(0, 150, 255, 0.3);
-            border-radius: 10px;
+            gap: 0.8rem;
+            padding: 1.2rem;
+            background: #f8f9fa;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
             font-family: 'Fredoka One', cursive;
             font-size: 0.9rem;
-            color: #FFFFFF;
+            color: #333333;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .stat-item i {
@@ -194,17 +151,20 @@
         }
 
         .history-log {
-            background: rgba(15, 26, 46, 0.8);
-            border: 1px solid rgba(0, 150, 255, 0.3);
-            border-radius: 10px;
-            padding: 1rem;
+            background: #f8f9fa;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
         }
 
         .history-log h4 {
             font-family: 'Fredoka One', cursive;
-            color: #0096ff;
-            margin-bottom: 1rem;
+            color: #333333;
+            margin-bottom: 1.2rem;
             text-align: center;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
         }
 
         .history-log-content {
@@ -212,15 +172,17 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
+            gap: 0.8rem;
         }
 
         .history-entry {
-            padding: 0.5rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 5px;
-            font-size: 0.8rem;
+            padding: 0.8rem;
+            background: #ffffff;
+            border-radius: 8px;
+            font-size: 0.85rem;
             border-left: 3px solid #0096ff;
+            color: #333333;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         /* Characters Section */
@@ -406,33 +368,14 @@
         /* Battle Actions */
         .battle-actions {
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            gap: 0.5rem;
+            gap: 1.5rem;
             padding: 1rem;
             position: absolute;
-            bottom: 2rem;
-            right: 2rem;
-        }
-
-        .action-row {
-            display: flex;
-            gap: 1rem;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .top-row {
-            justify-content: center;
-        }
-
-        .middle-row {
-            justify-content: center;
-        }
-
-        .bottom-row {
-            justify-content: center;
+            bottom: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
         }
 
         .action-btn {
@@ -443,8 +386,8 @@
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
-            width: 90px;
-            height: 90px;
+            width: 85px;
+            height: 85px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -453,6 +396,61 @@
                 0 0 20px rgba(0, 150, 255, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
             transform: perspective(1000px) rotateX(5deg);
+        }
+
+        /* Colores específicos para cada acción */
+        .action-btn[data-action="Ultra"] {
+            background: linear-gradient(135deg, rgba(255, 68, 0, 0.95), rgba(255, 140, 0, 0.95));
+            border-color: rgba(255, 68, 0, 0.8);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(255, 68, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn[data-action="Ataque Fuerte"] {
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.95), rgba(160, 82, 45, 0.95));
+            border-color: rgba(139, 69, 19, 0.8);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(139, 69, 19, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn[data-action="Defensa"] {
+            background: linear-gradient(135deg, rgba(0, 150, 255, 0.95), rgba(0, 100, 200, 0.95));
+            border-color: rgba(0, 150, 255, 0.8);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(0, 150, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn[data-action="Ataque Básico"] {
+            background: linear-gradient(135deg, rgba(255, 0, 0, 0.95), rgba(220, 20, 60, 0.95));
+            border-color: rgba(255, 0, 0, 0.8);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(255, 0, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn[data-action="Recargar"] {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.95), rgba(255, 165, 0, 0.95));
+            border-color: rgba(255, 215, 0, 0.8);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(255, 215, 0, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .action-btn[data-action="Combo"] {
+            background: linear-gradient(135deg, rgba(128, 128, 128, 0.95), rgba(64, 64, 64, 0.95));
+            border-color: rgba(128, 128, 128, 0.8);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(128, 128, 128, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .action-btn:hover {
@@ -469,19 +467,135 @@
         }
 
         .action-icon {
-            width: 72px;
-            height: 72px;
+            width: 68px;
+            height: 68px;
             object-fit: contain;
             filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
             max-width: 100%;
             max-height: 100%;
         }
 
+        /* Efectos de Ondas de Energía por color */
+        @keyframes energyWaveFire {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 68, 0, 0.7);
+            }
+            50% {
+                transform: scale(1.15);
+                box-shadow: 0 0 0 10px rgba(255, 68, 0, 0.5);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(255, 68, 0, 0);
+            }
+        }
+
+        @keyframes energyWaveWeapon {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(139, 69, 19, 0.7);
+            }
+            50% {
+                transform: scale(1.15);
+                box-shadow: 0 0 0 10px rgba(139, 69, 19, 0.5);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(139, 69, 19, 0);
+            }
+        }
+
+        @keyframes energyWaveShield {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(0, 150, 255, 0.7);
+            }
+            50% {
+                transform: scale(1.15);
+                box-shadow: 0 0 0 10px rgba(0, 150, 255, 0.5);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(0, 150, 255, 0);
+            }
+        }
+
+        @keyframes energyWavePunch {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.7);
+            }
+            50% {
+                transform: scale(1.15);
+                box-shadow: 0 0 0 10px rgba(255, 0, 0, 0.5);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(255, 0, 0, 0);
+            }
+        }
+
+        @keyframes energyWaveEnergy {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7);
+            }
+            50% {
+                transform: scale(1.15);
+                box-shadow: 0 0 0 10px rgba(255, 215, 0, 0.5);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(255, 215, 0, 0);
+            }
+        }
+
+        @keyframes energyWaveCombo {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(128, 128, 128, 0.7);
+            }
+            50% {
+                transform: scale(1.15);
+                box-shadow: 0 0 0 10px rgba(128, 128, 128, 0.5);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 20px rgba(128, 128, 128, 0);
+            }
+        }
+
+        /* Clases para aplicar las animaciones específicas */
+        .energy-wave-fire {
+            animation: energyWaveFire 0.5s ease-out;
+        }
+
+        .energy-wave-weapon {
+            animation: energyWaveWeapon 0.5s ease-out;
+        }
+
+        .energy-wave-shield {
+            animation: energyWaveShield 0.5s ease-out;
+        }
+
+        .energy-wave-punch {
+            animation: energyWavePunch 0.5s ease-out;
+        }
+
+        .energy-wave-energy {
+            animation: energyWaveEnergy 0.5s ease-out;
+        }
+
+        .energy-wave-combo {
+            animation: energyWaveCombo 0.5s ease-out;
+        }
 
 
 
 
-        /* Character Modal */
+
+        /* Character Modal - Estilo NFT Card */
         .character-modal {
             position: fixed;
             top: 0;
@@ -500,23 +614,22 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
         }
 
         .modal-content {
             position: relative;
-            background: rgba(15, 26, 46, 0.95);
-            backdrop-filter: blur(20px);
-            border: 2px solid rgba(0, 150, 255, 0.3);
-            border-radius: 20px;
+            background: #fefefe;
+            border-radius: 24px;
             padding: 0;
-            max-width: 600px;
+            max-width: 480px;
             width: 90%;
-            max-height: 80vh;
+            max-height: 85vh;
             overflow-y: auto;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-            animation: modalSlideIn 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            animation: modalSlideIn 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
         }
 
         @keyframes modalSlideIn {
@@ -534,73 +647,76 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 1.5rem;
-            border-bottom: 1px solid rgba(0, 150, 255, 0.2);
-            background: rgba(0, 150, 255, 0.1);
-            border-radius: 18px 18px 0 0;
+            padding: 2rem 2rem 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            background: #fefefe;
+            border-radius: 24px 24px 0 0;
         }
 
         .modal-header h3 {
             font-family: 'Fredoka One', cursive;
             font-weight: 400;
-            color: #FFFFFF;
+            color: #333333;
             margin: 0;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             text-transform: uppercase;
-            text-shadow: 2px 2px 0px #000000;
+            letter-spacing: 0.5px;
         }
 
         .modal-close {
             background: none;
             border: none;
-            color: #A0AEC0;
-            font-size: 1.5rem;
+            color: #666666;
+            font-size: 1.3rem;
             cursor: pointer;
             padding: 0.5rem;
             border-radius: 50%;
             transition: all 0.3s ease;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .modal-close:hover {
-            color: #FFD700;
-            background: rgba(255, 215, 0, 0.1);
+            color: #333333;
+            background: rgba(0, 0, 0, 0.05);
             transform: rotate(90deg);
         }
 
         .modal-body {
-            padding: 1.5rem;
+            padding: 2rem;
+            background: #fefefe;
         }
 
         .modal-avatar {
-            width: 100px;
-            height: 100px;
+            width: 120px;
+            height: 120px;
             background: linear-gradient(135deg, #FFD700, #FFA500);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1rem;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+            border: 4px solid #fefefe;
         }
 
         .modal-avatar i {
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: #FFFFFF;
         }
 
         .modal-info h2 {
             font-family: 'Fredoka One', cursive;
             font-weight: 400;
-            color: #FFD700;
+            color: #333333;
             text-align: center;
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem;
             text-transform: uppercase;
-            text-shadow: 2px 2px 0px #000000;
+            font-size: 1.8rem;
+            letter-spacing: 0.5px;
         }
 
         .modal-info .role {
@@ -608,47 +724,120 @@
             color: #0096ff;
             font-family: 'Fredoka One', cursive;
             font-size: 1rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
             text-transform: uppercase;
+            font-weight: 500;
+            letter-spacing: 0.3px;
         }
 
         .modal-stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
+            gap: 1.2rem;
+            margin-bottom: 2rem;
         }
 
         .modal-stat {
-            background: rgba(26, 26, 26, 0.6);
-            border: 1px solid rgba(0, 150, 255, 0.2);
-            border-radius: 8px;
-            padding: 1rem;
+            background: #f8f9fa;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 1.2rem;
             text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .modal-stat:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .modal-stat-label {
-            color: #A0AEC0;
+            color: #666666;
             font-family: 'Fredoka One', cursive;
             font-size: 0.8rem;
             text-transform: uppercase;
             margin-bottom: 0.5rem;
+            letter-spacing: 0.3px;
         }
 
         .modal-stat-value {
-            color: #FFD700;
+            color: #333333;
             font-family: 'Fredoka One', cursive;
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            text-shadow: 1px 1px 0px #000000;
         }
 
         .modal-description {
-            color: #FFFFFF;
+            color: #666666;
             font-family: 'Fredoka One', cursive;
-            font-size: 0.9rem;
-            line-height: 1.4;
+            font-size: 0.95rem;
+            line-height: 1.6;
             text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Estilos para el modal de equipo */
+        .team-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .team-character-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .team-character-item:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-character-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        .team-character-avatar i {
+            font-size: 1.8rem;
+            color: #FFFFFF;
+        }
+
+        .team-character-info {
+            flex: 1;
+        }
+
+        .team-character-name {
+            font-family: 'Fredoka One', cursive;
+            font-size: 1.1rem;
+            color: #333333;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .team-character-status {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.8rem;
+            color: #0096ff;
+            text-transform: uppercase;
+            font-weight: 500;
         }
 
         /* Config Options */
@@ -660,38 +849,40 @@
         }
 
         .config-option-btn {
-            background: linear-gradient(135deg, #0096ff, #0066cc);
-            color: #FFFFFF;
-            border: none;
-            padding: 1.5rem 2rem;
+            background: #f8f9fa;
+            color: #333333;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 1.2rem 1.5rem;
             border-radius: 12px;
             font-family: 'Fredoka One', cursive;
-            font-size: 1rem;
+            font-size: 0.95rem;
             cursor: pointer;
             transition: all 0.3s ease;
             text-transform: uppercase;
-            text-shadow: 2px 2px 0px #000000;
-            box-shadow: 0 8px 20px rgba(0, 150, 255, 0.3);
+            letter-spacing: 0.3px;
             display: flex;
             align-items: center;
             gap: 1rem;
             justify-content: flex-start;
+            font-weight: 500;
         }
 
         .config-option-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(0, 150, 255, 0.4);
-            background: linear-gradient(135deg, #0066cc, #0096ff);
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: rgba(0, 0, 0, 0.12);
         }
 
         .config-option-btn:active {
-            transform: translateY(-1px);
+            transform: translateY(0);
         }
 
         .config-option-btn i {
-            font-size: 1.2rem;
-            width: 30px;
+            font-size: 1.1rem;
+            width: 24px;
             text-align: center;
+            color: #0096ff;
         }
 
         /* Responsive Design */
@@ -725,13 +916,9 @@
             }
 
             .battle-actions {
-                margin: 1rem;
-                padding: 1.5rem;
-            }
-
-            .battle-actions {
                 flex-wrap: wrap;
                 gap: 0.8rem;
+                padding: 1rem;
             }
 
             .action-btn {
@@ -769,8 +956,9 @@
             }
 
             .battle-actions {
-                flex-direction: column;
+                flex-wrap: wrap;
                 gap: 0.5rem;
+                padding: 0.5rem;
             }
 
             .action-btn {
@@ -781,6 +969,8 @@
     </style>
 </head>
 <body>
+
+
 
     <!-- Botón de configuración centrado -->
     <button class="config-btn" onclick="showConfigModal()">
@@ -793,9 +983,9 @@
     </button>
 
     <div class="characters-section">
-        <!-- Lado Izquierdo - Goku -->
+        <!-- Lado Izquierdo - Personaje 1 -->
         <div class="character-side">
-            <div class="character-portrait" onclick="showCharacterModal('goku')" style="left: 2rem;">
+            <div class="character-portrait" data-character="1" style="left: 2rem;">
                 <i class="fas fa-user-ninja"></i>
             </div>
             <div class="character-info">
@@ -803,25 +993,25 @@
                     <div class="stat-group">
                         <div class="stat-label">Vida</div>
                         <div class="health-bar">
-                            <div class="health-fill" style="width: 85%"></div>
-                            <div class="health-text">85/100</div>
+                            <div class="health-fill" style="width: 100%"></div>
+                            <div class="health-text">300</div>
                         </div>
                     </div>
                     <div class="stat-group">
                         <div class="stat-label">Energia</div>
                         <div class="energy-bar">
-                            <div class="energy-fill" style="width: 70%"></div>
-                            <div class="energy-text">35/50</div>
+                            <div class="energy-fill" style="width: 100%"></div>
+                            <div class="energy-text">50</div>
                         </div>
                     </div>
                 </div>
-                <div class="character-name">GOKU</div>
+                <div class="character-name">Personaje 1</div>
             </div>
         </div>
 
-        <!-- Lado Derecho - Vegeta -->
+        <!-- Lado Derecho - Personaje 2 -->
         <div class="character-side" style="justify-content: flex-end;">
-            <div class="character-portrait" onclick="showCharacterModal('vegeta')" style="right: 2rem; left: auto;">
+            <div class="character-portrait" data-character="2" style="right: 2rem; left: auto;">
                 <i class="fas fa-user-ninja"></i>
             </div>
             <div class="character-info" style="margin-left: 0; margin-right: 120px; text-align: right;">
@@ -829,53 +1019,42 @@
                     <div class="stat-group">
                         <div class="stat-label">Vida</div>
                         <div class="health-bar">
-                            <div class="health-fill" style="width: 92%"></div>
-                            <div class="health-text">92/100</div>
+                            <div class="health-fill" style="width: 100%"></div>
+                            <div class="health-text">300</div>
                         </div>
                     </div>
                     <div class="stat-group">
                         <div class="stat-label">Energia</div>
                         <div class="energy-bar">
-                            <div class="energy-fill" style="width: 60%"></div>
-                            <div class="energy-text">30/50</div>
+                            <div class="energy-fill" style="width: 100%"></div>
+                            <div class="energy-text">50</div>
                         </div>
                     </div>
                 </div>
-                <div class="character-name">VEGETA</div>
+                <div class="character-name">Personaje 2</div>
             </div>
         </div>
     </div>
 
     <div class="battle-actions">
-        <!-- Fila superior (1 botón) -->
-        <div class="action-row top-row">
-            <button class="action-btn" data-action="Ultra">
-                <img src="../Images/Icons/storm.png" alt="Ultra" class="action-icon">
-            </button>
-        </div>
-        
-        <!-- Fila media (2 botones) -->
-        <div class="action-row middle-row">
-            <button class="action-btn" data-action="Ataque Fuerte">
-                <img src="../Images/Icons/weapon.png" alt="Ataque Fuerte" class="action-icon">
-            </button>
-            <button class="action-btn" data-action="Defensa">
-                <img src="../Images/Icons/shield.png" alt="Defensa" class="action-icon">
-            </button>
-        </div>
-        
-        <!-- Fila inferior (3 botones) -->
-        <div class="action-row bottom-row">
-            <button class="action-btn" data-action="Ataque Básico">
-                <img src="../Images/Icons/punch.png" alt="Ataque Básico" class="action-icon">
-            </button>
-            <button class="action-btn" data-action="Recargar">
-                <img src="../Images/Icons/energy.png" alt="Recargar" class="action-icon">
-            </button>
-            <button class="action-btn" data-action="Combo">
-                <img src="../Images/Icons/bomb.png" alt="Combo" class="action-icon">
-            </button>
-        </div>
+        <button class="action-btn" data-action="Ultra Move">
+            <img src="../Images/Icons/fire.png" alt="Ultra Move" class="action-icon">
+        </button>
+        <button class="action-btn" data-action="Ataque Fuerte">
+            <img src="../Images/Icons/weapon.png" alt="Ataque Fuerte" class="action-icon">
+        </button>
+        <button class="action-btn" data-action="Defender">
+            <img src="../Images/Icons/shield.png" alt="Defender" class="action-icon">
+        </button>
+        <button class="action-btn" data-action="Ataque Básico">
+            <img src="../Images/Icons/punch.png" alt="Ataque Básico" class="action-icon">
+        </button>
+        <button class="action-btn" data-action="Cargar Energía">
+            <img src="../Images/Icons/energy.png" alt="Cargar Energía" class="action-icon">
+        </button>
+        <button class="action-btn" data-action="Combo">
+            <img src="../Images/Icons/bomb.png" alt="Combo" class="action-icon">
+        </button>
     </div>
 
     <!-- Modal de Información del Personaje -->
@@ -934,17 +1113,9 @@
             </div>
             <div class="modal-body">
                 <div class="config-options">
-                    <button class="config-option-btn" onclick="pauseGame()">
-                        <i class="fas fa-pause"></i>
-                        Pausar Juego
-                    </button>
                     <button class="config-option-btn" onclick="exitGame()">
                         <i class="fas fa-sign-out-alt"></i>
                         Salir de la Partida
-                    </button>
-                    <button class="config-option-btn" onclick="showSettings()">
-                        <i class="fas fa-cog"></i>
-                        Configuración Avanzada
                     </button>
                     <button class="config-option-btn" onclick="showHelp()">
                         <i class="fas fa-question-circle"></i>
@@ -972,21 +1143,8 @@
                             <i class="fas fa-clock"></i>
                             <span>Tiempo de Partida: <span id="gameTime">00:00</span></span>
                         </div>
-                        <div class="stat-item">
-                            <i class="fas fa-sword"></i>
-                            <span>Total de Ataques: <span id="totalAttacks">0</span></span>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-shield"></i>
-                            <span>Total de Defensas: <span id="totalDefenses">0</span></span>
-                        </div>
-                        <div class="stat-item">
-                            <i class="fas fa-star"></i>
-                            <span>Combos Realizados: <span id="totalCombos">0</span></span>
-                        </div>
                     </div>
                     <div class="history-log">
-                        <h4>Registro Detallado</h4>
                         <div id="historyLogContent" class="history-log-content">
                             <!-- El contenido del historial se cargará dinámicamente -->
                         </div>
@@ -996,248 +1154,7 @@
         </div>
     </div>
 
-    <script>
-        // Datos de los personajes
-        const characterData = {
-            goku: {
-                name: 'GOKU',
-                role: 'HÉROE',
-                health: 100,
-                energy: 50,
-                attack: 85,
-                defense: 75,
-                description: 'Guerrero legendario con un corazón puro y un poder increíble. Maestro del Kamehameha y protector de la Tierra.'
-            },
-            vegeta: {
-                name: 'VEGETA',
-                role: 'RIVAL',
-                health: 100,
-                energy: 50,
-                attack: 90,
-                defense: 80,
-                description: 'Príncipe guerrero del planeta Vegeta. Orgulloso y poderoso, siempre busca superar sus límites.'
-            }
-        };
-
-        // Función para mostrar el modal del personaje
-        function showCharacterModal(character) {
-            const modal = document.getElementById('characterModal');
-            const data = characterData[character];
-            
-            document.getElementById('modalCharacterName').textContent = data.name;
-            document.getElementById('modalCharacterRole').textContent = data.role;
-            document.getElementById('modalHealth').textContent = data.health;
-            document.getElementById('modalEnergy').textContent = data.energy;
-            document.getElementById('modalAttack').textContent = data.attack;
-            document.getElementById('modalDefense').textContent = data.defense;
-            document.getElementById('modalDescription').textContent = data.description;
-            
-            modal.style.display = 'flex';
-        }
-
-        // Función para cerrar el modal
-        function closeModal() {
-            document.getElementById('characterModal').style.display = 'none';
-        }
-
-        // Función para mostrar el modal de configuración
-        function showConfigModal() {
-            document.getElementById('configModal').style.display = 'flex';
-        }
-
-        // Función para cerrar el modal de configuración
-        function closeConfigModal() {
-            document.getElementById('configModal').style.display = 'none';
-        }
-
-        // Función para pausar el juego
-        function pauseGame() {
-            alert('Juego pausado');
-            closeConfigModal();
-        }
-
-        // Función para salir del juego
-        function exitGame() {
-            if (confirm('¿Estás seguro de que quieres salir de la partida?')) {
-                alert('Saliendo de la partida...');
-                // Aquí puedes agregar la lógica para salir del juego
-                closeConfigModal();
-            }
-        }
-
-        // Función para mostrar configuración avanzada
-        function showSettings() {
-            alert('Configuración avanzada - Funcionalidad en desarrollo');
-            closeConfigModal();
-        }
-
-        // Función para mostrar ayuda
-        function showHelp() {
-            alert('Ayuda del juego:\n\n- Haz clic en los personajes para ver su información\n- Usa los botones de acción para atacar\n- El turno cambia automáticamente\n- Usa el botón de configuración para más opciones');
-            closeConfigModal();
-        }
-
-        // Cerrar modal con Escape
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeModal();
-                closeConfigModal();
-                closeHistoryModal();
-            }
-        });
-
-        // Cerrar modal al hacer clic fuera
-        document.addEventListener('click', function(event) {
-            const characterModal = document.getElementById('characterModal');
-            const configModal = document.getElementById('configModal');
-            const historyModal = document.getElementById('historyModal');
-            if (event.target === characterModal) {
-                closeModal();
-            }
-            if (event.target === configModal) {
-                closeConfigModal();
-            }
-            if (event.target === historyModal) {
-                closeHistoryModal();
-            }
-        });
-
-        // Simulación de batalla
-        let currentTurn = 'goku';
-        const turnIndicator = document.querySelector('.turn-indicator');
-
-        function switchTurn() {
-            currentTurn = currentTurn === 'goku' ? 'vegeta' : 'goku';
-            turnIndicator.textContent = `Turno de ${currentTurn === 'goku' ? 'Goku' : 'Vegeta'}`;
-        }
-
-        // Cambiar turno cada 3 segundos para demostración
-        setInterval(switchTurn, 3000);
-
-        // Variables para el historial de la partida
-        let gameStartTime = Date.now();
-        let gameHistory = [];
-        let totalAttacks = 0;
-        let totalDefenses = 0;
-        let totalCombos = 0;
-
-        // Función para agregar entrada al historial
-        function addHistoryEntry(action, description, damage = 0) {
-            const timestamp = new Date().toLocaleTimeString();
-            const entry = {
-                timestamp: timestamp,
-                action: action,
-                description: description,
-                damage: damage
-            };
-            gameHistory.push(entry);
-            
-            // Actualizar contadores
-            if (action === 'attack') totalAttacks++;
-            if (action === 'defense') totalDefenses++;
-            if (action === 'combo') totalCombos++;
-        }
-
-        // Función para mostrar el modal de historial
-        function showHistoryModal() {
-            const modal = document.getElementById('historyModal');
-            modal.style.display = 'flex';
-            
-            // Actualizar estadísticas
-            updateHistoryStats();
-            
-            // Actualizar registro detallado
-            updateHistoryLog();
-        }
-
-        // Función para cerrar el modal de historial
-        function closeHistoryModal() {
-            document.getElementById('historyModal').style.display = 'none';
-        }
-
-        // Función para actualizar estadísticas del historial
-        function updateHistoryStats() {
-            const gameTimeElement = document.getElementById('gameTime');
-            const totalAttacksElement = document.getElementById('totalAttacks');
-            const totalDefensesElement = document.getElementById('totalDefenses');
-            const totalCombosElement = document.getElementById('totalCombos');
-            
-            // Calcular tiempo de partida
-            const currentTime = Date.now();
-            const gameTime = Math.floor((currentTime - gameStartTime) / 1000);
-            const minutes = Math.floor(gameTime / 60);
-            const seconds = gameTime % 60;
-            const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-            
-            gameTimeElement.textContent = timeString;
-            totalAttacksElement.textContent = totalAttacks;
-            totalDefensesElement.textContent = totalDefenses;
-            totalCombosElement.textContent = totalCombos;
-        }
-
-        // Función para actualizar el registro detallado
-        function updateHistoryLog() {
-            const logContent = document.getElementById('historyLogContent');
-            logContent.innerHTML = '';
-            
-            if (gameHistory.length === 0) {
-                logContent.innerHTML = '<div class="history-entry">No hay acciones registradas aún.</div>';
-                return;
-            }
-            
-            gameHistory.forEach(entry => {
-                const entryElement = document.createElement('div');
-                entryElement.className = 'history-entry';
-                
-                let damageText = '';
-                if (entry.damage > 0) {
-                    damageText = ` (${entry.damage} daño)`;
-                }
-                
-                entryElement.innerHTML = `
-                    <strong>${entry.timestamp}</strong> - ${entry.description}${damageText}
-                `;
-                logContent.appendChild(entryElement);
-            });
-            
-            // Scroll al final
-            logContent.scrollTop = logContent.scrollHeight;
-        }
-
-        // Agregar funcionalidad a los botones de acción
-        document.querySelectorAll('.action-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                const action = this.getAttribute('data-action');
-                
-                // Agregar al historial
-                const characterName = currentTurn === 'goku' ? 'Goku' : 'Vegeta';
-                let actionType = 'attack';
-                let damage = Math.floor(Math.random() * 20) + 10; // Daño aleatorio entre 10-30
-                
-                if (action.includes('Defensa')) {
-                    actionType = 'defense';
-                    damage = 0;
-                } else if (action.includes('Combo') || action.includes('Ultra')) {
-                    actionType = 'combo';
-                    damage = Math.floor(Math.random() * 30) + 20; // Daño aleatorio entre 20-50
-                }
-                
-                addHistoryEntry(actionType, `${characterName} usa ${action}`, damage);
-                
-                // Cambiar turno después de una acción
-                setTimeout(switchTurn, 1000);
-            });
-        });
-
-        // Inicializar historial con algunas entradas de ejemplo
-        document.addEventListener('DOMContentLoaded', function() {
-            addHistoryEntry('start', '¡La batalla ha comenzado! Goku y Vegeta se enfrentan.');
-            addHistoryEntry('attack', 'Goku usa Ataque Básico', 15);
-            addHistoryEntry('attack', 'Vegeta contraataca con Ataque Especial', 20);
-            addHistoryEntry('defense', 'Goku se defiende - Reduce el daño en 50%');
-            addHistoryEntry('combo', 'Vegeta usa Transformación - Poder de ataque aumentado');
-            addHistoryEntry('attack', 'Goku lanza Kamehameha - ¡Daño crítico!', 35);
-        });
-    </script>
+    <!-- Incluir el sistema de batalla -->
+    <script src="../js/battle.js"></script>
 </body>
 </html> 

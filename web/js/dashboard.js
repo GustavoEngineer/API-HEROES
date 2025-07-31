@@ -130,6 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize sections on load
     initializeSections();
     
+    // Load user data from localStorage
+    loadUserData();
+    
     // Load characters from API
     loadCharactersFromAPI();
     
@@ -877,11 +880,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     showMessage('No puedes seleccionar el mismo personaje más de una vez', 'error');
                     return;
                 }
-                
-                // For now, we'll use the first character from each team for 1v1 battle
-                // In the future, you could implement team battle logic
-                characterIds = [characterIds[0], characterIds[3]]; // First from team 1 vs first from team 2
-                showMessage('Modo equipo: usando el primer personaje de cada equipo para batalla 1v1', 'info');
             } else {
                 // 1v1 mode - get two character selections
                 const character1Select = document.getElementById('character1Select');
@@ -913,14 +911,28 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error('No hay token de autenticación. Por favor, inicia sesión nuevamente.');
                 }
                 
-                // Prepare battle data
-                const battleData = {
-                    personaje1Id: characterIds[0],
-                    personaje2Id: characterIds[1]
-                };
+                // Prepare battle data based on mode
+                let battleData;
+                let apiEndpoint;
+                
+                if (isTeamMode) {
+                    // 3v3 battle data - enviar arrays simples de IDs
+                    battleData = {
+                        equipo1: [characterIds[0], characterIds[1], characterIds[2]],
+                        equipo2: [characterIds[3], characterIds[4], characterIds[5]]
+                    };
+                    apiEndpoint = `${API_BASE_URL}/api/batallas3v3`;
+                } else {
+                    // 1v1 battle data
+                    battleData = {
+                        personaje1Id: characterIds[0],
+                        personaje2Id: characterIds[1]
+                    };
+                    apiEndpoint = `${API_BASE_URL}/api/batallas`;
+                }
                 
                 // Send request to API
-                const response = await fetch(`${API_BASE_URL}/api/batallas`, {
+                const response = await fetch(apiEndpoint, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -940,12 +952,49 @@ document.addEventListener('DOMContentLoaded', function() {
                 hideGameSetupPanel();
                 
                 // Show success message with battle details
-                const personaje1 = allCharacters.find(char => char.id === characterIds[0]);
-                const personaje2 = allCharacters.find(char => char.id === characterIds[1]);
-                const personaje1Name = personaje1 ? personaje1.Nombre : 'Personaje 1';
-                const personaje2Name = personaje2 ? personaje2.Nombre : 'Personaje 2';
-                
-                showMessage(`¡Batalla creada exitosamente! ${personaje1Name} vs ${personaje2Name}`, 'success');
+                if (isTeamMode) {
+                    // Get team member names for 3v3
+                    const equipo1Names = characterIds.slice(0, 3).map(id => {
+                        const char = allCharacters.find(char => char.id === id);
+                        return char ? char.Nombre : 'Personaje';
+                    });
+                    const equipo2Names = characterIds.slice(3, 6).map(id => {
+                        const char = allCharacters.find(char => char.id === id);
+                        return char ? char.Nombre : 'Personaje';
+                    });
+                    
+                    // Guardar información de la batalla 3v3 en localStorage
+                    const battleInfo = {
+                        equipo1: characterIds.slice(0, 3).map(id => {
+                            const char = allCharacters.find(char => char.id === id);
+                            return {
+                                id: id,
+                                nombre: char ? char.Nombre : 'Personaje'
+                            };
+                        }),
+                        equipo2: characterIds.slice(3, 6).map(id => {
+                            const char = allCharacters.find(char => char.id === id);
+                            return {
+                                id: id,
+                                nombre: char ? char.Nombre : 'Personaje'
+                            };
+                        })
+                    };
+                    localStorage.setItem('currentBattle', JSON.stringify(battleInfo));
+                    
+                    showMessage(`¡Batalla 3v3 creada exitosamente! Equipo 1: ${equipo1Names.join(', ')} vs Equipo 2: ${equipo2Names.join(', ')}`, 'success');
+                } else {
+                    // 1v1 battle message
+                    const personaje1 = allCharacters.find(char => char.id === characterIds[0]);
+                    const personaje2 = allCharacters.find(char => char.id === characterIds[1]);
+                    const personaje1Name = personaje1 ? personaje1.Nombre : 'Personaje 1';
+                    const personaje2Name = personaje2 ? personaje2.Nombre : 'Personaje 2';
+                    
+                    // Guardar información de la batalla 1v1 en localStorage
+                    localStorage.setItem('currentBattle', JSON.stringify(battleResult));
+                    
+                    showMessage(`¡Batalla creada exitosamente! ${personaje1Name} vs ${personaje2Name}`, 'success');
+                }
                 
                 // Redirigir a la interfaz de batalla
                 setTimeout(() => {
@@ -1298,6 +1347,43 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (clearFiltersBtn) {
             clearFiltersBtn.addEventListener('click', clearFilters);
+        }
+    }
+
+    // Function to load and display user data from localStorage
+    function loadUserData() {
+        try {
+            // Get user data from localStorage
+            const userData = localStorage.getItem('user');
+            
+            if (userData) {
+                const user = JSON.parse(userData);
+                
+                // Update profile information
+                const userNameElement = document.getElementById('userName');
+                const userEmailElement = document.getElementById('userEmail');
+                
+                if (userNameElement && user.nombre) {
+                    userNameElement.textContent = user.nombre;
+                }
+                
+                if (userEmailElement && user.correo) {
+                    userEmailElement.textContent = user.correo;
+                }
+                
+                console.log('User data loaded successfully:', user);
+            } else {
+                console.warn('No user data found in localStorage');
+                showMessage('No se encontraron datos de usuario. Por favor, inicia sesión nuevamente.', 'error');
+                
+                // Redirect to login after 3 seconds
+                setTimeout(() => {
+                    window.location.href = 'login.html';
+                }, 3000);
+            }
+        } catch (error) {
+            console.error('Error loading user data:', error);
+            showMessage('Error al cargar datos del usuario', 'error');
         }
     }
 

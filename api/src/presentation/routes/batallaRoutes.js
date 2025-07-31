@@ -382,7 +382,7 @@ function estadoBase(personaje) {
   return {
     ID: personaje.PersonajeID,
     Nombre: personaje.Nombre,
-    HP: 100,
+    HP: 300,
     Energia: 50,
     Combo: 0,
     Ultra: 0,
@@ -431,7 +431,9 @@ function toPublicBatalla(batalla) {
     Estado: obj.estado || obj.Estado,
     Ganador: obj.ganador || obj.Ganador,
     TurnoActual: obj.turnoActual || obj.TurnoActual,
-    historial: obj.historial || []
+    historial: obj.historial || [],
+    estadoPersonaje1: obj.estadoPersonaje1,
+    estadoPersonaje2: obj.estadoPersonaje2
   };
 }
 
@@ -467,7 +469,7 @@ router.post('/api/batallas', async (req, res) => {
       estadoPersonaje1: {
         ID: p1._id,
         Nombre: p1.Nombre,
-        HP: 100,
+        HP: 300,
         Energia: 50,
         Combo: 0,
         Ultra: 0,
@@ -477,7 +479,7 @@ router.post('/api/batallas', async (req, res) => {
       estadoPersonaje2: {
         ID: p2._id,
         Nombre: p2.Nombre,
-        HP: 100,
+        HP: 300,
         Energia: 50,
         Combo: 0,
         Ultra: 0,
@@ -528,7 +530,7 @@ router.get('/api/batallas/reglas', (req, res) => {
   res.json({
     reglas: [
       'Batallas 1v1 por turnos. El turno se alterna automáticamente tras cada acción válida.',
-      'Ambos jugadores inician con 100 HP, 50 energía, 0 combo y 0 ultra.',
+      'Ambos jugadores inician con 300 HP, 50 energía, 0 combo y 0 ultra.',
       'El objetivo es reducir el HP del oponente a 0 para ganar la partida.',
       'Ultra Move solo puede usarse una vez por jugador y requiere 100 de ultra.',
       'Los movimientos requieren recursos y aplican efectos inmediatos.',
@@ -630,7 +632,7 @@ router.post('/api/batallas/accion', async (req, res) => {
       case 'Ataque Básico': {
         const dano = randomInt(12, 16);
         danoReal = dano;
-        oponente.HP = clamp(oponente.HP - dano, 0, 100);
+        oponente.HP = clamp(oponente.HP - dano, 0, 300);
         jugador.Combo = clamp(jugador.Combo + 10, 0, 100);
         jugador.Ultra = clamp(jugador.Ultra + 7, 0, 100);
         mensaje = `🗡️ ${jugador.Nombre} realizó un Ataque Básico a ${oponente.Nombre}, causando ${dano} de daño. ¡Gana +10 combo y +7 ultra!`;
@@ -643,8 +645,8 @@ router.post('/api/batallas/accion', async (req, res) => {
         }
         const dano = randomInt(22, 28);
         danoReal = dano;
-        oponente.HP = clamp(oponente.HP - dano, 0, 100);
-        jugador.Energia = clamp(jugador.Energia - 20, 0, 100);
+        oponente.HP = clamp(oponente.HP - dano, 0, 300);
+        jugador.Energia = clamp(jugador.Energia - 20, 0, 50);
         jugador.Combo = clamp(jugador.Combo + 15, 0, 100);
         jugador.Ultra = clamp(jugador.Ultra + 8, 0, 100);
         mensaje = `💪 ${jugador.Nombre} realizó un Ataque Fuerte a ${oponente.Nombre}, causando ${dano} de daño. ¡Gana +15 combo y +8 ultra!`;
@@ -671,8 +673,8 @@ router.post('/api/batallas/accion', async (req, res) => {
           nombreCombo = jugador.combo3Name;
         }
         danoReal = danoCombo;
-        oponente.HP = clamp(oponente.HP - danoCombo, 0, 100);
-        jugador.Energia = clamp(jugador.Energia - 30, 0, 100);
+        oponente.HP = clamp(oponente.HP - danoCombo, 0, 300);
+        jugador.Energia = clamp(jugador.Energia - 30, 0, 50);
         jugador.Combo = clamp(jugador.Combo - 30, 0, 100);
         jugador.Ultra = clamp(jugador.Ultra + 10, 0, 100);
         mensaje = `💥 ${jugador.Nombre} realizó su combo "${nombreCombo}" contra ${oponente.Nombre}, causando ${danoCombo} de daño. ¡Gana +10 ultra!`;
@@ -685,7 +687,7 @@ router.post('/api/batallas/accion', async (req, res) => {
         efectos = { defensa: true };
         break;
       case 'Cargar Energía':
-        jugador.Energia = clamp(jugador.Energia + 30, 0, 100);
+        jugador.Energia = clamp(jugador.Energia + 30, 0, 50);
         jugador.Ultra = clamp(jugador.Ultra + 15, 0, 100);
         jugador.Estado = 'Vulnerable';
         mensaje = `⚡ ${jugador.Nombre} cargó energía y quedó vulnerable.`;
@@ -700,7 +702,7 @@ router.post('/api/batallas/accion', async (req, res) => {
         }
         const dano = randomInt(90, 110);
         danoReal = dano;
-        oponente.HP = clamp(oponente.HP - dano, 0, 100);
+        oponente.HP = clamp(oponente.HP - dano, 0, 300);
         jugador.UltraUsado = true;
         jugador.Ultra = 0;
         mensaje = `💥 ${jugador.Nombre} usó su ultra "${jugador.ultraName}" contra ${oponente.Nombre}, causando ${dano} de daño. ¡Gana +10 ultra!`;
@@ -716,16 +718,16 @@ router.post('/api/batallas/accion', async (req, res) => {
       const reduccion = Math.random() * 0.2 + 0.5;
       const danoOriginal = efectos.dano || 0;
       const danoReducido = Math.round(danoOriginal * reduccion);
-      oponente.HP = clamp(oponente.HP + danoOriginal - danoReducido, 0, 100);
-      oponente.Energia = clamp(oponente.Energia + 10, 0, 100);
+      oponente.HP = clamp(oponente.HP + danoOriginal - danoReducido, 0, 300);
+      oponente.Energia = clamp(oponente.Energia + 10, 0, 50);
       oponente.Ultra = clamp(oponente.Ultra + 20, 0, 100);
       efectos.danoReducido = danoReducido;
       efectos.defensaBonus = { energiaGanada: 10, ultraGanado: 20 };
       danoReal = danoReducido;
       // 🌟 Contraataque especial
       if ((accion === 'Ataque Fuerte' || accion === 'Combo') && oponente.Energia >= 10) {
-        jugador.HP = clamp(jugador.HP - 5, 0, 100);
-        oponente.Energia = clamp(oponente.Energia - 10, 0, 100);
+        jugador.HP = clamp(jugador.HP - 5, 0, 300);
+        oponente.Energia = clamp(oponente.Energia - 10, 0, 50);
         contraataqueRealizado = true;
         efectos.contraataque = {
           mensaje: `${oponente.Nombre} realizó un contraataque automático y causó 5 de daño a ${jugador.Nombre}.`,
