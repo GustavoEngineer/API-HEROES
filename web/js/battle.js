@@ -1,5 +1,7 @@
 // API Configuration
-const API_BASE_URL = 'http://localhost:3000';
+const API_BASE_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:3000' 
+    : 'https://api-heroes-3l62.onrender.com';
 
 // Battle System for 1v1 and Team Battles
 class BattleSystem {
