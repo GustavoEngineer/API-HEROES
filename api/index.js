@@ -14,6 +14,14 @@ const port = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Servir archivos estáticos de la carpeta web
+app.use(express.static(path.join(__dirname, '../web')));
+
+// Servir archivos CSS, JS e imágenes desde rutas específicas
+app.use('/css', express.static(path.join(__dirname, '../web/css')));
+app.use('/js', express.static(path.join(__dirname, '../web/js')));
+app.use('/Images', express.static(path.join(__dirname, '../web/Images')));
+
 // Swagger config básica
 const swaggerDefinition = {
   openapi: '3.0.0',
@@ -35,12 +43,31 @@ const options = {
 
 const swaggerSpec = swaggerJSDoc(options);
 
-// Redirección de la raíz (debe ir antes de los app.use de rutas)
+// Redirección de la raíz a la aplicación web
 app.get('/', (req, res) => {
-  res.redirect('/api-docs/');
+  res.sendFile(path.join(__dirname, '../web/index.html'));
 });
 
+// Ruta para acceder a Swagger manualmente
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+// Rutas para las páginas HTML
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../web/html/login.html'));
+});
+
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, '../web/html/register.html'));
+});
+
+app.get('/dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, '../web/html/dashboard.html'));
+});
+
+app.get('/campobatallas', (req, res) => {
+  res.sendFile(path.join(__dirname, '../web/html/campobatallas.html'));
+});
+
 const personajeRoutes = require('./src/presentation/routes/personajeRoutes');
 const batallaRoutes = require('./src/presentation/routes/batallaRoutes');
 const batalla3v3Routes = require('./src/presentation/routes/batalla3v3Routes');
