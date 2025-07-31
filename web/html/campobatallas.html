@@ -283,6 +283,70 @@
             text-shadow: 2px 2px 0px #000000;
         }
 
+        .character-status {
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.8rem;
+            color: #0096ff;
+            text-transform: uppercase;
+            text-shadow: 1px 1px 0px #000000;
+            margin-top: 0.3rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 8px;
+            background: rgba(0, 150, 255, 0.1);
+            border: 1px solid rgba(0, 150, 255, 0.3);
+            display: inline-block;
+        }
+
+        .character-status.normal {
+            color: #00ff00;
+            background: rgba(0, 255, 0, 0.1);
+            border-color: rgba(0, 255, 0, 0.3);
+        }
+
+        .character-status.aturdido {
+            color: #ffaa00;
+            background: rgba(255, 170, 0, 0.1);
+            border-color: rgba(255, 170, 0, 0.3);
+        }
+
+        .character-status.cansado {
+            color: #ff6666;
+            background: rgba(255, 102, 102, 0.1);
+            border-color: rgba(255, 102, 102, 0.3);
+        }
+
+        .character-status.potenciado {
+            color: #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
+            border-color: rgba(255, 0, 255, 0.3);
+        }
+
+        .character-status.defendiendo {
+            color: #0096ff;
+            background: rgba(0, 150, 255, 0.1);
+            border-color: rgba(0, 150, 255, 0.3);
+        }
+
+        .character-status.vulnerable {
+            color: #ff4444;
+            background: rgba(255, 68, 68, 0.1);
+            border-color: rgba(255, 68, 68, 0.3);
+        }
+
+        /* Animación para ocultar/mostrar barra de ultra */
+        .stat-group {
+            transition: all 0.3s ease;
+        }
+
+        .stat-group.hidden {
+            opacity: 0;
+            transform: scaleY(0);
+            height: 0;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
         .character-role {
             font-family: 'Fredoka One', cursive;
             font-size: 0.8rem;
@@ -344,13 +408,33 @@
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
+        .combo-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            transition: width 0.3s ease;
+            border-radius: 4px;
+            box-shadow: 
+                0 0 10px rgba(255, 215, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .ultra-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #FF4444, #CC0000);
+            transition: width 0.3s ease;
+            border-radius: 4px;
+            box-shadow: 
+                0 0 10px rgba(255, 68, 68, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
         /* Barras del lado derecho (Vegeta) - se llenan de derecha a izquierda */
         .character-side:last-child .health-fill,
         .character-side:last-child .energy-fill {
             margin-left: auto;
         }
 
-        .health-text, .energy-text {
+        .health-text, .energy-text, .combo-text, .ultra-text {
             position: absolute;
             top: 50%;
             left: 50%;
@@ -566,6 +650,72 @@
             }
         }
 
+        /* Indicadores de Ultra */
+        .ultra-gain {
+            position: relative;
+        }
+
+        .ultra-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #FF4444, #CC0000);
+            color: #FFFFFF;
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 0px #000000;
+            z-index: 10;
+        }
+
+        .ultra-gain:hover .ultra-indicator {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        /* Indicadores de Combo */
+        .combo-action {
+            position: relative;
+        }
+
+        .combo-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: #FFFFFF;
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 0.2rem 0.4rem;
+            border-radius: 8px;
+            border: 2px solid #FFFFFF;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            text-shadow: 1px 1px 0px #000000;
+            z-index: 10;
+        }
+
+        .combo-action:hover .combo-indicator {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.6);
+            }
+            100% {
+                box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+            }
+        }
+
         /* Clases para aplicar las animaciones específicas */
         .energy-wave-fire {
             animation: energyWaveFire 0.5s ease-out;
@@ -737,6 +887,12 @@
             margin-bottom: 2rem;
         }
 
+        @media (max-width: 768px) {
+            .modal-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .modal-stat {
             background: #f8f9fa;
             border: 1px solid rgba(0, 0, 0, 0.08);
@@ -796,12 +952,35 @@
             border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 12px;
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
         .team-character-item:hover {
             background: #f0f2f5;
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-character-item.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #e9ecef;
+        }
+
+        .team-character-item.disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .team-character-item.active {
+            background: linear-gradient(135deg, #0096ff, #0066cc);
+            color: #FFFFFF;
+            border-color: #0096ff;
+        }
+
+        .team-character-item.active .team-character-name,
+        .team-character-item.active .team-character-status {
+            color: #FFFFFF;
         }
 
         .team-character-avatar {
@@ -813,6 +992,16 @@
             align-items: center;
             justify-content: center;
             box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        .team-character-avatar.disabled {
+            background: #6c757d;
+            box-shadow: none;
+        }
+
+        .team-character-avatar.active {
+            background: linear-gradient(135deg, #0096ff, #0066cc);
+            box-shadow: 0 4px 12px rgba(0, 150, 255, 0.3);
         }
 
         .team-character-avatar i {
@@ -838,6 +1027,54 @@
             color: #0096ff;
             text-transform: uppercase;
             font-weight: 500;
+        }
+
+        .team-character-status.disabled {
+            color: #6c757d;
+        }
+
+        .team-character-status.active {
+            color: #FFFFFF;
+        }
+
+        /* Botones de navegación del modal de equipo */
+        .team-modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .team-modal-btn {
+            background: #f8f9fa;
+            color: #333333;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-weight: 500;
+        }
+
+        .team-modal-btn:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-modal-btn.primary {
+            background: linear-gradient(135deg, #0096ff, #0066cc);
+            color: #FFFFFF;
+            border-color: #0096ff;
+        }
+
+        .team-modal-btn.primary:hover {
+            background: linear-gradient(135deg, #0066cc, #0096ff);
+            box-shadow: 0 4px 12px rgba(0, 150, 255, 0.3);
         }
 
         /* Config Options */
@@ -977,10 +1214,33 @@
         <i class="fas fa-cog"></i>
     </button>
     
+    <!-- Botón para cambiar modo de demostración -->
+    <button id="demoModeBtn" style="position: absolute; top: 2rem; right: 2rem; background: #FF6B6B; color: #FFFFFF; border: none; width: 60px; height: 60px; border-radius: 50%; font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 1rem; cursor: pointer; text-shadow: 2px 2px 0px #000000; z-index: 1000; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);" onclick="toggleDemoMode()">
+        <i class="fas fa-gamepad"></i>
+    </button>
+    
+    <!-- Botón de prueba -->
+    <button id="testBtn" style="position: absolute; top: 2rem; right: 8rem; background: #28a745; color: #FFFFFF; border: none; width: 60px; height: 60px; border-radius: 50%; font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 1rem; cursor: pointer; text-shadow: 2px 2px 0px #000000; z-index: 1000; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);" onclick="testButton()">
+        <i class="fas fa-play"></i>
+    </button>
+    
     <!-- Botón de historial -->
     <button class="history-btn" onclick="showHistoryModal()">
         <i class="fas fa-history"></i>
     </button>
+
+    <!-- Mensaje informativo para batallas en equipo -->
+    <div id="teamInfo" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 150, 255, 0.9); color: white; padding: 1rem 2rem; border-radius: 12px; font-family: 'Fredoka One', cursive; z-index: 999; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+        <i class="fas fa-users" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+        <div>¡Batalla en Equipo!</div>
+        <div style="font-size: 0.8rem; margin-top: 0.5rem;">Haz clic en los retratos para ver tu equipo</div>
+    </div>
+
+    <!-- Indicador de turno -->
+    <div id="turnIndicator" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(255, 215, 0, 0.9); color: #333; padding: 0.5rem 1rem; border-radius: 8px; font-family: 'Fredoka One', cursive; z-index: 998; text-align: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">
+        <i class="fas fa-clock" style="margin-right: 0.5rem;"></i>
+        <span id="turnText">Turno del Equipo 1</span>
+    </div>
 
     <div class="characters-section">
         <!-- Lado Izquierdo - Personaje 1 -->
@@ -994,18 +1254,33 @@
                         <div class="stat-label">Vida</div>
                         <div class="health-bar">
                             <div class="health-fill" style="width: 100%"></div>
-                            <div class="health-text">300</div>
+                            <div class="health-text">300/300</div>
                         </div>
                     </div>
                     <div class="stat-group">
                         <div class="stat-label">Energia</div>
                         <div class="energy-bar">
                             <div class="energy-fill" style="width: 100%"></div>
-                            <div class="energy-text">50</div>
+                            <div class="energy-text">50/50</div>
+                        </div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">Combo</div>
+                        <div class="energy-bar">
+                            <div class="combo-fill" style="width: 0%"></div>
+                            <div class="combo-text">0/100</div>
+                        </div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">Ultra</div>
+                        <div class="energy-bar">
+                            <div class="ultra-fill" style="width: 0%"></div>
+                            <div class="ultra-text">0/100</div>
                         </div>
                     </div>
                 </div>
                 <div class="character-name">Personaje 1</div>
+                <div class="character-status normal">Normal</div>
             </div>
         </div>
 
@@ -1020,18 +1295,33 @@
                         <div class="stat-label">Vida</div>
                         <div class="health-bar">
                             <div class="health-fill" style="width: 100%"></div>
-                            <div class="health-text">300</div>
+                            <div class="health-text">300/300</div>
                         </div>
                     </div>
                     <div class="stat-group">
                         <div class="stat-label">Energia</div>
                         <div class="energy-bar">
                             <div class="energy-fill" style="width: 100%"></div>
-                            <div class="energy-text">50</div>
+                            <div class="energy-text">50/50</div>
+                        </div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">Combo</div>
+                        <div class="energy-bar">
+                            <div class="combo-fill" style="width: 0%"></div>
+                            <div class="combo-text">0/100</div>
+                        </div>
+                    </div>
+                    <div class="stat-group">
+                        <div class="stat-label">Ultra</div>
+                        <div class="energy-bar">
+                            <div class="ultra-fill" style="width: 0%"></div>
+                            <div class="ultra-text">0/100</div>
                         </div>
                     </div>
                 </div>
                 <div class="character-name">Personaje 2</div>
+                <div class="character-status normal">Normal</div>
             </div>
         </div>
     </div>
@@ -1040,20 +1330,21 @@
         <button class="action-btn" data-action="Ultra Move">
             <img src="../Images/Icons/fire.png" alt="Ultra Move" class="action-icon">
         </button>
-        <button class="action-btn" data-action="Ataque Fuerte">
+        <button class="action-btn" data-action="Ataque Fuerte" title="Ataque Fuerte - Gasta 20 Energía, Gana Ultra">
             <img src="../Images/Icons/weapon.png" alt="Ataque Fuerte" class="action-icon">
         </button>
-        <button class="action-btn" data-action="Defender">
+        <button class="action-btn" data-action="Defender" title="Defender - Gasta 5 Energía, Gana Ultra al defender">
             <img src="../Images/Icons/shield.png" alt="Defender" class="action-icon">
         </button>
-        <button class="action-btn" data-action="Ataque Básico">
+        <button class="action-btn" data-action="Ataque Básico" title="Ataque Básico - Gasta 10 Energía">
             <img src="../Images/Icons/punch.png" alt="Ataque Básico" class="action-icon">
         </button>
-        <button class="action-btn" data-action="Cargar Energía">
+        <button class="action-btn" data-action="Cargar Energía" title="Cargar Energía - Recupera 30 Energía, Gana Ultra, Queda Vulnerable (+5 ultra al ser golpeado)">
             <img src="../Images/Icons/energy.png" alt="Cargar Energía" class="action-icon">
         </button>
-        <button class="action-btn" data-action="Combo">
+        <button class="action-btn combo-action" data-action="Combo" title="Combo - Gasta 30 Energía, Requiere 30+ combo, gana Ultra">
             <img src="../Images/Icons/bomb.png" alt="Combo" class="action-icon">
+            <div class="combo-indicator">30+</div>
         </button>
     </div>
 
@@ -1074,14 +1365,23 @@
                 <div class="modal-info">
                     <h2 id="modalCharacterName">GOKU</h2>
                     <div class="role" id="modalCharacterRole">HÉROE</div>
+                    <div class="character-status normal" id="modalCharacterStatus">Normal</div>
                     <div class="modal-stats">
                         <div class="modal-stat">
                             <div class="modal-stat-label">Vida</div>
-                            <div class="modal-stat-value" id="modalHealth">100</div>
+                            <div class="modal-stat-value" id="modalHealth">300/300</div>
                         </div>
                         <div class="modal-stat">
                             <div class="modal-stat-label">Energía</div>
-                            <div class="modal-stat-value" id="modalEnergy">50</div>
+                            <div class="modal-stat-value" id="modalEnergy">50/50</div>
+                        </div>
+                        <div class="modal-stat">
+                            <div class="modal-stat-label">Combo</div>
+                            <div class="modal-stat-value" id="modalCombo">0/100</div>
+                        </div>
+                        <div class="modal-stat">
+                            <div class="modal-stat-label">Ultra</div>
+                            <div class="modal-stat-value" id="modalUltra">0/100</div>
                         </div>
                         <div class="modal-stat">
                             <div class="modal-stat-label">Ataque</div>
@@ -1096,6 +1396,32 @@
                         Guerrero legendario con un corazón puro y un poder increíble. 
                         Maestro del Kamehameha y protector de la Tierra.
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Equipo (solo para batallas 3v3) -->
+    <div id="teamModal" class="character-modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeTeamModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Miembros del Equipo</h3>
+                <button class="modal-close" onclick="closeTeamModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="team-list" id="teamList">
+                    <!-- Los miembros del equipo se cargarán dinámicamente -->
+                </div>
+                <div class="team-modal-actions">
+                    <button class="team-modal-btn" onclick="closeTeamModal()">
+                        <i class="fas fa-times"></i> Cerrar
+                    </button>
+                    <button class="team-modal-btn primary" onclick="showCharacterFromTeam()">
+                        <i class="fas fa-user"></i> Ver Personaje
+                    </button>
                 </div>
             </div>
         </div>

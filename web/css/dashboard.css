@@ -651,18 +651,21 @@
 .character-avatar {
     width: 60px;
     height: 60px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
+    background: transparent;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 1.5rem auto 0.5rem;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    box-shadow: none;
 }
 
-.character-avatar i {
-    font-size: 1.5rem;
-    color: #FFFFFF;
+.character-avatar .character-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 150, 255, 0.3);
 }
 
 .character-card h3 {
@@ -734,23 +737,26 @@
 .character-avatar {
     width: 90px;
     height: 90px;
-    background: linear-gradient(135deg, #FFD700, #FFA500);
+    background: transparent;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 1.5rem;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    box-shadow: none;
 }
 
 .character-card.empty .character-avatar {
-    background: linear-gradient(135deg, #0096ff, #0066cc);
-    box-shadow: 0 0 20px rgba(0, 150, 255, 0.5);
+    background: transparent;
+    box-shadow: none;
 }
 
-.character-avatar i {
-    font-size: 2.5rem;
-    color: #FFFFFF;
+.character-avatar .character-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid rgba(0, 150, 255, 0.3);
 }
 
 .character-card h3 {
@@ -2542,6 +2548,31 @@ body.battle-mode::before {
     .character-saga {
         font-size: 0.7rem;
     }
+}
+
+/* Additional styles for character images */
+.character-avatar .character-image {
+    transition: all 0.3s ease;
+}
+
+.character-avatar .character-image:hover {
+    transform: scale(1.05);
+    border-color: #0096ff;
+    box-shadow: 0 0 20px rgba(0, 150, 255, 0.3);
+}
+
+.character-avatar .character-image:not([src]), 
+.character-avatar .character-image[src=""],
+.character-avatar .character-image[src*="default.jpg"] {
+    display: none;
+}
+
+.character-avatar .character-image:not([src]) + i,
+.character-avatar .character-image[src=""] + i,
+.character-avatar .character-image[src*="default.jpg"] + i {
+    display: flex;
+    font-size: 2.5rem;
+    color: #0096ff;
 }
 
 @media (max-width: 480px) {

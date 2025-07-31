@@ -403,10 +403,10 @@ function randomInt(min, max) {
 // Utilidad para obtener acciones posibles según el estado actual del jugador
 function accionesPosibles(jugador) {
   const posibles = [];
-  posibles.push('Ataque Básico');
+  if (jugador.Energia >= 10) posibles.push('Ataque Básico');
   if (jugador.Energia >= 20) posibles.push('Ataque Fuerte');
   if (jugador.Combo >= 30 && jugador.Energia >= 30) posibles.push('Combo');
-  posibles.push('Defender');
+  if (jugador.Energia >= 5) posibles.push('Defender');
   posibles.push('Cargar Energía');
   if (jugador.Ultra >= 100 && !jugador.UltraUsado) posibles.push('Ultra Move');
   return posibles;
@@ -630,13 +630,17 @@ router.post('/api/batallas/accion', async (req, res) => {
     // Acciones
     switch (accion) {
       case 'Ataque Básico': {
+        if (jugador.Energia < 10) {
+          return res.status(400).json({ error: '⚠️ No tienes suficiente energía para Ataque Básico. Prueba con Defender o Cargar Energía.', posiblesAcciones: accionesPosibles(jugador) });
+        }
         const dano = randomInt(12, 16);
         danoReal = dano;
         oponente.HP = clamp(oponente.HP - dano, 0, 300);
+        jugador.Energia = clamp(jugador.Energia - 10, 0, 50);
         jugador.Combo = clamp(jugador.Combo + 10, 0, 100);
-        jugador.Ultra = clamp(jugador.Ultra + 7, 0, 100);
-        mensaje = `🗡️ ${jugador.Nombre} realizó un Ataque Básico a ${oponente.Nombre}, causando ${dano} de daño. ¡Gana +10 combo y +7 ultra!`;
-        efectos = { dano, comboGanado: 10, ultraGanado: 7 };
+        console.log(`Ataque Básico: ${jugador.Nombre} - Energía antes: ${jugador.Energia + 10}, después: ${jugador.Energia}`);
+        mensaje = `🗡️ ${jugador.Nombre} realizó un Ataque Básico a ${oponente.Nombre}, causando ${dano} de daño. ¡Gana +10 combo!`;
+        efectos = { dano, energiaGastada: 10, comboGanado: 10 };
         break;
       }
       case 'Ataque Fuerte': {
@@ -648,9 +652,9 @@ router.post('/api/batallas/accion', async (req, res) => {
         oponente.HP = clamp(oponente.HP - dano, 0, 300);
         jugador.Energia = clamp(jugador.Energia - 20, 0, 50);
         jugador.Combo = clamp(jugador.Combo + 15, 0, 100);
-        jugador.Ultra = clamp(jugador.Ultra + 8, 0, 100);
-        mensaje = `💪 ${jugador.Nombre} realizó un Ataque Fuerte a ${oponente.Nombre}, causando ${dano} de daño. ¡Gana +15 combo y +8 ultra!`;
-        efectos = { dano, energiaGastada: 20, comboGanado: 15, ultraGanado: 8 };
+        jugador.Ultra = clamp(jugador.Ultra + 6, 0, 100);
+        mensaje = `💪 ${jugador.Nombre} realizó un Ataque Fuerte a ${oponente.Nombre}, causando ${dano} de daño. ¡Gana +15 combo y +6 ultra!`;
+        efectos = { dano, energiaGastada: 20, comboGanado: 15, ultraGanado: 6 };
         break;
       }
       case 'Combo': {
@@ -662,36 +666,48 @@ router.post('/api/batallas/accion', async (req, res) => {
         }
         let danoCombo = 0;
         let nombreCombo = jugador.combo1Name;
-        if (jugador.Combo >= 30 && jugador.Combo < 60) {
-          danoCombo = randomInt(30, 38);
+        let comboGastado = 30;
+        
+        // Diferentes niveles de combo según la cantidad acumulada
+        if (jugador.Combo >= 30 && jugador.Combo <= 60) {
+          // Combo Básico (30-60)
+          danoCombo = randomInt(35, 45);
           nombreCombo = jugador.combo1Name;
-        } else if (jugador.Combo >= 60 && jugador.Combo < 90) {
-          danoCombo = randomInt(45, 55);
+          comboGastado = 30;
+        } else if (jugador.Combo >= 61 && jugador.Combo <= 100) {
+          // Combo Avanzado (61-100)
+          danoCombo = randomInt(55, 70);
           nombreCombo = jugador.combo2Name;
-        } else if (jugador.Combo >= 90) {
-          danoCombo = randomInt(60, 75);
-          nombreCombo = jugador.combo3Name;
+          comboGastado = 40;
         }
+        
         danoReal = danoCombo;
         oponente.HP = clamp(oponente.HP - danoCombo, 0, 300);
         jugador.Energia = clamp(jugador.Energia - 30, 0, 50);
-        jugador.Combo = clamp(jugador.Combo - 30, 0, 100);
-        jugador.Ultra = clamp(jugador.Ultra + 10, 0, 100);
-        mensaje = `💥 ${jugador.Nombre} realizó su combo "${nombreCombo}" contra ${oponente.Nombre}, causando ${danoCombo} de daño. ¡Gana +10 ultra!`;
-        efectos = { dano: danoCombo, energiaGastada: 30, comboGastado: 30, ultraGanado: 10, nombreCombo };
+        jugador.Combo = clamp(jugador.Combo - comboGastado, 0, 100);
+        jugador.Ultra = clamp(jugador.Ultra + 9, 0, 100);
+        
+        let nivelCombo = (jugador.Combo >= 61) ? "AVANZADO" : "BÁSICO";
+        mensaje = `💥 ${jugador.Nombre} realizó su combo ${nivelCombo} "${nombreCombo}" contra ${oponente.Nombre}, causando ${danoCombo} de daño. ¡Gastó ${comboGastado} de combo y ganó +9 ultra!`;
+        efectos = { dano: danoCombo, energiaGastada: 30, comboGastado: comboGastado, ultraGanado: 9, nombreCombo, nivelCombo };
         break;
       }
-      case 'Defender':
+      case 'Defender': {
+        if (jugador.Energia < 5) {
+          return res.status(400).json({ error: '⚠️ No tienes suficiente energía para Defender. Prueba con Cargar Energía.', posiblesAcciones: accionesPosibles(jugador) });
+        }
+        jugador.Energia = clamp(jugador.Energia - 5, 0, 50);
         jugador.Estado = 'Defendiendo';
         mensaje = `🛡️ ${jugador.Nombre} se puso en defensa.`;
-        efectos = { defensa: true };
+        efectos = { energiaGastada: 5, defensa: true };
         break;
+      }
       case 'Cargar Energía':
         jugador.Energia = clamp(jugador.Energia + 30, 0, 50);
-        jugador.Ultra = clamp(jugador.Ultra + 15, 0, 100);
+        jugador.Ultra = clamp(jugador.Ultra + 5, 0, 100);
         jugador.Estado = 'Vulnerable';
-        mensaje = `⚡ ${jugador.Nombre} cargó energía y quedó vulnerable.`;
-        efectos = { energiaGanada: 30, ultraGanado: 15 };
+        mensaje = `⚡ ${jugador.Nombre} cargó energía y quedó vulnerable. ¡Gana +5 ultra!`;
+        efectos = { energiaGanada: 30, ultraGanado: 5 };
         break;
       case 'Ultra Move': {
         if (jugador.Ultra < 100) {
@@ -705,7 +721,7 @@ router.post('/api/batallas/accion', async (req, res) => {
         oponente.HP = clamp(oponente.HP - dano, 0, 300);
         jugador.UltraUsado = true;
         jugador.Ultra = 0;
-        mensaje = `💥 ${jugador.Nombre} usó su ultra "${jugador.ultraName}" contra ${oponente.Nombre}, causando ${dano} de daño. ¡Gana +10 ultra!`;
+        mensaje = `💥 ${jugador.Nombre} usó su ultra "${jugador.ultraName}" contra ${oponente.Nombre}, causando ${dano} de daño.`;
         efectos = { dano, ultraGastado: 100, nombreUltra: jugador.ultraName };
         break;
       }
@@ -720,9 +736,9 @@ router.post('/api/batallas/accion', async (req, res) => {
       const danoReducido = Math.round(danoOriginal * reduccion);
       oponente.HP = clamp(oponente.HP + danoOriginal - danoReducido, 0, 300);
       oponente.Energia = clamp(oponente.Energia + 10, 0, 50);
-      oponente.Ultra = clamp(oponente.Ultra + 20, 0, 100);
+      oponente.Ultra = clamp(oponente.Ultra + 8, 0, 100);
       efectos.danoReducido = danoReducido;
-      efectos.defensaBonus = { energiaGanada: 10, ultraGanado: 20 };
+      efectos.defensaBonus = { energiaGanada: 10, ultraGanado: 8 };
       danoReal = danoReducido;
       // 🌟 Contraataque especial
       if ((accion === 'Ataque Fuerte' || accion === 'Combo') && oponente.Energia >= 10) {
@@ -736,16 +752,14 @@ router.post('/api/batallas/accion', async (req, res) => {
         };
       }
     }
-    // Si el jugador estaba vulnerable y fue atacado, gana ultra extra
-    if (jugador.Estado === 'Vulnerable' && ['Ataque Básico', 'Ataque Fuerte', 'Combo', 'Ultra Move'].includes(accion)) {
-      jugador.Ultra = clamp(jugador.Ultra + 10, 0, 100); // +5 extra
-      efectos.ultraGanadoPorVulnerable = 10;
+    
+    // 🌟 Bonus de ultra por estar vulnerable y recibir daño
+    if (oponente.Estado === 'Vulnerable' && danoReal > 0) {
+      oponente.Ultra = clamp(oponente.Ultra + 5, 0, 100);
+      efectos.vulnerableBonus = { ultraGanado: 5 };
+      console.log(`${oponente.Nombre} vulnerable - Gana +5 ultra por recibir daño`);
     }
-    // Cada vez que un personaje recibe daño, gana +10 ultra adicional
-    if (danoReal > 0) {
-      oponente.Ultra = clamp(oponente.Ultra + 10, 0, 100); // +5 extra
-      efectos.ultraGanadoPorRecibirDanio = 10;
-    }
+    
     // Verificar si la batalla termina
     let ganador = null;
     if (oponente.HP <= 0) {
@@ -790,7 +804,12 @@ router.post('/api/batallas/accion', async (req, res) => {
     batalla.markModified('historial');
     batalla.markModified('estadoPersonaje1');
     batalla.markModified('estadoPersonaje2');
+    batalla.markModified('turnoActual');
+    batalla.markModified('estado');
+    batalla.markModified('ganador');
+    batalla.markModified('activa');
     await batalla.save();
+    console.log(`Batalla guardada - ${jugador.Nombre} energía: ${jugador.Energia}, ${oponente.Nombre} energía: ${oponente.Energia}`);
     // Respuesta detallada
     res.json({
       mensaje,

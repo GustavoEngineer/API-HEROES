@@ -1,7 +1,7 @@
 // API Configuration
 const API_BASE_URL = 'http://localhost:3000';
 
-// Battle System for 1v1
+// Battle System for 1v1 and 3v3
 class BattleSystem {
     constructor() {
         this.currentBattle = null;
@@ -10,6 +10,9 @@ class BattleSystem {
         this.currentTurn = 1; // 1 = personaje1, 2 = personaje2
         this.gameHistory = [];
         this.gameStartTime = Date.now();
+        this.isTeamBattle = false;
+        this.teamData = null;
+        this.selectedTeamCharacter = null;
         
         this.init();
     }
@@ -22,17 +25,64 @@ class BattleSystem {
             await this.loadBattleData();
             this.setupEventListeners();
             this.updateUI();
+            
+            // Iniciar actualización automática de UI
+            this.startAutoUpdate();
         } catch (error) {
             console.error('Error inicializando batalla:', error);
             
-            // Si no hay batalla, redirigir al dashboard
-            if (error.message.includes('No se encontró ID de batalla')) {
-                alert('No hay una batalla activa. Serás redirigido al dashboard para crear una nueva batalla.');
-                window.location.href = 'dashboard.html';
+            // Si no hay batalla o hay error, mostrar mensaje y permitir continuar
+            if (error.message.includes('No se encontró ID de batalla') || 
+                error.message.includes('API no responde')) {
+                console.log('Modo de demostración activado - sin conexión a API');
+                this.setupDemoMode();
                 return;
             }
             
             this.showError(`Error al cargar la batalla: ${error.message}`);
+        }
+    }
+
+    setupDemoMode() {
+        console.log('Configurando modo de demostración...');
+        
+        // Configurar datos de demostración para batalla en equipo
+        const demoTeamBattle = {
+            id: "demo-team-battle",
+            equipo1: [
+                { id: "char1", nombre: "Goku" },
+                { id: "char2", nombre: "Vegeta" },
+                { id: "char3", nombre: "Gohan" }
+            ],
+            equipo2: [
+                { id: "char4", nombre: "Cell" },
+                { id: "char5", nombre: "Frieza" },
+                { id: "char6", nombre: "Majin Buu" }
+            ]
+        };
+        
+        // Guardar datos de demostración
+        localStorage.setItem('currentBattle', JSON.stringify(demoTeamBattle));
+        
+        // Recargar datos
+        this.getBattleId();
+        this.setupEventListeners();
+        this.updateUI();
+        
+        // Mostrar mensaje informativo para batalla en equipo
+        this.showTeamBattleInfo();
+        
+        console.log('Modo de demostración configurado - Batalla en equipo');
+    }
+
+    showTeamBattleInfo() {
+        const teamInfo = document.getElementById('teamInfo');
+        if (teamInfo && this.isTeamBattle) {
+            teamInfo.style.display = 'block';
+            // Ocultar después de 5 segundos
+            setTimeout(() => {
+                teamInfo.style.display = 'none';
+            }, 5000);
         }
     }
 
@@ -90,6 +140,8 @@ class BattleSystem {
 
             this.currentBattle = await battleResponse.json();
             console.log('Datos de batalla cargados:', this.currentBattle);
+            console.log('Energía Personaje 1:', this.currentBattle.estadoPersonaje1?.Energia);
+            console.log('Energía Personaje 2:', this.currentBattle.estadoPersonaje2?.Energia);
             
             // Cargar información completa de los personajes
             await this.loadCharacterDetails();
@@ -136,6 +188,17 @@ class BattleSystem {
         if (battleInfo) {
             try {
                 const battle = JSON.parse(battleInfo);
+                
+                // Detectar si es una batalla en equipo
+                if (battle.equipo1 && battle.equipo2) {
+                    this.isTeamBattle = true;
+                    this.teamData = battle;
+                    console.log('Batalla en equipo detectada:', battle);
+                } else {
+                    this.isTeamBattle = false;
+                    console.log('Batalla 1v1 detectada');
+                }
+                
                 return battle.id;
             } catch (error) {
                 console.error('Error parsing battle info:', error);
@@ -148,24 +211,57 @@ class BattleSystem {
     }
 
     setupEventListeners() {
+        console.log('Configurando event listeners...');
+        
         // Event listeners para botones de acción
-        document.querySelectorAll('.action-btn').forEach(button => {
+        const actionButtons = document.querySelectorAll('.action-btn');
+        console.log('Botones de acción encontrados:', actionButtons.length);
+        
+        actionButtons.forEach(button => {
+            const action = button.getAttribute('data-action');
+            console.log('Configurando botón:', action);
+            
             button.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 const action = e.currentTarget.getAttribute('data-action');
+                console.log('Botón clickeado:', action);
                 this.executeAction(action);
             });
         });
 
         // Event listeners para modales
-        document.querySelectorAll('.character-portrait').forEach(portrait => {
+        const portraits = document.querySelectorAll('.character-portrait');
+        console.log('Retratos encontrados:', portraits.length);
+        
+        portraits.forEach(portrait => {
             portrait.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
                 const character = e.currentTarget.getAttribute('data-character');
-                this.showCharacterModal(character);
+                console.log('Retrato clickeado:', character);
+                
+                if (this.isTeamBattle) {
+                    this.showTeamModal(character);
+                } else {
+                    this.showCharacterModal(character);
+                }
             });
         });
 
         // Configurar teclas
         this.setupKeyBindings();
+        
+        console.log('Event listeners configurados correctamente');
+        
+        // Verificación adicional de botones
+        setTimeout(() => {
+            const actionButtons = document.querySelectorAll('.action-btn');
+            console.log('Verificación final - Botones encontrados:', actionButtons.length);
+            actionButtons.forEach((btn, index) => {
+                console.log(`Botón ${index + 1}:`, btn.getAttribute('data-action'));
+            });
+        }, 1000);
     }
 
     setupKeyBindings() {
@@ -188,6 +284,17 @@ class BattleSystem {
     }
 
     async executeAction(action) {
+        console.log('executeAction llamado con:', action);
+        console.log('isTeamBattle:', this.isTeamBattle);
+        console.log('currentBattle:', this.currentBattle);
+        
+        // Si estamos en modo de demostración (sin API o batalla en equipo), usar lógica local
+        if (this.isTeamBattle || !this.currentBattle) {
+            console.log('Ejecutando modo de demostración');
+            this.executeDemoAction(action);
+            return;
+        }
+
         try {
             const token = localStorage.getItem('token');
             const battleId = this.getBattleId();
@@ -236,6 +343,148 @@ class BattleSystem {
         }
     }
 
+    executeDemoAction(action) {
+        console.log('Ejecutando acción de demostración:', action);
+        
+        // Efectos visuales
+        this.showActionEffect(action);
+        
+        // Agregar entrada al historial con el turno actual
+        const teamName = this.currentTurn === 1 ? 'Equipo 1' : 'Equipo 2';
+        const actionName = this.getActionDisplayName(action);
+        
+        console.log('Agregando al historial:', `${teamName} usa ${actionName}`);
+        
+        this.gameHistory.push({
+            mensaje: `${teamName} usa ${actionName}`,
+            timestamp: new Date().toLocaleTimeString()
+        });
+        
+        // Simular cambio de turno después de la acción
+        this.currentTurn = this.currentTurn === 1 ? 2 : 1;
+        console.log('Turno cambiado a:', this.currentTurn);
+        
+        // Actualizar UI
+        this.updateUI();
+        
+        // Mostrar mensaje de acción
+        this.showDemoMessage(`${teamName} usó ${actionName}`);
+        
+        console.log('Acción de demostración completada');
+    }
+
+    // Método para forzar la configuración de event listeners
+    forceSetupEventListeners() {
+        console.log('Forzando configuración de event listeners...');
+        this.setupEventListeners();
+    }
+
+    // Método para simular clic en botón de acción
+    simulateActionClick(action) {
+        console.log('Simulando clic en acción:', action);
+        const button = document.querySelector(`[data-action="${action}"]`);
+        if (button) {
+            console.log('Botón encontrado, simulando clic');
+            button.click();
+        } else {
+            console.log('Botón no encontrado para acción:', action);
+        }
+    }
+
+    getActionDisplayName(action) {
+        const actionNames = {
+            'Ultra Move': 'Ultra Move',
+            'Ataque Fuerte': 'Ataque Fuerte',
+            'Defender': 'Defensa',
+            'Ataque Básico': 'Ataque Básico',
+            'Cargar Energía': 'Cargar Energía',
+            'Combo': 'Combo'
+        };
+        return actionNames[action] || action;
+    }
+
+    showDemoMessage(message) {
+        // Crear un mensaje temporal en la pantalla
+        const messageDiv = document.createElement('div');
+        messageDiv.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 150, 255, 0.9);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: 'Fredoka One', cursive;
+            z-index: 1000;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: fadeInOut 2s ease-in-out;
+        `;
+        messageDiv.textContent = message;
+        
+        // Agregar estilos de animación
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+                20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            }
+        `;
+        document.head.appendChild(style);
+        
+        document.body.appendChild(messageDiv);
+        
+        // Remover después de 2 segundos
+        setTimeout(() => {
+            if (messageDiv.parentNode) {
+                messageDiv.parentNode.removeChild(messageDiv);
+            }
+        }, 2000);
+    }
+
+    toggleDemoMode() {
+        if (this.isTeamBattle) {
+            // Cambiar a modo 1v1
+            const demo1v1Battle = {
+                id: "demo-1v1-battle",
+                estadoPersonaje1: { ID: "char1", Nombre: "Goku", HP: 300, Energia: 50 },
+                estadoPersonaje2: { ID: "char2", Nombre: "Vegeta", HP: 300, Energia: 50 }
+            };
+            localStorage.setItem('currentBattle', JSON.stringify(demo1v1Battle));
+            this.isTeamBattle = false;
+            this.teamData = null;
+            this.showDemoMessage('Cambiado a modo 1v1');
+        } else {
+            // Cambiar a modo equipo
+            const demoTeamBattle = {
+                id: "demo-team-battle",
+                equipo1: [
+                    { id: "char1", nombre: "Goku" },
+                    { id: "char2", nombre: "Vegeta" },
+                    { id: "char3", nombre: "Gohan" }
+                ],
+                equipo2: [
+                    { id: "char4", nombre: "Cell" },
+                    { id: "char5", nombre: "Frieza" },
+                    { id: "char6", nombre: "Majin Buu" }
+                ]
+            };
+            localStorage.setItem('currentBattle', JSON.stringify(demoTeamBattle));
+            this.isTeamBattle = true;
+            this.teamData = demoTeamBattle;
+            this.showDemoMessage('Cambiado a modo Equipo');
+        }
+        
+        // Recargar datos y actualizar UI
+        this.getBattleId();
+        this.gameHistory = [];
+        this.currentTurn = 1;
+        this.updateUI();
+    }
+
     showActionEffect(action) {
         const button = document.querySelector(`[data-action="${action}"]`);
         if (button) {
@@ -276,7 +525,7 @@ class BattleSystem {
     }
 
     updateUI() {
-        if (!this.currentBattle) return;
+        if (!this.currentBattle && !this.isTeamBattle) return;
 
         // Actualizar nombres de personajes
         this.updateCharacterNames();
@@ -289,30 +538,83 @@ class BattleSystem {
         
         // Actualizar historial
         this.updateHistory();
+        
+        // Actualizar indicadores de combo
+        this.updateComboIndicators();
+        
+        // Mostrar información de batalla en equipo si es necesario
+        if (this.isTeamBattle) {
+            this.showTeamBattleInfo();
+        }
     }
 
     updateCharacterNames() {
-        // Personaje 1 (lado izquierdo)
-        const char1Name = document.querySelector('.character-side:first-child .character-name');
-        if (char1Name) {
-            char1Name.textContent = this.currentBattle.estadoPersonaje1?.Nombre || this.character1?.Nombre || 'Personaje 1';
-        }
+        if (this.isTeamBattle && this.teamData) {
+            // Para batallas en equipo, mostrar nombres del primer personaje de cada equipo
+            const char1Name = document.querySelector('.character-side:first-child .character-name');
+            const char1Status = document.querySelector('.character-side:first-child .character-status');
+            if (char1Name && this.teamData.equipo1[0]) {
+                char1Name.textContent = this.teamData.equipo1[0].nombre;
+            }
+            if (char1Status) {
+                char1Status.textContent = 'En Batalla';
+                char1Status.className = 'character-status normal';
+            }
 
-        // Personaje 2 (lado derecho)
-        const char2Name = document.querySelector('.character-side:last-child .character-name');
-        if (char2Name) {
-            char2Name.textContent = this.currentBattle.estadoPersonaje2?.Nombre || this.character2?.Nombre || 'Personaje 2';
+            const char2Name = document.querySelector('.character-side:last-child .character-name');
+            const char2Status = document.querySelector('.character-side:last-child .character-status');
+            if (char2Name && this.teamData.equipo2[0]) {
+                char2Name.textContent = this.teamData.equipo2[0].nombre;
+            }
+            if (char2Status) {
+                char2Status.textContent = 'En Batalla';
+                char2Status.className = 'character-status normal';
+            }
+        } else {
+            // Para batallas 1v1, usar la lógica original
+            const char1Name = document.querySelector('.character-side:first-child .character-name');
+            const char1Status = document.querySelector('.character-side:first-child .character-status');
+            if (char1Name) {
+                char1Name.textContent = this.currentBattle?.estadoPersonaje1?.Nombre || this.character1?.Nombre || 'Personaje 1';
+            }
+            if (char1Status) {
+                const estado = this.currentBattle?.estadoPersonaje1?.Estado || 'Normal';
+                char1Status.textContent = estado;
+                char1Status.className = `character-status ${estado.toLowerCase()}`;
+            }
+
+            const char2Name = document.querySelector('.character-side:last-child .character-name');
+            const char2Status = document.querySelector('.character-side:last-child .character-status');
+            if (char2Name) {
+                char2Name.textContent = this.currentBattle?.estadoPersonaje2?.Nombre || this.character2?.Nombre || 'Personaje 2';
+            }
+            if (char2Status) {
+                const estado = this.currentBattle?.estadoPersonaje2?.Estado || 'Normal';
+                char2Status.textContent = estado;
+                char2Status.className = `character-status ${estado.toLowerCase()}`;
+            }
         }
     }
 
     updateCharacterStats() {
-        // Actualizar estadísticas del personaje 1
-        const char1Stats = this.currentBattle.estadoPersonaje1;
-        this.updateCharacterBars('left', char1Stats);
+        if (this.isTeamBattle) {
+            // Para batallas en equipo, usar datos de demostración
+            const demoStats = {
+                HP: 300,
+                Energia: 50,
+                Combo: 0,
+                Ultra: 0
+            };
+            this.updateCharacterBars('left', demoStats);
+            this.updateCharacterBars('right', demoStats);
+        } else {
+            // Para batallas 1v1, usar la lógica original
+            const char1Stats = this.currentBattle?.estadoPersonaje1;
+            this.updateCharacterBars('left', char1Stats);
 
-        // Actualizar estadísticas del personaje 2
-        const char2Stats = this.currentBattle.estadoPersonaje2;
-        this.updateCharacterBars('right', char2Stats);
+            const char2Stats = this.currentBattle?.estadoPersonaje2;
+            this.updateCharacterBars('right', char2Stats);
+        }
     }
 
     updateCharacterBars(side, stats) {
@@ -321,28 +623,88 @@ class BattleSystem {
         
         if (!container) return;
 
+        // Usar datos por defecto si no hay stats
+        const defaultStats = {
+            HP: 300,
+            Energia: 50,
+            Combo: 0,
+            Ultra: 0
+        };
+        
+        const finalStats = stats || defaultStats;
+
         // Actualizar barra de vida
         const healthFill = container.querySelector('.health-fill');
         const healthText = container.querySelector('.health-text');
         if (healthFill && healthText) {
-            const healthPercent = (stats.HP / 300) * 100;
+            const healthPercent = (finalStats.HP / 300) * 100;
             healthFill.style.width = `${healthPercent}%`;
-            healthText.textContent = `${stats.HP}`;
+            healthText.textContent = `${finalStats.HP}/300`;
         }
 
         // Actualizar barra de energía
         const energyFill = container.querySelector('.energy-fill');
         const energyText = container.querySelector('.energy-text');
         if (energyFill && energyText) {
-            const energyPercent = (stats.Energia / 50) * 100;
+            const energyPercent = (finalStats.Energia / 50) * 100;
             energyFill.style.width = `${energyPercent}%`;
-            energyText.textContent = `${stats.Energia}`;
+            energyText.textContent = `${finalStats.Energia}/50`;
+        }
+
+        // Actualizar barra de combo
+        const comboFill = container.querySelector('.combo-fill');
+        const comboText = container.querySelector('.combo-text');
+        if (comboFill && comboText) {
+            const comboPercent = (finalStats.Combo / 100) * 100;
+            comboFill.style.width = `${comboPercent}%`;
+            comboText.textContent = `${finalStats.Combo}/100`;
+        }
+
+        // Actualizar barra de ultra
+        const ultraFill = container.querySelector('.ultra-fill');
+        const ultraText = container.querySelector('.ultra-text');
+        const ultraBar = container.querySelector('.stat-group:last-child');
+        
+        if (ultraFill && ultraText && ultraBar) {
+            // Ocultar la barra de ultra si ya se usó (UltraUsado = true)
+            if (finalStats.UltraUsado) {
+                ultraBar.classList.add('hidden');
+            } else {
+                ultraBar.classList.remove('hidden');
+                const ultraPercent = (finalStats.Ultra / 100) * 100;
+                ultraFill.style.width = `${ultraPercent}%`;
+                ultraText.textContent = `${finalStats.Ultra}/100`;
+                
+                // Efecto especial cuando ultra está al 100%
+                if (finalStats.Ultra >= 100) {
+                    ultraFill.style.animation = 'pulse 1s infinite';
+                } else {
+                    ultraFill.style.animation = 'none';
+                }
+            }
+        }
+        
+        // Efecto especial cuando combo está al 100%
+        if (comboFill && finalStats.Combo >= 100) {
+            comboFill.style.animation = 'pulse 1s infinite';
+        } else if (comboFill) {
+            comboFill.style.animation = 'none';
         }
     }
 
     updateTurnIndicator() {
-        // El indicador de turno se eliminó del HTML
-        // Se puede agregar en el futuro si es necesario
+        const turnIndicator = document.getElementById('turnIndicator');
+        const turnText = document.getElementById('turnText');
+        
+        if (turnIndicator && turnText) {
+            if (this.isTeamBattle) {
+                const teamName = this.currentTurn === 1 ? 'Equipo 1' : 'Equipo 2';
+                turnText.textContent = `Turno del ${teamName}`;
+                turnIndicator.style.display = 'block';
+            } else {
+                turnIndicator.style.display = 'none';
+            }
+        }
     }
 
     updateHistory() {
@@ -356,7 +718,7 @@ class BattleSystem {
             return;
         }
         
-        this.gameHistory.forEach(entry => {
+        this.gameHistory.forEach((entry, index) => {
             const entryElement = document.createElement('div');
             entryElement.className = 'history-entry';
             
@@ -365,7 +727,7 @@ class BattleSystem {
                 damageText = ` (${entry.dano} daño)`;
             }
             
-            // Crear descripción basada en la estructura de la API
+            // Crear descripción basada en la estructura de la API o modo demostración
             let description = '';
             if (entry.accion) {
                 description = `${entry.atacante} usa ${entry.accion} contra ${entry.defensor}`;
@@ -379,8 +741,10 @@ class BattleSystem {
                 description = entry.mensaje || 'Acción realizada';
             }
             
+            const timestamp = entry.timestamp || `Turno ${index + 1}`;
+            
             entryElement.innerHTML = `
-                <strong>Golpe ${entry.golpe || ''}</strong> - ${description}${damageText}
+                <strong>${timestamp}</strong> - ${description}${damageText}
             `;
             logContent.appendChild(entryElement);
         });
@@ -390,19 +754,78 @@ class BattleSystem {
     }
 
     showCharacterModal(character) {
-        const characterData = character === '1' ? this.character1 : this.character2;
-        if (!characterData) return;
+        if (this.isTeamBattle && this.teamData) {
+            // Para batallas en equipo, mostrar información del primer personaje del equipo correspondiente
+            const team = character === '1' ? this.teamData.equipo1 : this.teamData.equipo2;
+            const characterData = team[0];
+            
+            if (!characterData) return;
 
-        const modal = document.getElementById('characterModal');
-        if (!modal) return;
+            const modal = document.getElementById('characterModal');
+            if (!modal) return;
 
-        // Actualizar contenido del modal
-        document.getElementById('modalCharacterName').textContent = characterData.Nombre;
-        document.getElementById('modalCharacterRole').textContent = characterData.Categoria;
-        document.getElementById('modalHealth').textContent = characterData.Vida || 300;
-        document.getElementById('modalEnergy').textContent = characterData.Energia || 50;
-        document.getElementById('modalAttack').textContent = characterData.Ataque || 85;
-        document.getElementById('modalDefense').textContent = characterData.Defensa || 75;
+            // Actualizar contenido del modal
+            document.getElementById('modalCharacterName').textContent = characterData.nombre.toUpperCase();
+            document.getElementById('modalCharacterRole').textContent = 'MIEMBRO DEL EQUIPO';
+            
+            // Actualizar estado en el modal
+            const modalStatus = document.getElementById('modalCharacterStatus');
+            if (modalStatus) {
+                modalStatus.textContent = 'En Batalla';
+                modalStatus.className = 'character-status normal';
+            }
+            
+            document.getElementById('modalHealth').textContent = '300/300';
+            document.getElementById('modalEnergy').textContent = '50/50';
+            document.getElementById('modalCombo').textContent = '0/100';
+            document.getElementById('modalUltra').textContent = '0/100';
+            document.getElementById('modalAttack').textContent = '85';
+            document.getElementById('modalDefense').textContent = '75';
+            document.getElementById('modalDescription').textContent = `Miembro del equipo ${character === '1' ? '1' : '2'}. Luchador valiente y poderoso.`;
+        } else {
+            // Para batallas 1v1, usar la lógica original
+            const characterData = character === '1' ? this.character1 : this.character2;
+            const currentStats = character === '1' ? this.currentBattle?.estadoPersonaje1 : this.currentBattle?.estadoPersonaje2;
+            
+            if (!characterData) return;
+
+            const modal = document.getElementById('characterModal');
+            if (!modal) return;
+
+            // Actualizar contenido del modal
+            document.getElementById('modalCharacterName').textContent = characterData.Nombre;
+            document.getElementById('modalCharacterRole').textContent = characterData.Categoria;
+            
+            // Actualizar estado en el modal
+            const modalStatus = document.getElementById('modalCharacterStatus');
+            if (modalStatus) {
+                const estado = currentStats?.Estado || 'Normal';
+                modalStatus.textContent = estado;
+                modalStatus.className = `character-status ${estado.toLowerCase()}`;
+            }
+            
+            document.getElementById('modalHealth').textContent = `${currentStats?.HP || characterData.Vida || 300}/300`;
+            document.getElementById('modalEnergy').textContent = `${currentStats?.Energia || characterData.Energia || 50}/50`;
+            document.getElementById('modalAttack').textContent = characterData.Ataque || 85;
+            document.getElementById('modalDefense').textContent = characterData.Defensa || 75;
+        
+        // Actualizar combo y ultra si existen los elementos en el modal
+        const modalCombo = document.getElementById('modalCombo');
+        const modalUltra = document.getElementById('modalUltra');
+        const modalUltraContainer = modalUltra?.parentElement;
+        
+        if (modalCombo) {
+            modalCombo.textContent = `${currentStats?.Combo || 0}/100`;
+        }
+        if (modalUltra && modalUltraContainer) {
+            // Ocultar la estadística de ultra si ya se usó
+            if (currentStats?.UltraUsado) {
+                modalUltraContainer.classList.add('hidden');
+            } else {
+                modalUltraContainer.classList.remove('hidden');
+                modalUltra.textContent = `${currentStats?.Ultra || 0}/100`;
+            }
+        }
         
         // Crear descripción dinámica
         const description = `${characterData.Nombre} es un ${characterData.Categoria} de ${characterData.Ciudad}, 
@@ -416,9 +839,8 @@ class BattleSystem {
     }
 
     handleBattleEnd(winner) {
-        const winnerName = winner === this.currentBattle.estadoPersonaje1?.ID ? 
-            (this.currentBattle.estadoPersonaje1?.Nombre || this.character1?.Nombre) : 
-            (this.currentBattle.estadoPersonaje2?.Nombre || this.character2?.Nombre);
+        // El winner ya viene como el nombre del personaje ganador desde la API
+        const winnerName = winner || 'Ganador';
         
         setTimeout(() => {
             alert(`¡${winnerName} ha ganado la batalla!`);
@@ -429,6 +851,39 @@ class BattleSystem {
 
     showError(message) {
         alert(`Error: ${message}`);
+    }
+
+    startAutoUpdate() {
+        // Actualizar UI cada 2 segundos para mantener las barras sincronizadas
+        setInterval(() => {
+            if (this.currentBattle) {
+                this.updateUI();
+            }
+        }, 2000);
+    }
+
+    updateComboIndicators() {
+        // Determinar qué personaje está activo
+        const currentCharacter = this.currentTurn === 1 ? 
+            this.currentBattle.estadoPersonaje1 : 
+            this.currentBattle.estadoPersonaje2;
+        
+        const comboIndicator = document.querySelector('.combo-indicator');
+        if (comboIndicator) {
+            if (currentCharacter.Combo >= 61) {
+                comboIndicator.textContent = 'AVANZADO';
+                comboIndicator.style.background = 'linear-gradient(135deg, #FF4444, #CC0000)';
+                comboIndicator.title = 'Combo Avanzado - Daño: 55-70';
+            } else if (currentCharacter.Combo >= 30) {
+                comboIndicator.textContent = 'BÁSICO';
+                comboIndicator.style.background = 'linear-gradient(135deg, #FFD700, #FFA500)';
+                comboIndicator.title = 'Combo Básico - Daño: 35-45';
+            } else {
+                comboIndicator.textContent = '30+';
+                comboIndicator.style.background = 'linear-gradient(135deg, #888888, #666666)';
+                comboIndicator.title = 'Combo - Requiere 30+ combo';
+            }
+        }
     }
 
     // Funciones para modales
@@ -485,31 +940,148 @@ REGLAS DEL JUEGO
 • Gana el jugador que reduzca el HP del oponente a 0
 
 ⚔️ ACCIONES DISPONIBLES:
-• Ataque Básico: Daño moderado, gana combo y ultra
-• Ataque Fuerte: Daño alto, consume energía
-• Combo: Daño especial, requiere combo acumulado
-• Defender: Reduce daño recibido, gana energía y ultra
-• Cargar Energía: Recupera energía, queda vulnerable
+• Ataque Básico: Daño moderado, gasta 10 energía, gana combo (+10)
+• Ataque Fuerte: Daño alto, gasta 20 energía, gana ultra (+6)
+• Combo: Daño especial, gasta 30 energía, requiere combo acumulado, gana ultra (+9)
+• Defender: Reduce daño recibido, gasta 5 energía, gana ultra (+8) al defender
+• Cargar Energía: Recupera 30 energía, gana ultra (+5), queda vulnerable
 • Ultra Move: Daño máximo, requiere ultra al 100%
 
-💡 CONSEJOS:
-• Usa la defensa estratégicamente
-• Acumula combo para ataques más poderosos
-• El ultra solo se puede usar una vez por ronda
+💥 NIVELES DE COMBO:
+• Combo Básico (30-60): Daño 35-45, gasta 30 combo
+• Combo Avanzado (61-100): Daño 55-70, gasta 40 combo
 
-🎯 OBJETIVO:
-Reducir el HP del oponente a 0 para ganar la batalla.
-        `;
-        
+⚡ SISTEMA DE ENERGÍA:
+• Máximo: 50 energía
+• Ataque Básico: -10 energía
+• Ataque Fuerte: -20 energía
+• Combo: -30 energía
+• Defender: -5 energía
+• Cargar Energía: +30 energía
+
+🛡️ ESTADOS ESPECIALES:
+• Vulnerable: Recupera energía pero recibe más daño y gana +5 ultra al ser golpeado
+• Defendiendo: Reduce daño recibido y puede contraatacar
+
+${this.isTeamBattle ? `
+👥 BATALLA EN EQUIPO:
+• Cada equipo tiene 3 personajes
+• Los personajes se turnan automáticamente
+• Cuando un personaje es derrotado, el siguiente toma su lugar
+• Gana el equipo que derrote a todos los personajes del oponente
+` : ''}
+`;
         alert(helpText);
-        this.closeConfigModal();
+    }
+
+    // Métodos para batallas en equipo
+    showTeamModal(characterSide) {
+        if (!this.isTeamBattle || !this.teamData) {
+            console.error('No es una batalla en equipo o no hay datos de equipo');
+            return;
+        }
+
+        const modal = document.getElementById('teamModal');
+        const teamList = document.getElementById('teamList');
+        
+        // Determinar qué equipo mostrar basado en el lado del personaje
+        const team = characterSide === '1' ? this.teamData.equipo1 : this.teamData.equipo2;
+        const teamName = characterSide === '1' ? 'Equipo 1' : 'Equipo 2';
+        
+        // Limpiar contenido anterior
+        teamList.innerHTML = '';
+        
+        // Crear elementos para cada personaje del equipo
+        team.forEach((character, index) => {
+            const characterItem = document.createElement('div');
+            characterItem.className = 'team-character-item';
+            characterItem.setAttribute('data-character-id', character.id);
+            characterItem.setAttribute('data-character-index', index);
+            
+            // Determinar si el personaje está activo o bloqueado
+            const isActive = index === 0; // Por ahora, solo el primer personaje está activo
+            const isBlocked = !isActive;
+            
+            if (isBlocked) {
+                characterItem.classList.add('disabled');
+            }
+            
+            characterItem.innerHTML = `
+                <div class="team-character-avatar ${isBlocked ? 'disabled' : ''} ${isActive ? 'active' : ''}">
+                    <i class="fas fa-user-ninja"></i>
+                </div>
+                <div class="team-character-info">
+                    <div class="team-character-name">${character.nombre}</div>
+                    <div class="team-character-status ${isBlocked ? 'disabled' : ''} ${isActive ? 'active' : ''}">
+                        ${isActive ? 'En Batalla' : 'Bloqueado'}
+                    </div>
+                </div>
+            `;
+            
+            // Agregar event listener para seleccionar personaje
+            characterItem.addEventListener('click', () => {
+                if (!isBlocked) {
+                    this.selectedTeamCharacter = character;
+                    // Remover selección anterior
+                    document.querySelectorAll('.team-character-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    // Agregar selección actual
+                    characterItem.classList.add('active');
+                }
+            });
+            
+            teamList.appendChild(characterItem);
+        });
+        
+        // Mostrar modal
+        modal.style.display = 'flex';
+    }
+
+    closeTeamModal() {
+        document.getElementById('teamModal').style.display = 'none';
+        this.selectedTeamCharacter = null;
+    }
+
+    showCharacterFromTeam() {
+        if (!this.selectedTeamCharacter) {
+            alert('Por favor selecciona un personaje del equipo primero.');
+            return;
+        }
+        
+        // Cerrar modal de equipo
+        this.closeTeamModal();
+        
+        // Mostrar modal de personaje con la información del personaje seleccionado
+        this.showCharacterModalFromTeam(this.selectedTeamCharacter);
+    }
+
+    showCharacterModalFromTeam(character) {
+        // Implementar la lógica para mostrar información del personaje del equipo
+        // Por ahora, mostrar información básica
+        const modal = document.getElementById('characterModal');
+        const modalName = document.getElementById('modalCharacterName');
+        const modalRole = document.getElementById('modalCharacterRole');
+        const modalStatus = document.getElementById('modalCharacterStatus');
+        
+        modalName.textContent = character.nombre.toUpperCase();
+        modalRole.textContent = 'MIEMBRO DEL EQUIPO';
+        modalStatus.textContent = 'Disponible';
+        modalStatus.className = 'character-status normal';
+        
+        // Mostrar modal
+        modal.style.display = 'flex';
     }
 }
 
     // Inicializar sistema de batalla cuando el DOM esté listo
     document.addEventListener('DOMContentLoaded', function() {
+        console.log('DOM cargado, inicializando sistema de batalla...');
+        
         // Hacer las funciones disponibles globalmente para los onclick del HTML
         window.battleSystem = new BattleSystem();
+        
+        console.log('Sistema de batalla inicializado:', window.battleSystem);
         
         // Funciones globales para modales
         window.showCharacterModal = (character) => window.battleSystem.showCharacterModal(character);
@@ -520,6 +1092,29 @@ Reducir el HP del oponente a 0 para ganar la batalla.
         window.closeHistoryModal = () => window.battleSystem.closeHistoryModal();
         window.exitGame = () => window.battleSystem.exitGame();
         window.showHelp = () => window.battleSystem.showHelp();
+        
+        // Funciones globales para modal de equipo
+        window.closeTeamModal = () => window.battleSystem.closeTeamModal();
+        window.showCharacterFromTeam = () => window.battleSystem.showCharacterFromTeam();
+        
+        // Función para alternar modo de demostración
+        window.toggleDemoMode = () => window.battleSystem.toggleDemoMode();
+        
+        // Función de prueba
+        window.testButton = () => {
+            console.log('Botón de prueba clickeado');
+            if (window.battleSystem) {
+                window.battleSystem.showDemoMessage('¡Botón de prueba funcionando!');
+                // Forzar configuración de event listeners
+                window.battleSystem.forceSetupEventListeners();
+                // Simular una acción
+                setTimeout(() => {
+                    window.battleSystem.simulateActionClick('Ataque Básico');
+                }, 1000);
+            } else {
+                alert('Sistema de batalla no inicializado');
+            }
+        };
 
         // Cerrar modal con Escape
         document.addEventListener('keydown', function(event) {
@@ -527,6 +1122,7 @@ Reducir el HP del oponente a 0 para ganar la batalla.
                 window.battleSystem.closeModal();
                 window.battleSystem.closeConfigModal();
                 window.battleSystem.closeHistoryModal();
+                window.battleSystem.closeTeamModal();
             }
         });
 
@@ -535,6 +1131,7 @@ Reducir el HP del oponente a 0 para ganar la batalla.
             const characterModal = document.getElementById('characterModal');
             const configModal = document.getElementById('configModal');
             const historyModal = document.getElementById('historyModal');
+            const teamModal = document.getElementById('teamModal');
             
             if (event.target === characterModal) {
                 window.battleSystem.closeModal();
@@ -544,6 +1141,9 @@ Reducir el HP del oponente a 0 para ganar la batalla.
             }
             if (event.target === historyModal) {
                 window.battleSystem.closeHistoryModal();
+            }
+            if (event.target === teamModal) {
+                window.battleSystem.closeTeamModal();
             }
         });
     }); 

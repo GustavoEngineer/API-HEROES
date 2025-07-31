@@ -1217,8 +1217,8 @@ document.addEventListener('DOMContentLoaded', function() {
         card.className = 'character-card';
         card.setAttribute('data-character-id', personaje.id);
         
-        // Get icon based on category
-        const iconClass = getIconForCategory(personaje.Categoria);
+        // Get character image path
+        const imagePath = getCharacterImagePath(personaje.Nombre);
         
         // Calculate level based on stats (simple calculation)
         const level = Math.floor((personaje.Vida + personaje.Energia) / 20) + 1;
@@ -1227,7 +1227,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         card.innerHTML = `
             <div class="character-avatar">
-                <i class="${iconClass}"></i>
+                <img src="${imagePath}" alt="${personaje.Nombre}" class="character-image">
             </div>
             <h3>${personaje.Nombre}</h3>
             <div class="character-stats">
@@ -1250,16 +1250,22 @@ document.addEventListener('DOMContentLoaded', function() {
         return card;
     }
 
-    // Function to get icon class based on character category
-    function getIconForCategory(categoria) {
-        const iconMap = {
-            'Héroe': 'ph-sword',
-            'Villano': 'ph-skull',
-            'Antihéroe': 'ph-lightning',
-            'Antivillano': 'ph-ghost'
+    // Function to get character image path based on character name
+    function getCharacterImagePath(nombre) {
+        const imageMap = {
+            'Spider-Man': 'Images/characters/Spiderman.jpg',
+            'Iron Man': 'Images/characters/IronMan.jpg',
+            'Flash': 'Images/characters/Flash.jpg',
+            'Darth Vader': 'Images/characters/DarthVader.jpg',
+            'Loki': 'Images/characters/Loki.jpg',
+            'Venom': 'Images/characters/Venom.jpg',
+            'Goku': 'Images/characters/Goku.jpg',
+            'Capitán América': 'Images/characters/CaptainAmerica.jpg',
+            'Cell': 'Images/characters/Cell.jpg',
+            'Superman': 'Images/characters/Superman.jpg'
         };
         
-        return iconMap[categoria] || 'ph-user';
+        return imageMap[nombre] || 'Images/characters/default.jpg';
     }
 
     // Function to show character details
