@@ -185,6 +185,243 @@
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
+        /* Modal de Equipo */
+        .team-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .team-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+        }
+
+        .team-modal-content {
+            position: relative;
+            background: #fefefe;
+            border-radius: 24px;
+            padding: 0;
+            max-width: 480px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            animation: modalSlideIn 0.4s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .team-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2rem 1.5rem 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            background: #fefefe;
+            border-radius: 24px 24px 0 0;
+        }
+
+        .team-modal-header h3 {
+            font-family: 'Fredoka One', cursive;
+            font-weight: 400;
+            color: #333333;
+            margin: 0;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .team-modal-close {
+            background: none;
+            border: none;
+            color: #666666;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .team-modal-close:hover {
+            color: #333333;
+            background: rgba(0, 0, 0, 0.05);
+            transform: rotate(90deg);
+        }
+
+        .team-modal-body {
+            padding: 2rem;
+            background: #fefefe;
+        }
+
+        .team-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .team-character-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.2rem;
+            background: #f8f9fa;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .team-character-item:hover {
+            background: #f0f2f5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .team-character-item.blocked {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #e9ecef;
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+
+        .team-character-item.blocked:hover {
+            transform: none;
+            box-shadow: none;
+            background: #e9ecef;
+            border-color: #dee2e6;
+        }
+
+        .team-character-item.blocked .team-character-avatar {
+            background: linear-gradient(135deg, #6c757d, #495057);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+        }
+
+        .team-character-item.active {
+            background: linear-gradient(135deg, #0096ff, #0066cc);
+            color: #FFFFFF;
+            border-color: #0096ff;
+            box-shadow: 0 4px 12px rgba(0, 150, 255, 0.3);
+        }
+
+        .team-character-item.active:hover {
+            background: linear-gradient(135deg, #0066cc, #0096ff);
+            box-shadow: 0 6px 16px rgba(0, 150, 255, 0.4);
+        }
+
+        .team-character-item.active .team-character-avatar {
+            background: linear-gradient(135deg, #0096ff, #0066cc);
+            box-shadow: 0 4px 12px rgba(0, 150, 255, 0.5);
+        }
+
+        .team-character-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+            border: 3px solid #fefefe;
+        }
+
+        .team-character-avatar i {
+            font-size: 1.8rem;
+            color: #FFFFFF;
+        }
+
+        .team-character-info {
+            flex: 1;
+        }
+
+        .team-character-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .team-character-status {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .team-character-item.blocked .team-character-status {
+            color: #6c757d;
+        }
+
+        .team-character-item.active .team-character-status {
+            color: #FFFFFF;
+        }
+
+        .team-modal-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+        }
+
+        .team-modal-btn {
+            background: #0096ff;
+            color: #FFFFFF;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: 'Fredoka One', cursive;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-weight: 500;
+        }
+
+        .team-modal-btn:hover {
+            background: #0066cc;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 150, 255, 0.3);
+        }
+
+        .team-modal-btn.secondary {
+            background: #6c757d;
+        }
+
+        .team-modal-btn.secondary:hover {
+            background: #545b62;
+        }
+
+        /* Botón de regresar en modal de personaje */
+        .back-to-team-btn {
+            margin-top: 1.5rem;
+            width: 100%;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .back-to-team-btn i {
+            font-size: 0.9rem;
+        }
+
         /* Characters Section */
         .characters-section {
             display: flex;
@@ -952,7 +1189,6 @@
             border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 12px;
             transition: all 0.3s ease;
-            cursor: pointer;
         }
 
         .team-character-item:hover {
@@ -961,47 +1197,15 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        .team-character-item.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            background: #e9ecef;
-        }
-
-        .team-character-item.disabled:hover {
-            transform: none;
-            box-shadow: none;
-        }
-
-        .team-character-item.active {
-            background: linear-gradient(135deg, #0096ff, #0066cc);
-            color: #FFFFFF;
-            border-color: #0096ff;
-        }
-
-        .team-character-item.active .team-character-name,
-        .team-character-item.active .team-character-status {
-            color: #FFFFFF;
-        }
-
         .team-character-avatar {
             width: 60px;
             height: 60px;
-            background: linear-gradient(135deg, #FFD700, #FFA500);
+            background: transparent;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
-        }
-
-        .team-character-avatar.disabled {
-            background: #6c757d;
             box-shadow: none;
-        }
-
-        .team-character-avatar.active {
-            background: linear-gradient(135deg, #0096ff, #0066cc);
-            box-shadow: 0 4px 12px rgba(0, 150, 255, 0.3);
         }
 
         .team-character-avatar i {
@@ -1027,54 +1231,6 @@
             color: #0096ff;
             text-transform: uppercase;
             font-weight: 500;
-        }
-
-        .team-character-status.disabled {
-            color: #6c757d;
-        }
-
-        .team-character-status.active {
-            color: #FFFFFF;
-        }
-
-        /* Botones de navegación del modal de equipo */
-        .team-modal-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-            justify-content: center;
-        }
-
-        .team-modal-btn {
-            background: #f8f9fa;
-            color: #333333;
-            border: 1px solid rgba(0, 0, 0, 0.08);
-            padding: 0.8rem 1.5rem;
-            border-radius: 12px;
-            font-family: 'Fredoka One', cursive;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            font-weight: 500;
-        }
-
-        .team-modal-btn:hover {
-            background: #f0f2f5;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .team-modal-btn.primary {
-            background: linear-gradient(135deg, #0096ff, #0066cc);
-            color: #FFFFFF;
-            border-color: #0096ff;
-        }
-
-        .team-modal-btn.primary:hover {
-            background: linear-gradient(135deg, #0066cc, #0096ff);
-            box-shadow: 0 4px 12px rgba(0, 150, 255, 0.3);
         }
 
         /* Config Options */
@@ -1202,6 +1358,33 @@
                 width: 60px;
                 height: 60px;
             }
+
+            /* Responsive para modal de equipo */
+            .team-modal-content {
+                width: 95%;
+                max-height: 90vh;
+            }
+
+            .team-character-item {
+                padding: 1rem;
+            }
+
+            .team-character-avatar {
+                width: 50px;
+                height: 50px;
+            }
+
+            .team-character-avatar i {
+                font-size: 1.5rem;
+            }
+
+            .team-character-name {
+                font-size: 1rem;
+            }
+
+            .team-character-status {
+                font-size: 0.7rem;
+            }
         }
     </style>
 </head>
@@ -1214,33 +1397,10 @@
         <i class="fas fa-cog"></i>
     </button>
     
-    <!-- Botón para cambiar modo de demostración -->
-    <button id="demoModeBtn" style="position: absolute; top: 2rem; right: 2rem; background: #FF6B6B; color: #FFFFFF; border: none; width: 60px; height: 60px; border-radius: 50%; font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 1rem; cursor: pointer; text-shadow: 2px 2px 0px #000000; z-index: 1000; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);" onclick="toggleDemoMode()">
-        <i class="fas fa-gamepad"></i>
-    </button>
-    
-    <!-- Botón de prueba -->
-    <button id="testBtn" style="position: absolute; top: 2rem; right: 8rem; background: #28a745; color: #FFFFFF; border: none; width: 60px; height: 60px; border-radius: 50%; font-family: 'Fredoka One', cursive; font-weight: 400; font-size: 1rem; cursor: pointer; text-shadow: 2px 2px 0px #000000; z-index: 1000; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);" onclick="testButton()">
-        <i class="fas fa-play"></i>
-    </button>
-    
     <!-- Botón de historial -->
     <button class="history-btn" onclick="showHistoryModal()">
         <i class="fas fa-history"></i>
     </button>
-
-    <!-- Mensaje informativo para batallas en equipo -->
-    <div id="teamInfo" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: rgba(0, 150, 255, 0.9); color: white; padding: 1rem 2rem; border-radius: 12px; font-family: 'Fredoka One', cursive; z-index: 999; text-align: center; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
-        <i class="fas fa-users" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
-        <div>¡Batalla en Equipo!</div>
-        <div style="font-size: 0.8rem; margin-top: 0.5rem;">Haz clic en los retratos para ver tu equipo</div>
-    </div>
-
-    <!-- Indicador de turno -->
-    <div id="turnIndicator" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(255, 215, 0, 0.9); color: #333; padding: 0.5rem 1rem; border-radius: 8px; font-family: 'Fredoka One', cursive; z-index: 998; text-align: center; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);">
-        <i class="fas fa-clock" style="margin-right: 0.5rem;"></i>
-        <span id="turnText">Turno del Equipo 1</span>
-    </div>
 
     <div class="characters-section">
         <!-- Lado Izquierdo - Personaje 1 -->
@@ -1401,32 +1561,6 @@
         </div>
     </div>
 
-    <!-- Modal de Equipo (solo para batallas 3v3) -->
-    <div id="teamModal" class="character-modal" style="display: none;">
-        <div class="modal-overlay" onclick="closeTeamModal()"></div>
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Miembros del Equipo</h3>
-                <button class="modal-close" onclick="closeTeamModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="team-list" id="teamList">
-                    <!-- Los miembros del equipo se cargarán dinámicamente -->
-                </div>
-                <div class="team-modal-actions">
-                    <button class="team-modal-btn" onclick="closeTeamModal()">
-                        <i class="fas fa-times"></i> Cerrar
-                    </button>
-                    <button class="team-modal-btn primary" onclick="showCharacterFromTeam()">
-                        <i class="fas fa-user"></i> Ver Personaje
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal de Configuración -->
     <div id="configModal" class="character-modal" style="display: none;">
         <div class="modal-overlay" onclick="closeConfigModal()"></div>
@@ -1475,6 +1609,30 @@
                             <!-- El contenido del historial se cargará dinámicamente -->
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Equipo -->
+    <div id="teamModal" class="team-modal" style="display: none;">
+        <div class="team-modal-overlay" onclick="closeTeamModal()"></div>
+        <div class="team-modal-content">
+            <div class="team-modal-header">
+                <h3 id="teamModalTitle">Equipo</h3>
+                <button class="team-modal-close" onclick="closeTeamModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="team-modal-body">
+                <div id="teamList" class="team-list">
+                    <!-- El contenido del equipo se cargará dinámicamente -->
+                </div>
+                <div class="team-modal-actions">
+                    <button class="team-modal-btn secondary" onclick="closeTeamModal()">
+                        <i class="fas fa-times"></i>
+                        Cerrar
+                    </button>
                 </div>
             </div>
         </div>

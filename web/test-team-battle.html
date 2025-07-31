@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Batalla en Equipo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .btn {
+            background: #0096ff;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin: 0.5rem;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn:hover {
+            background: #0066cc;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Prueba de Batalla en Equipo</h1>
+        <p>Haz clic en el botón para probar la funcionalidad de batalla en equipo:</p>
+        <a href="html/campobatallas.html?mode=team" class="btn">Crear Nueva Batalla en Equipo (Equipos por defecto)</a>
+        <br>
+        <a href="html/campobatallas.html?mode=team&equipo1=1,2,3&equipo2=4,5,6" class="btn">Crear Nueva Batalla con Equipos Personalizados</a>
+        <br>
+        <a href="html/campobatallas.html" class="btn">Crear Nueva Batalla 1v1</a>
+        <br>
+        <hr style="margin: 20px 0; border: 1px solid #ccc;">
+        <h3>O si ya tienes un ID de batalla:</h3>
+        <a href="html/campobatallas.html?mode=team&battleId=123" class="btn">Cargar Batalla en Equipo ID: 123</a>
+        <br>
+        <a href="html/campobatallas.html?battleId=456" class="btn">Cargar Batalla 1v1 ID: 456</a>
+    </div>
+</body>
+</html> 

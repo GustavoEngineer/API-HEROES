@@ -550,7 +550,7 @@ router.post('/api/batallas3v3', async (req, res) => {
       rondaActual: 1,
       historial: [],
       ganador: null,
-      usuario: req.user.id
+      usuario: new mongoose.Types.ObjectId(req.user.id)
     });
     await nuevaBatalla.save();
     res.status(201).json(toPublicBatalla3v3(nuevaBatalla));

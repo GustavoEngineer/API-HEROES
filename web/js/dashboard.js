@@ -998,7 +998,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 // Redirigir a la interfaz de batalla
                 setTimeout(() => {
-                    window.location.href = 'campobatallas.html';
+                    if (isTeamMode) {
+                        // Para batallas en equipo, pasar el battleId y el modo
+                        window.location.href = `campobatallas.html?battleId=${battleResult.id}&mode=team`;
+                    } else {
+                        // Para batallas 1v1, pasar el battleId
+                        window.location.href = `campobatallas.html?battleId=${battleResult.id}`;
+                    }
                 }, 1500);
                 
             } catch (error) {
