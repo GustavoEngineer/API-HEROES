@@ -11,8 +11,7 @@ const Batalla3v3Schema = new mongoose.Schema({
   rondas: Array,
   rondaActual: Number,
   historial: Array,
-  usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true },
-  // Agrega aquí otros campos según tu JSON
-});
+  usuario: { type: mongoose.Schema.Types.ObjectId, ref: 'Usuario', required: true }
+}, { timestamps: true });
 
 module.exports = mongoose.model('Batalla3v3', Batalla3v3Schema); 

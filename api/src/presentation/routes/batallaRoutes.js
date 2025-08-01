@@ -499,8 +499,53 @@ router.post('/api/batallas', async (req, res) => {
 router.get('/api/batallas', async (req, res) => {
   try {
     const batallas = await BatallaMongo.find({ usuario: req.user.id });
-    res.json(batallas);
+    
+    // Obtener todos los IDs únicos de personajes
+    const personajeIds = [];
+    batallas.forEach(batalla => {
+      if (batalla.personaje1) personajeIds.push(batalla.personaje1);
+      if (batalla.personaje2) personajeIds.push(batalla.personaje2);
+    });
+    
+    // Buscar todos los personajes de una vez
+    const PersonajeMongo = require('../../domain/models/PersonajeMongo');
+    const personajes = await PersonajeMongo.find({ _id: { $in: personajeIds } });
+    
+    // Crear un mapa de personajes por ID para acceso rápido
+    const personajesMap = {};
+    personajes.forEach(personaje => {
+      personajesMap[personaje._id.toString()] = personaje;
+    });
+    
+    const batallasConNombres = batallas.map(batalla => {
+      // Obtener nombres de personajes del mapa
+      const personaje1 = personajesMap[batalla.personaje1?.toString()];
+      const personaje2 = personajesMap[batalla.personaje2?.toString()];
+      
+      return {
+        id: batalla._id,
+        personaje1: {
+          id: batalla.personaje1,
+          nombre: personaje1 ? personaje1.Nombre : 'Personaje no encontrado'
+        },
+        personaje2: {
+          id: batalla.personaje2,
+          nombre: personaje2 ? personaje2.Nombre : 'Personaje no encontrado'
+        },
+        estado: batalla.estado,
+        ganador: batalla.ganador,
+        turnoActual: batalla.turnoActual,
+        activa: batalla.activa,
+        historial: batalla.historial,
+        estadoPersonaje1: batalla.estadoPersonaje1,
+        estadoPersonaje2: batalla.estadoPersonaje2,
+        createdAt: batalla.createdAt || batalla._id.getTimestamp()
+      };
+    });
+    
+    res.json(batallasConNombres);
   } catch (err) {
+    console.error('Error en GET /api/batallas:', err);
     res.status(500).json({ error: 'Error al obtener batallas', message: err.message });
   }
 });
@@ -519,8 +564,13 @@ router.get('/api/batallas/:id', async (req, res) => {
     if (String(batalla.usuario) !== String(req.user.id)) {
       return res.status(403).json({ error: 'No tienes permiso para ver esta batalla' });
     }
-    res.json(toPublicBatalla(batalla));
+    
+    const response = toPublicBatalla(batalla);
+    response.createdAt = batalla.createdAt || batalla._id.getTimestamp();
+    
+    res.json(response);
   } catch (err) {
+    console.error('Error al obtener batalla:', err);
     res.status(500).json({ error: 'Error al obtener batalla', message: err.message });
   }
 });

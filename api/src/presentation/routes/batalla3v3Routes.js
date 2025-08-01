@@ -501,52 +501,52 @@ router.use(authMiddleware);
 // POST /api/batallas3v3 - Crear nueva batalla 3v3
 router.post('/api/batallas3v3', async (req, res) => {
   try {
-  const { equipo1, equipo2 } = req.body;
-  if (!Array.isArray(equipo1) || !Array.isArray(equipo2) || equipo1.length !== 3 || equipo2.length !== 3) {
-    return res.status(400).json({ error: '⚠️ Debes seleccionar exactamente 3 personajes por equipo.' });
-  }
-  const ids = [...equipo1, ...equipo2];
-  if (new Set(ids).size !== 6) {
-    return res.status(400).json({ error: '⚠️ No puede haber personajes repetidos entre los equipos.' });
-  }
-  // Validar que todos los IDs sean ObjectId válidos
-  if (!ids.every(id => mongoose.Types.ObjectId.isValid(id))) {
-    return res.status(400).json({ error: 'Todos los IDs de personajes deben ser ObjectId válidos de MongoDB.' });
-  }
+    const { equipo1, equipo2 } = req.body;
+    if (!Array.isArray(equipo1) || !Array.isArray(equipo2) || equipo1.length !== 3 || equipo2.length !== 3) {
+      return res.status(400).json({ error: '⚠️ Debes seleccionar exactamente 3 personajes por equipo.' });
+    }
+    const ids = [...equipo1, ...equipo2];
+    if (new Set(ids).size !== 6) {
+      return res.status(400).json({ error: '⚠️ No puede haber personajes repetidos entre los equipos.' });
+    }
+    // Validar que todos los IDs sean ObjectId válidos
+    if (!ids.every(id => mongoose.Types.ObjectId.isValid(id))) {
+      return res.status(400).json({ error: 'Todos los IDs de personajes deben ser ObjectId válidos de MongoDB.' });
+    }
     const PersonajeMongo = require('../../domain/models/PersonajeMongo');
     const personajes1 = await PersonajeMongo.find({ _id: { $in: equipo1 } });
     const personajes2 = await PersonajeMongo.find({ _id: { $in: equipo2 } });
     if (personajes1.length !== 3 || personajes2.length !== 3) {
-    return res.status(404).json({ error: '⚠️ Uno o más personajes no existen.' });
-  }
-  function initPersonaje(p) {
-    return {
+      return res.status(404).json({ error: '⚠️ Uno o más personajes no existen.' });
+    }
+    function initPersonaje(p) {
+      return {
         id: p._id,
-      nombre: p.Nombre,
-      hp: 100,
-      energia: 50,
-      combo: 0,
-      ultra: 0,
-      estado: 'Normal',
-      historial: []
-    };
-  }
-  // Guardar solo los IDs de los personajes en equipo1 y equipo2
-  const eq1 = personajes1.map(p => p._id);
-  const eq2 = personajes2.map(p => p._id);
+        nombre: p.Nombre,
+        hp: 100,
+        energia: 50,
+        combo: 0,
+        ultra: 0,
+        estado: 'Normal',
+        historial: []
+      };
+    }
+    // Guardar solo los IDs de los personajes en equipo1 y equipo2
+    const eq1 = personajes1.map(p => p._id);
+    const eq2 = personajes2.map(p => p._id);
     const nuevaBatalla = new Batalla3v3Mongo({
       equipo1: eq1,
       equipo2: eq2,
       estado: 'En curso',
       turnoActual: 1,
-    idxActivo1: 0,
-    idxActivo2: 0,
-    rondas: [{
-      numero: 1,
-      inicio: `${personajes1[0].Nombre} vs ${personajes2[0].Nombre}`,
-      acciones: [],
-      fin: null
-    }],
+      idxActivo1: 0,
+      idxActivo2: 0,
+      rondas: [{
+        numero: 1,
+        inicio: `${personajes1[0].Nombre} vs ${personajes2[0].Nombre}`,
+        acciones: [],
+        fin: null
+      }],
       rondaActual: 1,
       historial: [],
       ganador: null,
@@ -562,17 +562,36 @@ router.post('/api/batallas3v3', async (req, res) => {
 // GET /api/batallas3v3 - Listar todas las batallas 3v3 del usuario autenticado
 router.get('/api/batallas3v3', async (req, res) => {
   try {
-    const batallas = await Batalla3v3Mongo.find({ usuario: req.user.id }).populate('equipo1 equipo2');
+    const batallas = await Batalla3v3Mongo.find({ usuario: req.user.id });
+
+    // Obtener todos los IDs únicos de personajes de ambos equipos
+    const personajeIds = [];
+    batallas.forEach(batalla => {
+      if (batalla.equipo1) personajeIds.push(...batalla.equipo1);
+      if (batalla.equipo2) personajeIds.push(...batalla.equipo2);
+    });
+
+    // Buscar todos los personajes de una vez
+    const PersonajeMongo = require('../../domain/models/PersonajeMongo');
+    const personajes = await PersonajeMongo.find({ _id: { $in: personajeIds } });
+
+    // Crear un mapa de personajes por ID para acceso rápido
+    const personajesMap = {};
+    personajes.forEach(personaje => {
+      personajesMap[personaje._id.toString()] = personaje;
+    });
+
     const mapEquipo = (equipo) => {
       return equipo.map(p => ({
-        id: p._id,
-        nombre: p.Nombre
+        id: p,
+        nombre: personajesMap[p.toString()] ? personajesMap[p.toString()].Nombre : 'Personaje no encontrado'
       }));
     };
+
     const batallasConNombres = batallas.map(b => ({
       id: b._id,
-      equipo1: mapEquipo(b.equipo1),
-      equipo2: mapEquipo(b.equipo2),
+      equipo1: mapEquipo(b.equipo1 || []),
+      equipo2: mapEquipo(b.equipo2 || []),
       estado: b.estado,
       turnoActual: b.turnoActual,
       idxActivo1: b.idxActivo1,
@@ -580,10 +599,12 @@ router.get('/api/batallas3v3', async (req, res) => {
       rondas: b.rondas,
       rondaActual: b.rondaActual,
       historial: b.historial,
-      ganador: b.ganador
+      ganador: b.ganador,
+      createdAt: b.createdAt || b._id.getTimestamp()
     }));
     res.json(batallasConNombres);
   } catch (err) {
+    console.error('Error en GET /api/batallas3v3:', err);
     res.status(500).json({ error: 'Error al obtener batallas 3v3', message: err.message });
   }
 });
@@ -591,19 +612,83 @@ router.get('/api/batallas3v3', async (req, res) => {
 // GET /api/batallas3v3/:id - Obtener una batalla 3v3 por ID
 router.get('/api/batallas3v3/:id', async (req, res) => {
   try {
+    console.log('🔍 GET /api/batallas3v3/:id - Iniciando...');
+    console.log('📝 Parámetros:', { id: req.params.id, userId: req.user.id });
+
     const id = req.params.id;
     if (!mongoose.Types.ObjectId.isValid(id)) {
+      console.log('❌ ID inválido:', id);
       return res.status(400).json({ error: 'ID de batalla 3v3 inválido. Debe ser un ObjectId de MongoDB.' });
     }
+
+    console.log('🔍 Buscando batalla en BD...');
     const batalla = await Batalla3v3Mongo.findById(id);
     if (!batalla) {
+      console.log('❌ Batalla no encontrada para ID:', id);
       return res.status(404).json({ error: 'Batalla 3v3 no encontrada' });
     }
+    console.log('✅ Batalla encontrada:', {
+      id: batalla._id,
+      usuario: batalla.usuario,
+      estado: batalla.estado,
+      equipo1Count: batalla.equipo1?.length,
+      equipo2Count: batalla.equipo2?.length
+    });
+
     if (String(batalla.usuario) !== String(req.user.id)) {
+      console.log('❌ Permiso denegado:', {
+        batallaUsuario: batalla.usuario,
+        reqUsuario: req.user.id
+      });
       return res.status(403).json({ error: 'No tienes permiso para ver esta batalla 3v3' });
     }
-    res.json(toPublicBatalla3v3(batalla));
+
+    // Obtener todos los IDs únicos de personajes de ambos equipos
+    const personajeIds = [];
+    if (batalla.equipo1) personajeIds.push(...batalla.equipo1);
+    if (batalla.equipo2) personajeIds.push(...batalla.equipo2);
+    console.log('👥 IDs de personajes a buscar:', personajeIds);
+
+    // Buscar todos los personajes de una vez
+    const PersonajeMongo = require('../../domain/models/PersonajeMongo');
+    const personajes = await PersonajeMongo.find({ _id: { $in: personajeIds } });
+    console.log('✅ Personajes encontrados:', personajes.map(p => ({ id: p._id, nombre: p.Nombre })));
+
+    // Crear un mapa de personajes por ID para acceso rápido (mismo formato que el endpoint de lista)
+    const personajesMap = {};
+    personajes.forEach(personaje => {
+      personajesMap[personaje._id.toString()] = personaje;
+    });
+
+    console.log('🗺️ Mapa de personajes creado:', personajesMap);
+    console.log('🔍 IDs de equipo1 originales:', batalla.equipo1.map(id => id.toString()));
+    console.log('🔍 IDs de equipo2 originales:', batalla.equipo2.map(id => id.toString()));
+
+    // Crear la respuesta con los nombres de personajes
+    const response = toPublicBatalla3v3(batalla);
+
+    // Usar el mismo mapeo que funciona en el endpoint de lista
+    const mapEquipo = (equipo) => {
+      return equipo.map(p => ({
+        id: p,
+        nombre: personajesMap[p.toString()] ? personajesMap[p.toString()].Nombre : 'Personaje no encontrado'
+      }));
+    };
+
+    response.equipo1 = mapEquipo(batalla.equipo1 || []);
+    response.equipo2 = mapEquipo(batalla.equipo2 || []);
+
+    response.createdAt = batalla.createdAt || batalla._id.getTimestamp();
+
+    console.log('📦 Respuesta final:', response);
+    console.log('🔍 Equipo1 en respuesta:', response.equipo1);
+    console.log('🔍 Equipo2 en respuesta:', response.equipo2);
+    console.log('🔍 Mapa de personajes:', personajesMap);
+    console.log('🔍 IDs de equipo1 originales:', batalla.equipo1.map(id => id.toString()));
+    console.log('🔍 IDs de equipo2 originales:', batalla.equipo2.map(id => id.toString()));
+    res.json(response);
   } catch (err) {
+    console.error('💥 Error al obtener batalla 3v3:', err);
     res.status(500).json({ error: 'Error al obtener batalla 3v3', message: err.message });
   }
 });
@@ -941,7 +1026,7 @@ router.get('/api/batallas3v3/:id/historial', async (req, res) => {
       return res.status(400).json({ error: 'ID de batalla inválido.' });
     }
     const batalla = await Batalla3v3Mongo.findById(id);
-  if (!batalla) {
+    if (!batalla) {
       return res.status(404).json({ error: 'Batalla 3v3 no encontrada' });
     }
     if (String(batalla.usuario) !== String(req.user.id)) {

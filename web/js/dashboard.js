@@ -135,6 +135,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load user data from localStorage
     loadUserData();
     
+    // Load user partidas from API
+    loadUserPartidas();
+    
     // Load characters from API
     loadCharactersFromAPI();
     
@@ -492,10 +495,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <select id="character1Select" class="character-select">
                 <option value="">Selecciona el primer personaje</option>
             </select>
-            <div class="character-preview" id="character1Preview">
-                <i class="ph-question"></i>
-                <span>Personaje no seleccionado</span>
-            </div>
+
         `;
         setupContent.appendChild(characterSection);
         
@@ -506,18 +506,14 @@ document.addEventListener('DOMContentLoaded', function() {
             <select id="character2Select" class="character-select">
                 <option value="">Selecciona el segundo personaje</option>
             </select>
-            <div class="character-preview" id="character2Preview">
-                <i class="ph-question"></i>
-                <span>Personaje no seleccionado</span>
-            </div>
+
         `;
         setupContent.appendChild(character2Section);
         
         // Populate dropdowns with characters from API
         populateCharacterDropdowns();
         
-        // Add event listeners for character selection dropdowns
-        addCharacterDropdownEventListeners();
+
     }
     
     function updateSetupContentForTeam() {
@@ -537,30 +533,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     <select id="team1Char1" class="character-select">
                         <option value="">Selecciona el personaje</option>
                     </select>
-                    <div class="character-preview" id="team1Char1Preview">
-                        <i class="ph-question"></i>
-                        <span>No seleccionado</span>
-                    </div>
                 </div>
                 <div class="character-input-group">
                     <label for="team1Char2">Personaje 2:</label>
                     <select id="team1Char2" class="character-select">
                         <option value="">Selecciona el personaje</option>
                     </select>
-                    <div class="character-preview" id="team1Char2Preview">
-                        <i class="ph-question"></i>
-                        <span>No seleccionado</span>
-                    </div>
                 </div>
                 <div class="character-input-group">
                     <label for="team1Char3">Personaje 3:</label>
                     <select id="team1Char3" class="character-select">
                         <option value="">Selecciona el personaje</option>
                     </select>
-                    <div class="character-preview" id="team1Char3Preview">
-                        <i class="ph-question"></i>
-                        <span>No seleccionado</span>
-                    </div>
                 </div>
             </div>
         `;
@@ -577,30 +561,18 @@ document.addEventListener('DOMContentLoaded', function() {
                     <select id="team2Char1" class="character-select">
                         <option value="">Selecciona el personaje</option>
                     </select>
-                    <div class="character-preview" id="team2Char1Preview">
-                        <i class="ph-question"></i>
-                        <span>No seleccionado</span>
-                    </div>
                 </div>
                 <div class="character-input-group">
                     <label for="team2Char2">Personaje 2:</label>
                     <select id="team2Char2" class="character-select">
                         <option value="">Selecciona el personaje</option>
                     </select>
-                    <div class="character-preview" id="team2Char2Preview">
-                        <i class="ph-question"></i>
-                        <span>No seleccionado</span>
-                    </div>
                 </div>
                 <div class="character-input-group">
                     <label for="team2Char3">Personaje 3:</label>
                     <select id="team2Char3" class="character-select">
                         <option value="">Selecciona el personaje</option>
                     </select>
-                    <div class="character-preview" id="team2Char3Preview">
-                        <i class="ph-question"></i>
-                        <span>No seleccionado</span>
-                    </div>
                 </div>
             </div>
         `;
@@ -609,8 +581,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Populate dropdowns with characters from API
         populateTeamCharacterDropdowns();
         
-        // Add event listeners for team character selection dropdowns
-        addTeamCharacterDropdownEventListeners();
+
     }
     
     function populateCharacterDropdowns() {
@@ -644,66 +615,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    function addCharacterDropdownEventListeners() {
-        const character1Select = document.getElementById('character1Select');
-        const character2Select = document.getElementById('character2Select');
-        const character1Preview = document.getElementById('character1Preview');
-        const character2Preview = document.getElementById('character2Preview');
-        
-        if (character1Select) {
-            character1Select.addEventListener('change', function() {
-                const characterId = this.value;
-                if (characterId) {
-                    const selectedCharacter = allCharacters.find(char => char.id === characterId);
-                    if (selectedCharacter) {
-                        const iconClass = getIconForCategory(selectedCharacter.Categoria);
-                        character1Preview.innerHTML = `
-                            <i class="${iconClass}"></i>
-                            <div class="character-info">
-                                <span class="character-name">${selectedCharacter.Nombre}</span>
-                                <span class="character-category">${selectedCharacter.Categoria}</span>
-                                <span class="character-saga">${selectedCharacter.Saga}</span>
-                            </div>
-                        `;
-                        character1Preview.classList.add('character-found');
-                    }
-                } else {
-                    character1Preview.innerHTML = `
-                        <i class="ph-question"></i>
-                        <span>Personaje no seleccionado</span>
-                    `;
-                    character1Preview.classList.remove('character-found');
-                }
-            });
-        }
-        
-        if (character2Select) {
-            character2Select.addEventListener('change', function() {
-                const characterId = this.value;
-                if (characterId) {
-                    const selectedCharacter = allCharacters.find(char => char.id === characterId);
-                    if (selectedCharacter) {
-                        const iconClass = getIconForCategory(selectedCharacter.Categoria);
-                        character2Preview.innerHTML = `
-                            <i class="${iconClass}"></i>
-                            <div class="character-info">
-                                <span class="character-name">${selectedCharacter.Nombre}</span>
-                                <span class="character-category">${selectedCharacter.Categoria}</span>
-                                <span class="character-saga">${selectedCharacter.Saga}</span>
-                            </div>
-                        `;
-                        character2Preview.classList.add('character-found');
-                    }
-                } else {
-                    character2Preview.innerHTML = `
-                        <i class="ph-question"></i>
-                        <span>Personaje no seleccionado</span>
-                    `;
-                    character2Preview.classList.remove('character-found');
-                }
-            });
-        }
-    }
+
     
     function populateTeamCharacterDropdowns() {
         const team1Inputs = ['team1Char1', 'team1Char2', 'team1Char3'];
@@ -751,76 +663,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    function addTeamCharacterDropdownEventListeners() {
-        const team1Inputs = ['team1Char1', 'team1Char2', 'team1Char3'];
-        const team2Inputs = ['team2Char1', 'team2Char2', 'team2Char3'];
-        
-        // Add listeners for team 1
-        team1Inputs.forEach((inputId, index) => {
-            const select = document.getElementById(inputId);
-            const preview = document.getElementById(inputId + 'Preview');
-            
-            if (select && preview) {
-                select.addEventListener('change', function() {
-                    const characterId = this.value;
-                    if (characterId) {
-                        const selectedCharacter = allCharacters.find(char => char.id === characterId);
-                        if (selectedCharacter) {
-                            const iconClass = getIconForCategory(selectedCharacter.Categoria);
-                            preview.innerHTML = `
-                                <i class="${iconClass}"></i>
-                                <div class="character-info">
-                                    <span class="character-name">${selectedCharacter.Nombre}</span>
-                                    <span class="character-category">${selectedCharacter.Categoria}</span>
-                                    <span class="character-saga">${selectedCharacter.Saga}</span>
-                                </div>
-                            `;
-                            preview.classList.add('character-found');
-                        }
-                    } else {
-                        preview.innerHTML = `
-                            <i class="ph-question"></i>
-                            <span>No seleccionado</span>
-                        `;
-                        preview.classList.remove('character-found');
-                    }
-                });
-            }
-        });
-        
-        // Add listeners for team 2
-        team2Inputs.forEach((inputId, index) => {
-            const select = document.getElementById(inputId);
-            const preview = document.getElementById(inputId + 'Preview');
-            
-            if (select && preview) {
-                select.addEventListener('change', function() {
-                    const characterId = this.value;
-                    if (characterId) {
-                        const selectedCharacter = allCharacters.find(char => char.id === characterId);
-                        if (selectedCharacter) {
-                            const iconClass = getIconForCategory(selectedCharacter.Categoria);
-                            preview.innerHTML = `
-                                <i class="${iconClass}"></i>
-                                <div class="character-info">
-                                    <span class="character-name">${selectedCharacter.Nombre}</span>
-                                    <span class="character-category">${selectedCharacter.Categoria}</span>
-                                    <span class="character-saga">${selectedCharacter.Saga}</span>
-                                </div>
-                            `;
-                            preview.classList.add('character-found');
-                        }
-                    } else {
-                        preview.innerHTML = `
-                            <i class="ph-question"></i>
-                            <span>No seleccionado</span>
-                        `;
-                        preview.classList.remove('character-found');
-                    }
-                });
-            }
-        });
-    }
+
     
     function hideGameSetupPanel() {
         gameSetupPanel.classList.remove('show');
@@ -1401,4 +1244,602 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-}); 
+    // Function to load user partidas from API
+    async function loadUserPartidas() {
+        const partidasContainer = document.getElementById('partidasContainer');
+        if (!partidasContainer) return;
+
+        try {
+            // Show loading state
+            partidasContainer.innerHTML = `
+                <div class="loading-partidas">
+                    <i class="ph-circle-notch ph-spin"></i>
+                    <span>Cargando partidas...</span>
+                </div>
+            `;
+
+            // Get token from localStorage
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No se encontró token de autenticación');
+            }
+
+            // Fetch both 1v1 and 3v3 battles
+            const [batallas1v1, batallas3v3] = await Promise.all([
+                fetch(`${API_BASE_URL}/api/batallas`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }),
+                fetch(`${API_BASE_URL}/api/batallas3v3`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                })
+            ]);
+
+            if (!batallas1v1.ok || !batallas3v3.ok) {
+                throw new Error('Error al obtener las partidas');
+            }
+
+            const [batallas1v1Data, batallas3v3Data] = await Promise.all([
+                batallas1v1.json(),
+                batallas3v3.json()
+            ]);
+
+            // Debug: Log para ver qué devuelve la API
+            console.log('Datos de batallas 1v1 de la API:', batallas1v1Data);
+            console.log('Datos de batallas 3v3 de la API:', batallas3v3Data);
+
+            // Combine and sort all battles by creation date (newest first)
+            const allPartidas = [
+                ...batallas1v1Data.map(b => ({ ...b, type: '1v1' })),
+                ...batallas3v3Data.map(b => ({ ...b, type: '3v3' }))
+            ].sort((a, b) => new Date(b.createdAt || b._id) - new Date(a.createdAt || a._id));
+
+            console.log('Todas las partidas combinadas:', allPartidas);
+
+            displayPartidas(allPartidas);
+
+        } catch (error) {
+            console.error('Error loading partidas:', error);
+            partidasContainer.innerHTML = `
+                <div class="no-partidas">
+                    <i class="ph-warning"></i>
+                    <h4>Error al cargar partidas</h4>
+                    <p>${error.message}</p>
+                </div>
+            `;
+        }
+    }
+
+    // Function to display partidas
+    function displayPartidas(partidas) {
+        const partidasContainer = document.getElementById('partidasContainer');
+        if (!partidasContainer) return;
+
+        if (!partidas || partidas.length === 0) {
+            partidasContainer.innerHTML = `
+                <div class="no-partidas">
+                    <i class="ph-game-controller"></i>
+                    <h4>No tienes partidas</h4>
+                    <p>¡Crea tu primera partida para comenzar a jugar!</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Debug: Log para ver qué datos están llegando
+        console.log('Partidas recibidas en displayPartidas:', partidas);
+        partidas.forEach((partida, index) => {
+            console.log(`Partida ${index + 1}:`, {
+                id: partida.id || partida._id,
+                type: partida.type,
+                personaje1: partida.personaje1,
+                personaje2: partida.personaje2,
+                equipo1: partida.equipo1,
+                equipo2: partida.equipo2,
+                estado: partida.estado,
+                createdAt: partida.createdAt
+            });
+        });
+
+        // Store partidas globally for filtering
+        window.allPartidas = partidas;
+
+        const partidasHTML = partidas.map(partida => createPartidaItem(partida)).join('');
+        partidasContainer.innerHTML = `
+            <div class="partidas-filters">
+                <button class="filter-btn active" data-filter="all">
+                    <i class="ph-list"></i>
+                    Todas
+                </button>
+                <button class="filter-btn" data-filter="1v1">
+                    <i class="ph-sword"></i>
+                    1v1
+                </button>
+                <button class="filter-btn" data-filter="3v3">
+                    <i class="ph-users"></i>
+                    En Equipos
+                </button>
+                <button class="filter-btn" data-filter="en-curso">
+                    <i class="ph-play-circle"></i>
+                    En Curso
+                </button>
+                <button class="filter-btn" data-filter="terminadas">
+                    <i class="ph-check-circle"></i>
+                    Terminadas
+                </button>
+            </div>
+            <div class="partidas-list">
+                ${partidasHTML}
+            </div>
+        `;
+
+        // Add event listeners for delete buttons and click events
+        addDeletePartidaListeners();
+        addPartidaClickListeners();
+        addFilterListeners();
+    }
+
+    // Function to create partida item HTML
+    function createPartidaItem(partida) {
+        const is1v1 = partida.type === '1v1';
+        const typeIcon = is1v1 ? 'ph-sword' : 'ph-users';
+        const typeText = is1v1 ? '1v1' : 'En Equipo';
+        
+        let characters = '';
+        if (is1v1) {
+            // Usar nombre de personaje1 o estadoPersonaje1
+            const nombre1 = partida.personaje1?.nombre || partida.estadoPersonaje1?.Nombre || 'Personaje no encontrado';
+            const nombre2 = partida.personaje2?.nombre || partida.estadoPersonaje2?.Nombre || 'Personaje no encontrado';
+            characters = `<strong>${nombre1}</strong> vs <strong>${nombre2}</strong>`;
+        } else {
+            // Para batallas 3v3, los datos vienen como array de objetos con nombre
+            const equipo1 = partida.equipo1?.map(p => p.nombre).join(', ') || 'N/A';
+            const equipo2 = partida.equipo2?.map(p => p.nombre).join(', ') || 'N/A';
+            
+            characters = `<strong>Equipo 1:</strong> ${equipo1} | <strong>Equipo 2:</strong> ${equipo2}`;
+        }
+
+        const statusClass = getStatusClass(partida.estado);
+        const statusText = getStatusText(partida.estado);
+        
+        // Manejar fechas correctamente
+        let createdAt = 'Fecha no disponible';
+        try {
+            if (partida.createdAt) {
+                createdAt = new Date(partida.createdAt).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } else if (partida._id) {
+                // Usar el timestamp del ObjectId como fallback
+                const timestamp = new Date(parseInt(partida._id.toString().substring(0, 8), 16) * 1000);
+                createdAt = timestamp.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } else if (partida.id) {
+                // Usar el timestamp del ObjectId como fallback (cuando viene como 'id')
+                const timestamp = new Date(parseInt(partida.id.toString().substring(0, 8), 16) * 1000);
+                createdAt = timestamp.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+        } catch (error) {
+            console.error('Error parsing date:', error);
+        }
+
+        return `
+            <div class="partida-item clickable" data-partida-id="${partida.id || partida._id}" data-partida-type="${partida.type}">
+                <div class="partida-header">
+                    <div class="partida-type">
+                        <i class="${typeIcon}"></i>
+                        <span>${typeText}</span>
+                    </div>
+                    <span class="partida-status ${statusClass}">${statusText}</span>
+                </div>
+                <div class="partida-content">
+                    <div class="partida-info">
+                        <div class="partida-characters">
+                            ${characters}
+                        </div>
+                        <div class="partida-details">
+                            <span>Creada: ${createdAt}</span>
+                            ${partida.ganador ? `<span>Ganador: ${partida.ganador}</span>` : ''}
+                        </div>
+                    </div>
+                    <div class="partida-actions">
+                        <button class="delete-partida-btn" data-partida-id="${partida.id || partida._id}" data-partida-type="${partida.type}">
+                            <i class="ph-trash"></i>
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    // Function to get status class
+    function getStatusClass(estado) {
+        switch (estado?.toLowerCase()) {
+            case 'en curso':
+            case 'activa':
+                return 'en-curso';
+            case 'finalizada':
+            case 'completada':
+                return 'finalizada';
+            case 'cancelada':
+            case 'abandonada':
+                return 'cancelada';
+            default:
+                return 'en-curso';
+        }
+    }
+
+    // Function to get status text
+    function getStatusText(estado) {
+        switch (estado?.toLowerCase()) {
+            case 'en curso':
+            case 'activa':
+                return 'En Curso';
+            case 'finalizada':
+            case 'completada':
+                return 'Finalizada';
+            case 'cancelada':
+            case 'abandonada':
+                return 'Cancelada';
+            default:
+                return 'En Curso';
+        }
+    }
+
+    // Function to add delete partida listeners
+    function addDeletePartidaListeners() {
+        const deleteButtons = document.querySelectorAll('.delete-partida-btn');
+        
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', async function(e) {
+                e.preventDefault();
+                e.stopPropagation(); // Prevent triggering partida click
+                
+                const partidaId = this.getAttribute('data-partida-id');
+                const partidaType = this.getAttribute('data-partida-type');
+                
+                if (confirm('¿Estás seguro de que quieres eliminar esta partida? Esta acción no se puede deshacer.')) {
+                    await deletePartida(partidaId, partidaType);
+                }
+            });
+        });
+    }
+
+    // Function to add partida click listeners
+    function addPartidaClickListeners() {
+        const partidaItems = document.querySelectorAll('.partida-item.clickable');
+        
+        partidaItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                // Don't trigger if clicking on delete button
+                if (e.target.closest('.delete-partida-btn')) {
+                    return;
+                }
+                
+                const partidaId = this.getAttribute('data-partida-id');
+                const partidaType = this.getAttribute('data-partida-type');
+                
+                console.log('🖱️ Click en partida:', { partidaId, partidaType });
+                
+                showPartidaDetails(partidaId, partidaType);
+            });
+        });
+    }
+
+    // Function to add filter listeners
+    function addFilterListeners() {
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                const filter = this.getAttribute('data-filter');
+                
+                // Update active filter button
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Apply filter
+                applyPartidaFilter(filter);
+            });
+        });
+    }
+
+    // Function to apply partida filter
+    function applyPartidaFilter(filter) {
+        const partidaItems = document.querySelectorAll('.partida-item');
+        
+        partidaItems.forEach(item => {
+            const partidaType = item.getAttribute('data-partida-type');
+            const statusElement = item.querySelector('.partida-status');
+            const status = statusElement ? statusElement.textContent.toLowerCase() : '';
+            
+            let shouldShow = true;
+            
+            switch (filter) {
+                case '1v1':
+                    shouldShow = partidaType === '1v1';
+                    break;
+                case '3v3':
+                    shouldShow = partidaType === '3v3';
+                    break;
+                case 'en-curso':
+                    shouldShow = status.includes('en curso') || status.includes('activa');
+                    break;
+                case 'terminadas':
+                    shouldShow = status.includes('finalizada') || status.includes('completada');
+                    break;
+                case 'all':
+                default:
+                    shouldShow = true;
+                    break;
+            }
+            
+            item.style.display = shouldShow ? 'block' : 'none';
+        });
+    }
+
+    // Function to show partida details
+    async function showPartidaDetails(partidaId, partidaType) {
+        try {
+            console.log('🔍 Iniciando showPartidaDetails:', { partidaId, partidaType });
+            
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No se encontró token de autenticación');
+            }
+            console.log('✅ Token encontrado');
+
+            const endpoint = partidaType === '1v1' ? 'batallas' : 'batallas3v3';
+            const url = `${API_BASE_URL}/api/${endpoint}/${partidaId}`;
+            console.log('🌐 URL de la petición:', url);
+            console.log('🔑 Headers:', {
+                'Authorization': `Bearer ${token.substring(0, 20)}...`,
+                'Content-Type': 'application/json'
+            });
+
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            console.log('📡 Respuesta del servidor:', {
+                status: response.status,
+                statusText: response.statusText,
+                ok: response.ok
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('❌ Error response body:', errorText);
+                throw new Error(`Error al obtener detalles de la partida (${response.status}): ${errorText}`);
+            }
+
+            const partida = await response.json();
+            console.log('📦 Datos de la partida recibidos:', partida);
+            
+            showPartidaModal(partida, partidaType);
+
+        } catch (error) {
+            console.error('💥 Error completo en showPartidaDetails:', error);
+            showMessage(`Error al cargar detalles: ${error.message}`, 'error');
+        }
+    }
+
+    // Function to show partida modal
+    function showPartidaModal(partida, partidaType) {
+        const is1v1 = partidaType === '1v1';
+        const typeText = is1v1 ? '1v1' : 'En Equipo';
+        
+        let charactersInfo = '';
+        if (is1v1) {
+            // Usar nombre de personaje1 o estadoPersonaje1
+            const nombre1 = partida.personaje1?.nombre || partida.estadoPersonaje1?.Nombre || 'Personaje no encontrado';
+            const nombre2 = partida.personaje2?.nombre || partida.estadoPersonaje2?.Nombre || 'Personaje no encontrado';
+            const hp1 = partida.estadoPersonaje1?.HP || 'N/A';
+            const hp2 = partida.estadoPersonaje2?.HP || 'N/A';
+            const energia1 = partida.estadoPersonaje1?.Energia || 'N/A';
+            const energia2 = partida.estadoPersonaje2?.Energia || 'N/A';
+            
+            charactersInfo = `
+                <div class="partida-detail-characters">
+                    <div class="character-vs">
+                        <div class="character-info">
+                            <h4>${nombre1}</h4>
+                            <p>HP: ${hp1}</p>
+                            <p>Energía: ${energia1}</p>
+                        </div>
+                        <div class="vs-separator">VS</div>
+                        <div class="character-info">
+                            <h4>${nombre2}</h4>
+                            <p>HP: ${hp2}</p>
+                            <p>Energía: ${energia2}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        } else {
+            // Para batallas 3v3, los datos vienen como array de objetos con {id, nombre}
+            console.log('📋 Datos de partida recibidos en modal:', partida);
+            console.log('👥 Equipo1 recibido:', partida.equipo1);
+            console.log('👥 Equipo2 recibido:', partida.equipo2);
+            
+            // Procesar los nombres de personajes correctamente
+            const equipo1Personajes = partida.equipo1?.map(p => {
+                console.log('👤 Personaje equipo1:', p);
+                // La API devuelve objetos con {id, nombre}
+                return p?.nombre || 'Personaje no encontrado';
+            }) || [];
+            
+            const equipo2Personajes = partida.equipo2?.map(p => {
+                console.log('👤 Personaje equipo2:', p);
+                // La API devuelve objetos con {id, nombre}
+                return p?.nombre || 'Personaje no encontrado';
+            }) || [];
+            
+            console.log('📝 Equipo1 nombres procesados:', equipo1Personajes);
+            console.log('📝 Equipo2 nombres procesados:', equipo2Personajes);
+            console.log('📝 Equipo2 nombres procesados:', equipo2Personajes);
+            charactersInfo = `
+                <div class="partida-detail-characters">
+                    <div class="team-info">
+                        <h4 class="team-title">⚔️ Equipo 1</h4>
+                        <div class="team-members">
+                            ${equipo1Personajes.map((personaje, index) => `
+                                <div class="team-member">
+                                    <span class="member-number">${index + 1}</span>
+                                    <span class="member-name">${personaje}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="vs-separator">
+                        <div class="vs-circle">VS</div>
+                    </div>
+                    <div class="team-info">
+                        <h4 class="team-title">⚔️ Equipo 2</h4>
+                        <div class="team-members">
+                            ${equipo2Personajes.map((personaje, index) => `
+                                <div class="team-member">
+                                    <span class="member-number">${index + 1}</span>
+                                    <span class="member-name">${personaje}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        const statusClass = getStatusClass(partida.estado);
+        const statusText = getStatusText(partida.estado);
+        
+        // Manejar fechas correctamente
+        let createdAt = 'Fecha no disponible';
+        try {
+            if (partida.createdAt) {
+                createdAt = new Date(partida.createdAt).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } else if (partida._id) {
+                // Usar el timestamp del ObjectId como fallback
+                const timestamp = new Date(parseInt(partida._id.toString().substring(0, 8), 16) * 1000);
+                createdAt = timestamp.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } else if (partida.id) {
+                // Usar el timestamp del ObjectId como fallback (cuando viene como 'id')
+                const timestamp = new Date(parseInt(partida.id.toString().substring(0, 8), 16) * 1000);
+                createdAt = timestamp.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+        } catch (error) {
+            console.error('Error parsing date:', error);
+        }
+
+        const content = `
+            <div class="partida-detail-content">
+                <div class="partida-detail-header">
+                    <div class="partida-detail-type">
+                        <i class="${is1v1 ? 'ph-sword' : 'ph-users'}"></i>
+                        <span>${typeText}</span>
+                    </div>
+                    <span class="partida-status ${statusClass}">${statusText}</span>
+                </div>
+                
+                ${charactersInfo}
+                
+                <div class="partida-detail-info">
+                    <div class="info-item">
+                        <strong>Creada:</strong> ${createdAt}
+                    </div>
+                    <div class="info-item">
+                        <strong>Turno actual:</strong> ${partida.turnoActual || 'N/A'}
+                    </div>
+                    ${partida.ganador ? `
+                        <div class="info-item">
+                            <strong>Ganador:</strong> ${partida.ganador}
+                        </div>
+                    ` : ''}
+                    ${partida.historial && partida.historial.length > 0 ? `
+                        <div class="info-item">
+                            <strong>Acciones realizadas:</strong> ${partida.historial.length}
+                        </div>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+
+        showModal(content, `Detalles de Partida - ${typeText}`);
+    }
+
+    // Function to delete partida
+    async function deletePartida(partidaId, partidaType) {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('No se encontró token de autenticación');
+            }
+
+            const endpoint = partidaType === '1v1' ? 'batallas' : 'batallas3v3';
+            const response = await fetch(`${API_BASE_URL}/api/${endpoint}/${partidaId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Error al eliminar la partida');
+            }
+
+            showMessage('Partida eliminada exitosamente', 'success');
+            
+            // Reload partidas
+            await loadUserPartidas();
+
+        } catch (error) {
+            console.error('Error deleting partida:', error);
+            showMessage(`Error al eliminar la partida: ${error.message}`, 'error');
+        }
+    }
+
+
+});
