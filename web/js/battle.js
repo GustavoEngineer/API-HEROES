@@ -616,11 +616,14 @@ class BattleSystem {
                     tipo: battleMode === 'team' ? '3v3' : '1v1'
                 }));
                 
-                // Recargar la página con el battleId encontrado
-                const currentUrl = new URL(window.location);
-                currentUrl.searchParams.set('battleId', batallaSeleccionada.id);
-                console.log('Redirigiendo a:', currentUrl.toString());
-                window.location.href = currentUrl.toString();
+                // Redirigir según el tipo de batalla
+                if (battleMode === 'team') {
+                    console.log('Redirigiendo a batallas3v3.html con battleId:', batallaSeleccionada.id);
+                    window.location.href = `batallas3v3.html?battleId=${batallaSeleccionada.id}&mode=team`;
+                } else {
+                    console.log('Redirigiendo a batallas1v1.html con battleId:', batallaSeleccionada.id);
+                    window.location.href = `batallas1v1.html?battleId=${batallaSeleccionada.id}`;
+                }
                 return true;
             }
             
@@ -696,10 +699,12 @@ class BattleSystem {
                 tipo: battleMode === 'team' ? '3v3' : '1v1'
             }));
             
-            // Recargar la página con el nuevo battleId
-            const currentUrl = new URL(window.location);
-            currentUrl.searchParams.set('battleId', newBattle.id);
-            window.location.href = currentUrl.toString();
+            // Redirigir según el tipo de batalla
+            if (battleMode === 'team') {
+                window.location.href = `batallas3v3.html?battleId=${newBattle.id}&mode=team`;
+            } else {
+                window.location.href = `batallas1v1.html?battleId=${newBattle.id}`;
+            }
             
         } catch (error) {
             console.error('Error creando nueva batalla:', error);

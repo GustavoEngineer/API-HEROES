@@ -1,0 +1,915 @@
+/* Estilos para la página de batallas 3v3 */
+
+.battle-container {
+    min-height: 100vh;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+.page-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2rem;
+    color: #FFFFFF;
+    text-shadow: 2px 2px 4px #000000;
+    margin: 0;
+    margin-bottom: 0.25rem;
+}
+
+.battle-info {
+    text-align: center;
+    color: #E2E8F0;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+}
+
+.battle-details {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+    flex-wrap: wrap;
+}
+
+.turn-indicator, .round-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(15, 26, 46, 0.8);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 150, 255, 0.3);
+}
+
+.turn-label, .round-label {
+    font-size: 0.9rem;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.turn-value, .round-value {
+    font-family: 'Righteous', cursive;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+.turn-value.team1 {
+    color: #3B82F6;
+}
+
+.turn-value.team2 {
+    color: #EF4444;
+}
+
+.battle-arena {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 1rem;
+}
+
+.team-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    margin: 0 0.5rem;
+}
+
+.team-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #FFFFFF;
+    text-shadow: 2px 2px 4px #000000;
+    margin: 0;
+    margin-bottom: 0.25rem;
+}
+
+.players-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    width: 100%;
+    max-width: 250px;
+}
+
+.player-card {
+    background: rgba(15, 26, 46, 0.9);
+    border: 2px solid rgba(0, 150, 255, 0.5);
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+    width: 100%;
+    position: relative;
+}
+
+/* Estados de turno */
+.player-card.active-turn {
+    border: 3px solid #FFD700;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+    animation: pulse-gold 2s infinite;
+}
+
+.player-card.inactive-turn {
+    opacity: 0.7;
+    filter: grayscale(30%);
+}
+
+/* Estados de victoria/derrota */
+.player-card.winner {
+    border: 3px solid #22C55E;
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+    animation: pulse-green 2s infinite;
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.player-card.loser {
+    border: 3px solid #EF4444;
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+    opacity: 0.5;
+    filter: grayscale(50%);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+@keyframes pulse-gold {
+    0%, 100% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+    }
+}
+
+@keyframes pulse-green {
+    0%, 100% {
+        box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 50px rgba(34, 197, 94, 0.8);
+    }
+}
+
+@keyframes pulse-orange {
+    0%, 100% {
+        box-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+    }
+    50% {
+        box-shadow: 0 0 20px rgba(245, 158, 11, 1);
+    }
+}
+
+.player-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    color: #FFFFFF;
+    margin-bottom: 0.5rem;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+.player-status-indicator {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #6B7280;
+    transition: all 0.3s ease;
+}
+
+.player-status-indicator.active {
+    background: #FFD700;
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    animation: pulse-gold 1s infinite;
+}
+
+.player-status-indicator.defending {
+    background: #10B981;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.8);
+}
+
+.player-status-indicator.vulnerable {
+    background: #F59E0B;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.8);
+    animation: pulse-orange 1s infinite;
+}
+
+.player-status-indicator.ko {
+    background: #EF4444;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.8);
+}
+
+.player-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.stat-bar-container {
+    position: relative;
+    width: 100%;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-bar {
+    height: 100%;
+    transition: width 0.5s ease;
+    border-radius: 10px;
+}
+
+.hp-bar {
+    background: linear-gradient(90deg, #EF4444, #F87171);
+}
+
+.energy-bar {
+    background: linear-gradient(90deg, #3B82F6, #60A5FA);
+}
+
+.player-resources {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.resource-bar {
+    position: relative;
+    height: 16px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.resource-fill {
+    height: 100%;
+    transition: width 0.5s ease;
+    border-radius: 8px;
+}
+
+.combo-bar .resource-fill {
+    background: linear-gradient(90deg, #F59E0B, #FBBF24);
+}
+
+.ultra-bar .resource-fill {
+    background: linear-gradient(90deg, #EC4899, #F472B6);
+}
+
+.resource-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
+.stat {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.stat-value {
+    font-family: 'Righteous', cursive;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: #94A3B8;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.vs-separator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    flex-shrink: 0;
+    gap: 2rem;
+}
+
+.vs-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3rem;
+    color: #FFD700;
+    text-shadow: 3px 3px 6px #000000;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 1rem 2rem;
+    border-radius: 50%;
+    border: 3px solid #FFD700;
+}
+
+.battle-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    max-width: 400px;
+    width: 100%;
+}
+
+.action-btn {
+    background: linear-gradient(135deg, #1E40AF, #3B82F6);
+    border: 2px solid #60A5FA;
+    border-radius: 8px;
+    color: #FFFFFF;
+    font-family: 'Righteous', cursive;
+    font-size: 0.8rem;
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.action-btn:hover {
+    background: linear-gradient(135deg, #1D4ED8, #2563EB);
+    border-color: #93C5FD;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.action-btn:disabled {
+    background: linear-gradient(135deg, #6B7280, #9CA3AF);
+    border-color: #D1D5DB;
+    color: #9CA3AF;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.action-btn:disabled:hover {
+    background: linear-gradient(135deg, #6B7280, #9CA3AF);
+    border-color: #D1D5DB;
+    transform: none;
+    box-shadow: none;
+}
+
+.battle-status {
+    text-align: center;
+    color: #E2E8F0;
+    font-size: 1.1rem;
+    padding: 1rem;
+    background: rgba(15, 26, 46, 0.8);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    max-width: 600px;
+    width: 100%;
+}
+
+.battle-status.battle-ended {
+    background: rgba(34, 197, 94, 0.1);
+    border-color: #22C55E;
+    color: #22C55E;
+    animation: victory-pulse 2s infinite;
+}
+
+/* Historial de batalla */
+
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.history-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #FFFFFF;
+    text-shadow: 2px 2px 4px #000000;
+    margin: 0;
+}
+
+.history-controls {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.history-filter-btn, .history-clear-btn {
+    background: rgba(15, 26, 46, 0.8);
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    border-radius: 6px;
+    color: #E2E8F0;
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Righteous', cursive;
+}
+
+.history-filter-btn:hover, .history-clear-btn:hover {
+    background: rgba(0, 150, 255, 0.2);
+    border-color: #3B82F6;
+    transform: translateY(-1px);
+}
+
+.history-filter-btn.active {
+    background: rgba(59, 130, 246, 0.3);
+    border-color: #3B82F6;
+    color: #FFFFFF;
+}
+
+.history-clear-btn {
+    background: rgba(239, 68, 68, 0.2);
+    border-color: #EF4444;
+    color: #FCA5A5;
+}
+
+.history-clear-btn:hover {
+    background: rgba(239, 68, 68, 0.3);
+    border-color: #EF4444;
+}
+
+.battle-history {
+    background: rgba(15, 26, 46, 0.8);
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    max-height: 300px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.history-item {
+    padding: 0.75rem;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.2);
+    border-left: 3px solid #3B82F6;
+    transition: all 0.3s ease;
+    margin-bottom: 0.5rem;
+}
+
+.history-item:hover {
+    background: rgba(0, 0, 0, 0.4);
+    transform: translateX(5px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.history-item.attack {
+    border-left-color: #EF4444;
+}
+
+.history-item.defense {
+    border-left-color: #10B981;
+}
+
+.history-item.combo {
+    border-left-color: #F59E0B;
+}
+
+.history-item.ultra {
+    border-left-color: #EC4899;
+}
+
+.history-item.energy {
+    border-left-color: #3B82F6;
+}
+
+.history-item.ko {
+    border-left-color: #DC2626;
+    background: rgba(220, 38, 38, 0.1);
+}
+
+.history-item.critical {
+    border-left-color: #F59E0B;
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.history-item.dodge {
+    border-left-color: #10B981;
+    background: rgba(16, 185, 129, 0.1);
+}
+
+.history-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.history-timestamp {
+    font-size: 0.7rem;
+    color: #94A3B8;
+    font-family: 'Courier New', monospace;
+    opacity: 0.8;
+}
+
+.history-main-message {
+    font-size: 0.9rem;
+    color: #E2E8F0;
+    line-height: 1.4;
+    font-weight: 500;
+}
+
+.history-details {
+    font-size: 0.75rem;
+    color: #CBD5E1;
+    opacity: 0.9;
+    font-family: 'Courier New', monospace;
+}
+
+.history-effects {
+    font-size: 0.7rem;
+    color: #FBBF24;
+    font-style: italic;
+    opacity: 0.8;
+}
+
+.history-empty {
+    text-align: center;
+    color: #94A3B8;
+    font-style: italic;
+    padding: 2rem;
+    font-size: 0.9rem;
+}
+
+/* Scrollbar personalizado para el historial */
+.battle-history::-webkit-scrollbar {
+    width: 8px;
+}
+
+.battle-history::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+
+.battle-history::-webkit-scrollbar-thumb {
+    background: rgba(0, 150, 255, 0.5);
+    border-radius: 4px;
+}
+
+.battle-history::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 150, 255, 0.7);
+}
+
+/* Scrollbar personalizado para la página principal */
+.battle-container::-webkit-scrollbar {
+    width: 16px;
+}
+
+.battle-container::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.battle-container::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(0, 150, 255, 0.8), rgba(59, 130, 246, 0.8));
+    border-radius: 8px;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.battle-container::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(0, 150, 255, 1), rgba(59, 130, 246, 1));
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.battle-container::-webkit-scrollbar-thumb:active {
+    background: linear-gradient(180deg, rgba(0, 150, 255, 1), rgba(59, 130, 246, 1));
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Firefox scrollbar */
+.battle-container {
+    scrollbar-width: auto;
+    scrollbar-color: rgba(0, 150, 255, 0.8) rgba(0, 0, 0, 0.5);
+}
+
+
+
+@keyframes victory-pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(34, 197, 94, 0.6);
+    }
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+    .battle-arena {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 0 1rem;
+    }
+    
+    .players-grid {
+        flex-direction: column;
+        gap: 0.75rem;
+        max-width: 200px;
+    }
+    
+    .player-card {
+        padding: 1rem;
+        width: 100%;
+    }
+    
+    .stat-bar-container {
+        height: 16px;
+    }
+    
+    .resource-bar {
+        height: 14px;
+    }
+    
+    .resource-label {
+        font-size: 0.6rem;
+    }
+    
+    .vs-separator {
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+    
+    .vs-text {
+        font-size: 2.5rem;
+        padding: 0.75rem 1.5rem;
+    }
+    
+    .battle-actions {
+        max-width: 350px;
+        gap: 0.5rem;
+    }
+    
+    .battle-details {
+        gap: 1rem;
+    }
+    
+    .turn-indicator, .round-info {
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .battle-history-container {
+        margin-top: 1.5rem;
+    }
+    
+    .battle-history {
+        max-height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .battle-container {
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+    
+    .battle-arena {
+        padding: 0 0.5rem;
+    }
+    
+    .players-grid {
+        flex-direction: column;
+        gap: 0.5rem;
+        max-width: 180px;
+    }
+    
+    .player-card {
+        padding: 0.75rem;
+        width: 100%;
+    }
+    
+    .stat-bar-container {
+        height: 14px;
+    }
+    
+    .resource-bar {
+        height: 12px;
+    }
+    
+    .resource-label {
+        font-size: 0.5rem;
+    }
+    
+    .player-name {
+        font-size: 1rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    .stat-value {
+        font-size: 1rem;
+    }
+    
+    .stat-label {
+        font-size: 0.7rem;
+    }
+    
+    .battle-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+        max-width: 300px;
+    }
+    
+    .action-btn {
+        font-size: 0.7rem;
+        padding: 0.5rem;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .team-title {
+        font-size: 1.5rem;
+    }
+    
+    .vs-text {
+        font-size: 2rem;
+        padding: 0.5rem 1rem;
+    }
+    
+    .battle-status {
+        font-size: 1rem;
+        padding: 0.75rem;
+    }
+    
+    .battle-details {
+        gap: 0.5rem;
+        flex-direction: column;
+    }
+    
+    .turn-indicator, .round-info {
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .turn-label, .round-label {
+        font-size: 0.8rem;
+    }
+    
+    .turn-value, .round-value {
+        font-size: 0.9rem;
+    }
+    
+    .history-header {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .history-title {
+        font-size: 1.3rem;
+    }
+    
+    .history-controls {
+        gap: 0.3rem;
+    }
+    
+    .history-filter-btn, .history-clear-btn {
+        font-size: 0.7rem;
+        padding: 0.3rem 0.6rem;
+    }
+    
+    .battle-history {
+        max-height: 200px;
+        padding: 0.75rem;
+    }
+    
+    .history-main-message {
+        font-size: 0.8rem;
+    }
+    
+    .history-details {
+        font-size: 0.65rem;
+    }
+    
+    .history-effects {
+        font-size: 0.6rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .players-grid {
+        flex-direction: column;
+        gap: 0.25rem;
+        max-width: 150px;
+    }
+    
+    .player-card {
+        padding: 0.5rem;
+        width: 100%;
+    }
+    
+    .stat-bar-container {
+        height: 12px;
+    }
+    
+    .resource-bar {
+        height: 10px;
+    }
+    
+    .resource-label {
+        font-size: 0.4rem;
+    }
+    
+    .player-name {
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .stat-value {
+        font-size: 0.9rem;
+    }
+    
+    .stat-label {
+        font-size: 0.6rem;
+    }
+    
+    .battle-actions {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+        max-width: 250px;
+    }
+    
+    .action-btn {
+        font-size: 0.7rem;
+        padding: 0.4rem;
+    }
+    
+    .page-title {
+        font-size: 1.8rem;
+    }
+    
+    .team-title {
+        font-size: 1.3rem;
+    }
+    
+    .vs-text {
+        font-size: 1.5rem;
+        padding: 0.5rem;
+    }
+}
+
+/* Animaciones para efectos visuales */
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+    20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+}
+
+@keyframes actionEffect {
+    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+    100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+}
+
+@keyframes slideInRight {
+    0% { opacity: 0; transform: translateX(100%); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-gold {
+    0%, 100% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.6); }
+    50% { box-shadow: 0 0 50px rgba(255, 215, 0, 0.8); }
+}
+
+@keyframes pulse-green {
+    0%, 100% { box-shadow: 0 0 30px rgba(34, 197, 94, 0.6); }
+    50% { box-shadow: 0 0 50px rgba(34, 197, 94, 0.8); }
+}
+
+@keyframes victory-pulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
+    50% { box-shadow: 0 0 40px rgba(34, 197, 94, 0.6); }
+}

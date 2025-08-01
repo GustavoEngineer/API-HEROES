@@ -844,8 +844,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Redirigir a la interfaz de batalla
                 setTimeout(() => {
                     if (isTeamMode) {
-                        // Para batallas en equipo, pasar el battleId y el modo
-                        window.location.href = `campobatallas.html?battleId=${battleResult.id}&mode=team`;
+                        // Para batallas en equipo, redirigir a batallas3v3.html
+                        window.location.href = `batallas3v3.html?battleId=${battleResult.id}&mode=team`;
                     } else {
                         // Para batallas 1v1, redirigir a batallas1v1.html
                         window.location.href = `batallas1v1.html?battleId=${battleResult.id}`;

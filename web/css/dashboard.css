@@ -3,57 +3,9 @@
     display: none;
 }
 
-/* Scrollbar styling for dashboard */
-.dashboard-main::-webkit-scrollbar {
-    width: 8px;
-}
+/* Dashboard main - sin scroll personalizado */
 
-.dashboard-main::-webkit-scrollbar-track {
-    background: rgba(15, 26, 46, 0.3);
-    border-radius: 4px;
-}
-
-.dashboard-main::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #0096ff, #FFD700);
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-.dashboard-main::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #FFD700, #0096ff);
-}
-
-/* Firefox scrollbar */
-.dashboard-main {
-    scrollbar-width: thin;
-    scrollbar-color: #0096ff rgba(15, 26, 46, 0.3);
-}
-
-/* Scrollbar styling for dashboard sections */
-.dashboard-section::-webkit-scrollbar {
-    width: 8px;
-}
-
-.dashboard-section::-webkit-scrollbar-track {
-    background: rgba(15, 26, 46, 0.3);
-    border-radius: 4px;
-}
-
-.dashboard-section::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #0096ff, #FFD700);
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-.dashboard-section::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #FFD700, #0096ff);
-}
-
-/* Firefox scrollbar for sections */
-.dashboard-section {
-    scrollbar-width: thin;
-    scrollbar-color: #0096ff rgba(15, 26, 46, 0.3);
-}
+/* Dashboard sections - sin scroll personalizado */
 
 /* Battle Main Content */
 .battle-main {
@@ -65,30 +17,13 @@
     position: relative;
 }
 
-/* Scrollbar styling for battle main */
-.battle-main::-webkit-scrollbar {
-    width: 8px;
-}
-
-.battle-main::-webkit-scrollbar-track {
-    background: rgba(15, 26, 46, 0.3);
-    border-radius: 4px;
-}
-
-.battle-main::-webkit-scrollbar-thumb {
-    background: linear-gradient(135deg, #0096ff, #FFD700);
-    border-radius: 4px;
-    transition: all 0.3s ease;
-}
-
-.battle-main::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(135deg, #FFD700, #0096ff);
-}
-
-/* Firefox scrollbar for battle main */
+/* Battle main content - sin scroll personalizado */
 .battle-main {
-    scrollbar-width: thin;
-    scrollbar-color: #0096ff rgba(15, 26, 46, 0.3);
+    flex: 1;
+    padding: 2rem;
+    background: linear-gradient(135deg, #1e3a8a 0%, #0f172a 100%);
+    min-height: calc(100vh - 80px); /* Subtract header height */
+    position: relative;
 }
 
 /* Battle page specific styles */
