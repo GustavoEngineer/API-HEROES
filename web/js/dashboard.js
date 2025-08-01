@@ -847,8 +847,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         // Para batallas en equipo, pasar el battleId y el modo
                         window.location.href = `campobatallas.html?battleId=${battleResult.id}&mode=team`;
                     } else {
-                        // Para batallas 1v1, pasar el battleId
-                        window.location.href = `campobatallas.html?battleId=${battleResult.id}`;
+                        // Para batallas 1v1, redirigir a batallas1v1.html
+                        window.location.href = `batallas1v1.html?battleId=${battleResult.id}`;
                     }
                 }, 1500);
                 

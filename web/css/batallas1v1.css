@@ -1,0 +1,244 @@
+/* Estilos simples para la página de batallas 1v1 */
+
+.battle-container {
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+}
+
+.page-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    color: #FFFFFF;
+    text-shadow: 2px 2px 4px #000000;
+    margin: 0;
+}
+
+.battle-info {
+    text-align: center;
+    color: #E2E8F0;
+    font-size: 1.1rem;
+}
+
+.battle-arena {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.player-card {
+    background: rgba(15, 26, 46, 0.9);
+    border: 2px solid rgba(0, 150, 255, 0.5);
+    border-radius: 12px;
+    padding: 2rem;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+/* Estados de turno */
+.player-card.active-turn {
+    border: 3px solid #FFD700;
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+    animation: pulse-gold 2s infinite;
+}
+
+.player-card.inactive-turn {
+    opacity: 0.7;
+    filter: grayscale(30%);
+}
+
+/* Estados de victoria/derrota */
+.player-card.winner {
+    border: 3px solid #22C55E;
+    box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+    animation: pulse-green 2s infinite;
+    background: rgba(34, 197, 94, 0.1);
+}
+
+.player-card.loser {
+    border: 3px solid #EF4444;
+    box-shadow: 0 0 30px rgba(239, 68, 68, 0.6);
+    opacity: 0.5;
+    filter: grayscale(50%);
+    background: rgba(239, 68, 68, 0.1);
+}
+
+@keyframes pulse-gold {
+    0%, 100% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 50px rgba(255, 215, 0, 0.8);
+    }
+}
+
+@keyframes pulse-green {
+    0%, 100% {
+        box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 50px rgba(34, 197, 94, 0.8);
+    }
+}
+
+.player-name {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: #FFFFFF;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+.player-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    color: #FFD700;
+    text-shadow: 2px 2px 4px #000000;
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #E2E8F0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.vs-separator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.vs-text {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #FFD700;
+    text-shadow: 2px 2px 4px #000000;
+}
+
+.battle-actions {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    max-width: 800px;
+    width: 100%;
+}
+
+.action-btn {
+    background: rgba(15, 26, 46, 0.9);
+    border: 2px solid rgba(0, 150, 255, 0.5);
+    border-radius: 8px;
+    padding: 1rem;
+    color: #FFFFFF;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.action-btn:hover {
+    background: rgba(0, 150, 255, 0.2);
+    border-color: rgba(0, 150, 255, 0.8);
+    transform: translateY(-2px);
+}
+
+.action-btn:active {
+    transform: translateY(0);
+}
+
+/* Estados de botones deshabilitados */
+.action-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(15, 26, 46, 0.7);
+}
+
+.action-btn:disabled:hover {
+    transform: none;
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(15, 26, 46, 0.7);
+}
+
+.battle-status {
+    text-align: center;
+    color: #E2E8F0;
+    font-size: 1.1rem;
+    padding: 1rem;
+    background: rgba(15, 26, 46, 0.7);
+    border-radius: 8px;
+    border: 1px solid rgba(0, 150, 255, 0.3);
+    min-width: 400px;
+}
+
+/* Estado especial para batalla terminada */
+.battle-status.battle-ended {
+    background: rgba(34, 197, 94, 0.1);
+    border: 2px solid rgba(34, 197, 94, 0.5);
+    color: #22C55E;
+    animation: victory-pulse 2s infinite;
+}
+
+@keyframes victory-pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(34, 197, 94, 0.6);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .battle-arena {
+        flex-direction: column;
+        gap: 2rem;
+    }
+    
+    .player-card {
+        width: 100%;
+        max-width: 350px;
+    }
+    
+    .battle-actions {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.8rem;
+    }
+    
+    .page-title {
+        font-size: 2rem;
+    }
+    
+    .vs-text {
+        font-size: 2rem;
+    }
+    
+    .battle-status {
+        min-width: auto;
+        width: 100%;
+        max-width: 350px;
+    }
+} 

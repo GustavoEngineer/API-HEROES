@@ -37,6 +37,13 @@ body {
     overflow-x: hidden;
 }
 
+/* Body layout for battle pages */
+body.battle-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
 
 
 /* Header Styles */
